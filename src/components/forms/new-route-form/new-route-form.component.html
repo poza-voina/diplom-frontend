@@ -1,0 +1,8 @@
+<form>
+  <form-field label="Название маршрута:">
+    <input class="form-control mb-3" [(ngModel)]="routeItem.title" [ngModelOptions]="{standalone: true}" type="text" value="text">
+  </form-field>
+  <div class="d-flex justify-content-center">
+    <button class="btn btn-sm btn-primary" (click)="saveHandler()">Сохранить</button>
+  </div>
+</form>

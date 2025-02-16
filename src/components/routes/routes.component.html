@@ -1,0 +1,75 @@
+<div class="container container-lg d-flex flex-row p-0 mb-3 justify-content-between">
+  <div class="d-flex justify-content-start align-content-center">
+    <div class="dropdown me-2" id="sortingButtons">
+      <button class="btn btn-sm btn-primary dropdown-toggle" type="button" (click)="dropDownHandler('sortingButtons')" data-bs-toggle="dropdown" aria-expanded="false">
+        {{ RoutesSortHelper.getDescription(selectedSort)}}
+      </button>
+      <ul class="dropdown-menu">
+        <ng-container *ngFor="let sortingType of othersSort">
+          <li><button class="dropdown-item btn btn-sm" (click)="handleSortRoutes(sortingType);dropDownHandler('sortingButtons')">{{ RoutesSortHelper.getDescription(sortingType) }}</button></li>
+        </ng-container>
+      </ul>
+    </div>
+    <div class="form-check m-0 me-2 align-content-center">
+      <label class="form-check-label">
+        Показать скрытые
+      </label>
+      <input class="form-check-input" type="checkbox" (click)="showHiddenRoute($event)">
+    </div>
+    <div class="form-check m-0 me-2 align-content-center">
+      <label class="form-check-label" for="flexCheckChecked">
+        Показывать видимые
+      </label>
+      <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" (click)="showVisibleRoute($event)">
+    </div>
+  </div>
+  <div>
+    <button class="btn btn-sm btn-primary" (click)="openModal(addNewRouteModalId)" ><i class="bi bi-plus"></i></button>
+  </div>
+</div>
+
+<div class="container container-lg routes">
+  <ng-container [ngSwitch]="routesLoadingStatus">
+    <div *ngSwitchCase="RoutesLoadingStatus.Loading" class="container container-fluid loading-routes w-100 h-100">
+      <div>
+        Идет загрузка маршрутов
+      </div>
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Загрузка...</span>
+      </div>
+      <div *ngSwitchCase="RoutesLoadingStatus.Error">
+        Не получилось загрузить Маршруты
+      </div>
+    </div>
+    <ng-container *ngSwitchCase="RoutesLoadingStatus.Completed">
+      <div *ngFor="let item of routes" class="card mt-2" (click)="goToRoute(item.id)">
+        <div class="card-body">
+          <a class="card-title">{{ item.title }}</a>
+          <div class="card-text">
+            <div>Дата создания:</div>
+            <div>{{ item.creationDateTime }}</div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="btn-group">
+            <button (click)="item.isHidden ? showRoute(item) : hideRoute(item)" class="btn btn-primary btn-sm">
+              <i *ngIf="item.isHidden" class="bi bi-eye-slash"></i>
+              <i *ngIf="!item.isHidden" class="bi bi-eye"></i>
+              <div *ngIf="routesStatuses.getStatus(item) == RouteStatus.ToggleVisibility" class="spinner-border text-white spinner-border-sm ms-2" role="status">
+                <span class="visually-hidden">Загрузка</span>
+              </div>
+            </button>
+            <button class="btn btn-primary btn-sm">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+</div>
+
+<modal-window modalWindowId="{{ addNewRouteModalId }}">
+  <new-route-form (saveEvent)="createNewRoute($event)" (afterSaveEvent)="closeModal(addNewRouteModalId)">
+  </new-route-form>
+</modal-window>
