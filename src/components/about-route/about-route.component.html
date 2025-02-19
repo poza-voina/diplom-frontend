@@ -1,0 +1,44 @@
+<div>{{ this.routeId }}</div>
+<div class="container d-flex flex-row" *ngIf="routeItem != null">
+  <div class="container container-sm d-flex flex-column" style="max-width: 400px">
+    <div class="map-container ratio-1x1 mb-3">
+      <map class="map" [mapPoints]="mapPoints"></map>
+    </div>
+    <button class="btn btn-primary">Изменить маршрут</button>
+  </div>
+  <div class="container container-lg d-flex flex-column">
+    <div [ngSwitch]="routeCardStatus" class="card mb-3">
+      <div class="card-header">
+        <h4>
+          <ng-container *ngSwitchCase="RouteCardStatus.None">{{ routeItem.title }}</ng-container>
+          <input *ngSwitchCase="RouteCardStatus.Editing" class="form-control heading-input" value="{{routeItem.title}}">
+        </h4>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">Описание маршрута</h5>
+        <p *ngSwitchCase="RouteCardStatus.None" class="card-text">{{ routeItem.description }}</p>
+        <textarea *ngSwitchCase="RouteCardStatus.Editing" class="form-control">{{ routeItem.description}}</textarea>
+        <button *ngSwitchCase="RouteCardStatus.None" class="btn btn-primary" (click)="ToggleEditRouteCard()">Изменить</button>
+        <button *ngSwitchCase="RouteCardStatus.Editing" class="btn btn-primary" (click)="ToggleEditRouteCard()">Сохранить</button>
+      </div>
+    </div>
+
+    <table class="table">
+      <thead>
+      <tr>
+        <th>Дата начала</th>
+        <th>Дата окончания</th>
+        <th>Дата создания</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of routeExamples">
+          <td>{{ item.creationDateTime }}</td>
+          <td>{{ item.startDateTime }}</td>
+          <td>{{ item.endDateTime }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

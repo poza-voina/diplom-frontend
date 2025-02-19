@@ -8,6 +8,7 @@ import {GetRoutesDto} from '../../services/GetRoutesDto';
 import {ModalWindowComponent} from '../base/modal-window/modal-window.component';
 import {NewRouteFormComponent} from '../forms/new-route-form/new-route-form.component';
 import * as bootstrap from 'bootstrap';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-routes',
@@ -37,7 +38,7 @@ export class RoutesComponent {
   private pageNumber: number = 1;
   private countPerPage: number = 10;
 
-  constructor(private routeService: RouteService) {}
+  constructor(private routeService: RouteService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadRoutes();
@@ -62,8 +63,8 @@ export class RoutesComponent {
       });
   }
 
-  goToRoute(id: number | null) {
-    console.log(`Переход к маршруту с ID ${id}`);
+  goToRoute(id: number): void {
+    this.router.navigate(['/admin/route', id]);
   }
 
   showRoute(item: RouteItem) {

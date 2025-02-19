@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {RouteItem} from '../data/RouteItem';
 import {GetRoutesDto} from './GetRoutesDto';
+import {RouteExampleItem} from '../data/RouteExampleItem';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,14 @@ export class RouteService {
   private apiUrl = 'https://localhost:5233/api/routes';
 
   constructor(private http: HttpClient) { }
+
+  getRoute(id: number): Observable<RouteItem> {
+    return this.http.get<RouteItem>(`${this.apiUrl}/${id}`);
+  }
+
+  getRouteExamples(id: number): Observable<RouteExampleItem[]> {
+    return this.http.get<RouteExampleItem[]>(`${this.apiUrl}/${id}/examples`);
+  }
 
   getRoutes(dto: GetRoutesDto): Observable<RouteItem[]> {
     let params = new HttpParams();
