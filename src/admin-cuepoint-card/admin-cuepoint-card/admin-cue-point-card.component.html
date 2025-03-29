@@ -1,0 +1,75 @@
+<div *ngIf="routeCuePointItem" class="card mt-2">
+  <app-admin-cue-point-card-header (onTabClick)="navBarStatus=$event"
+                                   (onToggleExpand)="isExpanded=$event"
+                                   (onMoveHigher)="onMoveHigher.emit()"
+                                   (onMoveLower)="onMoveLower.emit()"></app-admin-cue-point-card-header>
+
+  <div class="card-body" [ngSwitch]="navBarStatus">
+    <div *ngSwitchCase="NavBarStatus.Name" [ngSwitch]="cuePointStatus" class="card-text">
+      <h4 class="card-title">
+        <ng-container *ngSwitchCase="CuePointStatus.None">{{ routeCuePointItem.title }}</ng-container>
+        <input *ngSwitchCase="CuePointStatus.Editing" class="form-control heading-input"
+               [(ngModel)]="routeCuePointItem.title">
+      </h4>
+      <ng-container *ngIf="isExpanded">
+        <h5 class="card-subtitle mb-2 text-muted">Описание маршрута</h5>
+        <div class="card-text">
+          <p *ngSwitchCase="CuePointStatus.None" class="card-text">{{ routeCuePointItem.description }}</p>
+          <textarea *ngSwitchCase="CuePointStatus.Editing" [(ngModel)]="routeCuePointItem.description"
+                    class="form-control"></textarea>
+        </div>
+      </ng-container>
+    </div>
+
+    <div class="card-text">
+      <div *ngSwitchCase="NavBarStatus.Address" class="card-text">
+        <h4 class="card-title">
+          <ng-container
+            *ngIf="addressStatus === AddressStatus.None">{{ checkAddress() ? routeCuePointItem.address : "Адрес не указан" }}
+          </ng-container>
+          <input
+            *ngIf="addressStatus !== AddressStatus.None"
+            class="form-control heading-input"
+            [(ngModel)]="routeCuePointItem.address"
+            (input)="onAddressInput($event)"
+            (focus)="showSuggestions = true"
+            (blur)="hideSuggestions()"
+          >
+
+          <div *ngIf="showSuggestions && addressSuggestions.length > 0" class="dropdown">
+            <button *ngFor="let suggestion of addressSuggestions"
+                    (mousedown)="selectAddress(suggestion)"
+                    class="dropdown-item">
+              {{ suggestion }}
+            </button>
+          </div>
+        </h4>
+      </div>
+    </div>
+  </div>
+  <div [ngSwitch]="navBarStatus" class="card-footer d-flex justify-content-between flex-row">
+    <div>
+      <button [ngSwitch]="cuePointStatus" *ngSwitchCase="NavBarStatus.Name" class="btn btn-primary"
+              (click)="toggleEditCuePoint()">
+        <ng-container *ngSwitchCase="CuePointStatus.None">Изменить</ng-container>
+        <ng-container *ngSwitchCase="CuePointStatus.Editing">Сохранить</ng-container>
+      </button>
+
+      <button *ngSwitchCase="NavBarStatus.Address"
+              (click)="toggleEditAddress()"
+              class="btn btn-primary">
+        <ng-container *ngIf="addressStatus === AddressStatus.None">Изменить</ng-container>
+        <ng-container *ngIf="addressStatus !== AddressStatus.None">Сохранить
+          <div *ngIf="addressStatus === AddressStatus.Saving"
+               class="spinner-border text-white spinner-border-sm ms-2" role="status">
+            <span class="visually-hidden">Загрузка</span>
+          </div>
+        </ng-container>
+      </button>
+    </div>
+    <div class="d-flex flex-column">
+      <button *ngIf="!(routeCuePointItem.latitude && routeCuePointItem.longitude && routeCuePointItem.address)" class="btn"><i
+        class="bi bi-exclamation-circle"></i></button>
+    </div>
+  </div>
+</div>

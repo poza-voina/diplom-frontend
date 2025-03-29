@@ -4,17 +4,17 @@ import {YandexMapService} from '../../../services/YandexMapService';
 
 
 @Component({
-  selector: 'map',
+  selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
 export class MapComponent implements OnInit, OnDestroy {
 
-  @Input() mapPoints: [number, number][] = [];
+  mapPoints: [number, number][] = [];
   private map: any;
 
   constructor(
-    private yandexMapService: YandexMapService,
+    public yandexMapService: YandexMapService,
     private el: ElementRef
   ) {}
 
@@ -31,7 +31,6 @@ export class MapComponent implements OnInit, OnDestroy {
   initializeMap() {
     this.yandexMapService.initializeMap("mapContainer", this.mapPoints).then((map: any) => {
       this.map = map;
-      this.addPointsToMap(this.mapPoints);
     })
   }
 

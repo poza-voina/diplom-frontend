@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {RouteItem} from '../data/RouteItem';
 import {GetRoutesDto} from './GetRoutesDto';
 import {RouteExampleItem} from '../data/RouteExampleItem';
+import {IRouteCuePointItem} from '../data/CuePoint';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,10 @@ export class RouteService {
 
   getRouteExamples(id: number): Observable<RouteExampleItem[]> {
     return this.http.get<RouteExampleItem[]>(`${this.apiUrl}/${id}/examples`);
+  }
+
+  getRouteCuePoints(id: number) : Observable<IRouteCuePointItem[]> {
+    return this.http.get<IRouteCuePointItem[]>(`${this.apiUrl}/${id}/cue-points`);
   }
 
   getRoutes(dto: GetRoutesDto): Observable<RouteItem[]> {
@@ -49,5 +54,10 @@ export class RouteService {
     return this.http.post<RouteItem>(this.apiUrl, route, {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     });
+  }
+
+  updateRouteCuePoints(cuePointItems: IRouteCuePointItem[]): Observable<IRouteCuePointItem[]> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.put<IRouteCuePointItem[]>(this.apiUrl + "/update-cue-points", cuePointItems, { headers });
   }
 }

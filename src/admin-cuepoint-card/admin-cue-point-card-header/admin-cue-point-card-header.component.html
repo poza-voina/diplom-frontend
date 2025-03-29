@@ -1,0 +1,19 @@
+<div class="card-header d-flex flex-row justify-content-between">
+  <div>
+    <ul class="nav nav-tabs card-header-tabs">
+      <li class="nav-item" *ngFor="let item of navBarStatusHelper.getKeys(); let i = index">
+        <button [ngClass]="{'nav-link': true, 'active': i === activeTabIndex}"
+                (click)="handleTabClick(item, i)">{{ navBarStatusHelper.getDescription(item) }}
+        </button>
+      </li>
+    </ul>
+  </div>
+  <div>
+    <button class="btn btn-sm btn-secondary m-1" (click)="onMoveHigher.emit()"><i class="bi bi-arrow-up-short"></i></button>
+    <button class="btn btn-sm btn-secondary m-1" (click)="onMoveLower.emit()"><i class="bi bi-arrow-down-short"></i></button>
+    <button class="btn btn-sm btn-secondary m-1" (click)="handleToggleExpand()">
+      <i *ngIf="!isExpanded" class="bi bi-chevron-down"></i>
+      <i *ngIf="isExpanded" class="bi bi-chevron-up"></i>
+    </button>
+  </div>
+</div>
