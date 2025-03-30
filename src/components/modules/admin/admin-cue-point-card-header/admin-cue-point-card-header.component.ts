@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Output} from '@angular/core';
-import {NavBarStatus, NavBarStatusHelper} from '../../enums/nav-bar.status';
+import {NavBarStatus, NavBarStatusHelper} from '../../../../enums/nav-bar.status';
+
 
 @Component({
   selector: 'app-admin-cue-point-card-header',
@@ -7,6 +8,7 @@ import {NavBarStatus, NavBarStatusHelper} from '../../enums/nav-bar.status';
   styleUrl: './admin-cue-point-card-header.component.css',
   standalone: false
 })
+
 export class AdminCuePointCardHeaderComponent {
 
   @Output() public onTabClick = new EventEmitter<NavBarStatus>();
@@ -18,7 +20,7 @@ export class AdminCuePointCardHeaderComponent {
   activeTabIndex: number = 0;
   isExpanded = false;
 
-  handleTabClick(status: NavBarStatus, tabIndex: number) : void {
+  handleTabClick(status: NavBarStatus, tabIndex: number): void {
     this.activeTabIndex = tabIndex;
     this.onTabClick.emit(status);
   }

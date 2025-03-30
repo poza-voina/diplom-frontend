@@ -16,17 +16,17 @@ import {CuePointCard, ICuePointCard} from '../../dto/ICuePointCard';
 import {CuePointStatus} from '../../enums/cue-point.status';
 import {NavBarStatus} from '../../enums/nav-bar.status';
 import {NgForOf, NgIf} from '@angular/common';
-import {AdminCuePointCardModule} from '../../admin-cuepoint-card/admin-cue-point-card.module';
 import {RouteCuePointItem} from '../../data/CuePoint';
 import {AddressStatus} from '../../enums/address.status';
+import {AdminModule} from '../modules/admin/admin.module';
 
 @Component({
   selector: 'app-route-map',
   imports: [
     MapComponent,
     NgForOf,
-    AdminCuePointCardModule,
-    NgIf
+    NgIf,
+    AdminModule
   ],
   templateUrl: './route-map.component.html',
   styleUrl: './route-map.component.css'

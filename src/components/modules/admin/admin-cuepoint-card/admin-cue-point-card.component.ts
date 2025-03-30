@@ -1,13 +1,10 @@
 import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {ICuePointCard} from '../../dto/ICuePointCard';
-import {NavBarStatus, NavBarStatusHelper} from '../../enums/nav-bar.status';
-import {CuePointStatus} from '../../enums/cue-point.status';
-import {AddressStatus} from '../../enums/address.status';
-import {YandexMapService} from '../../services/YandexMapService';
-import {YandexSuggestionsService} from '../../services/yandex-suggest-service';
-import {map, take, tap} from 'rxjs';
-import {MapService} from '../../services/map-service';
-import {IRouteCuePointItem, RouteCuePointItem} from '../../data/CuePoint';
+import {IRouteCuePointItem} from '../../../../data/CuePoint';
+import { AddressStatus } from '../../../../enums/address.status';
+import { NavBarStatus, NavBarStatusHelper } from '../../../../enums/nav-bar.status';
+import { CuePointStatus } from '../../../../enums/cue-point.status';
+import {YandexSuggestionsService} from '../../../../services/yandex-suggest-service';
+import {MapService} from '../../../../services/map-service';
 
 @Component({
   selector: 'app-admin-cue-point-card',
