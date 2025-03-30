@@ -4,8 +4,6 @@ import {RouteService} from '../../services/RouteService';
 import {RouteItem} from '../../data/RouteItem';
 import {tap} from 'rxjs';
 import {NgForOf, NgIf, NgSwitch, NgSwitchCase} from '@angular/common';
-import {CKEditorModule} from '@ckeditor/ckeditor5-angular';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {FormsModule} from '@angular/forms';
 import {RouteExampleItem} from '../../data/RouteExampleItem';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -16,7 +14,6 @@ import {ActivatedRoute, Router} from '@angular/router';
   imports: [
     MapComponent,
     NgIf,
-    CKEditorModule,
     FormsModule,
     NgSwitch,
     NgSwitchCase,
