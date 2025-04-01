@@ -1,0 +1,10 @@
+.last {
+  display: inline-block;
+  color: white;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  content: '/';
+  color: #fff;
+  margin: 0 0.5rem;
+}

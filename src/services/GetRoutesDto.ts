@@ -1,4 +1,4 @@
-import {RoutesSort} from "../components/routes/routesSort";
+import {RoutesSort} from '../components/modules/admin/admin-routes/routesSort';
 
 class RoutesFilter {
 }

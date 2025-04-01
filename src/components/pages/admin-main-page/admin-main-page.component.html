@@ -1,0 +1,6 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+  <app-breadcrumb></app-breadcrumb>
+</nav>
+
+<app-admin-dashboard *ngIf="isMain()"></app-admin-dashboard>
+<router-outlet *ngIf="!isMain()"></router-outlet>

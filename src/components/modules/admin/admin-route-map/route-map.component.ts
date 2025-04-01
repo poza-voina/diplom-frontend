@@ -1,27 +1,15 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  HostListener,
-  NgZone,
-  OnInit,
-  ViewChild
-} from '@angular/core';
-import {RouteService} from '../../services/RouteService';
-import {map} from 'rxjs';
-import {ActivatedRoute, Router} from '@angular/router';
-import {MapComponent} from '../base/map/map.component';
-import {CuePointCard, ICuePointCard} from '../../dto/ICuePointCard';
-import {CuePointStatus} from '../../enums/cue-point.status';
-import {NavBarStatus} from '../../enums/nav-bar.status';
+import {AfterViewInit, ChangeDetectorRef, Component, HostListener, OnInit, ViewChild} from "@angular/core";
+import {MapComponent} from '../../../base/map/map.component';
 import {NgForOf, NgIf} from '@angular/common';
-import {RouteCuePointItem} from '../../data/CuePoint';
-import {AddressStatus} from '../../enums/address.status';
-import {AdminModule} from '../modules/admin/admin.module';
+import {AdminModule} from '../admin.module';
+import {CuePointCard, ICuePointCard} from '../../../../dto/ICuePointCard';
+import {ActivatedRoute, Router} from '@angular/router';
+import {RouteService} from '../../../../services/RouteService';
+import {map} from 'rxjs';
+import {RouteCuePointItem} from '../../../../data/CuePoint';
 
 @Component({
-  selector: 'app-route-map',
+  selector: 'app-admin-route-map',
   imports: [
     MapComponent,
     NgForOf,
@@ -63,7 +51,7 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
   }
 
   loadCuePoints() {
-    this.routeService.getRouteCuePoints(1)
+    this.routeService.getRouteCuePoints(this.routeId)
       .pipe(
         map(x => x.map(y => new CuePointCard({CuePointCard: y, isHovered: false, sortIndex: y.sortIndex}))))
       .subscribe(
@@ -121,8 +109,13 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
     cuePointCard.isHovered = !cuePointCard.isHovered;
   }
 
-  handleAddNewCard(parentCard: ICuePointCard) {
-    this.insertCard(parentCard, new CuePointCard({isHovered: false, sortIndex: -1, CuePointCard: RouteCuePointItem.createEmpty()}));
+  handleAddNewCard(parentCard: ICuePointCard | null = null): void {
+    let cuePointCard = new CuePointCard({isHovered: false, sortIndex: -1, CuePointCard: RouteCuePointItem.createEmpty()});
+    if (!parentCard) {
+      this.cuePointCards.push(cuePointCard);
+    } else {
+      this.insertCard(parentCard, cuePointCard);
+    }
   }
 
   saveRoute() {

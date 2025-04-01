@@ -1,25 +1,27 @@
-<div class="container container-lg">
-  <nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container-fluid justify-content-between p-0">
-      <button class="btn btn-primary" (click)="goToRoute()">Вернуться к маршруту</button>
-      <button class="btn btn-primary" (click)="saveRoute()">Сохранить
-        <div *ngIf="isSavingCuePoints" class="spinner-border text-white spinner-border-sm ms-2" role="status">
-          <span class="visually-hidden">Загрузка</span>
-        </div></button>
-    </div>
-  </nav>
-</div>
-
 <div class="container container-lg d-flex flex-column flex-md-row p-0">
   <div class="container container-sm d-flex flex-column mt-2" style="max-width: 400px">
     <div class="map-container ratio-1x1 mb-3">
       <app-map class="map"></app-map>
     </div>
+    <button class="btn btn-primary" (click)="saveRoute()">Сохранить
+      <div *ngIf="isSavingCuePoints" class="spinner-border text-white spinner-border-sm ms-2" role="status">
+        <span class="visually-hidden">Загрузка</span>
+      </div></button>
   </div>
 
   <div class="container p-0">
     <div class="container">
-      <ng-container *ngFor="let item of this.cuePointCards">
+      <div *ngIf="this.cuePointCards.length === 0" class="d-flex flex-column align-content-center">
+        <div style="text-align: center; padding: 20px; font-family: Arial, sans-serif;">
+          <p style="font-size: 24px; font-weight: bold; color: #333; background-color: #f4f4f4; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            В этом маршруте еще нет ключевых точек
+          </p>
+        </div>
+        <button (click)="handleAddNewCard()" class="btn btn-sm btn-primary align-content-center">Добавить новую
+          ключевую точку <i
+            class="bi bi-plus"></i></button>
+      </div>
+      <div *ngFor="let item of this.cuePointCards">
         <div (mouseenter)="handleCuePointCardEnterToggle(item)" (mouseleave)="handleCuePointCardEnterToggle(item)">
           <app-admin-cue-point-card [routeCuePointItem]="item.cuePointItem" (onMoveLower)="moveLower(item.sortIndex)"
                                     (onMoveHigher)="moveHigher(item.sortIndex)"></app-admin-cue-point-card>
@@ -29,7 +31,7 @@
                 class="bi bi-plus"></i></button>
           </div>
         </div>
-      </ng-container>
+      </div>
     </div>
     <div>
       <button *ngIf="showScrollButton" (click)="scrollTop()" class="btn btn-primary">Вернуться в начало</button>

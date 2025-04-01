@@ -11,13 +11,13 @@
       <div class="card-header">
         <h4>
           <ng-container *ngSwitchCase="RouteCardStatus.None">{{ routeItem.title }}</ng-container>
-          <input *ngSwitchCase="RouteCardStatus.Editing" class="form-control heading-input" value="{{routeItem.title}}">
+          <input *ngSwitchCase="RouteCardStatus.Editing" [(ngModel)]="routeItem.title" class="form-control heading-input" value="{{routeItem.title}}">
         </h4>
       </div>
       <div class="card-body">
         <h5 class="card-title">Описание маршрута</h5>
         <p *ngSwitchCase="RouteCardStatus.None" class="card-text">{{ routeItem.description }}</p>
-        <textarea *ngSwitchCase="RouteCardStatus.Editing" class="form-control">{{ routeItem.description}}</textarea>
+        <textarea *ngSwitchCase="RouteCardStatus.Editing" [(ngModel)]="routeItem.description" class="form-control">{{ routeItem.description}}</textarea>
         <button *ngSwitchCase="RouteCardStatus.None" class="btn btn-primary" (click)="ToggleEditRouteCard()">Изменить</button>
         <button *ngSwitchCase="RouteCardStatus.Editing" class="btn btn-primary" (click)="ToggleEditRouteCard()">Сохранить</button>
       </div>

@@ -1,17 +1,17 @@
 import {Component, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {tap} from 'rxjs';
-import {RouteService} from '../../services/RouteService';
-import {RouteItem} from '../../data/RouteItem';
 import {RoutesSort} from './routesSort';
-import {GetRoutesDto} from '../../services/GetRoutesDto';
-import {ModalWindowComponent} from '../base/modal-window/modal-window.component';
-import {NewRouteFormComponent} from '../forms/new-route-form/new-route-form.component';
 import * as bootstrap from 'bootstrap';
 import {Router} from '@angular/router';
+import { NewRouteFormComponent } from '../../../forms/new-route-form/new-route-form.component';
+import {ModalWindowComponent} from '../../../base/modal-window/modal-window.component';
+import {RouteItem} from '../../../../data/RouteItem';
+import {RouteService} from '../../../../services/RouteService';
+import {GetRoutesDto} from '../../../../services/GetRoutesDto';
 
 @Component({
-  selector: 'app-routes',
+  selector: 'app-admin-routes',
   standalone: true,  // Если используете standalone компоненты в Angular
   imports: [CommonModule, ModalWindowComponent, NewRouteFormComponent],  // Добавьте CommonModule для работы с ngFor
   templateUrl: './routes.component.html',
@@ -64,10 +64,11 @@ export class RoutesComponent {
   }
 
   goToRoute(id: number): void {
-    this.router.navigate(['/admin/route', id]);
+    this.router.navigate(['/admin/routes', id]);
   }
 
-  showRoute(item: RouteItem) {
+  showRoute(event: Event, item: RouteItem) {
+    event.stopPropagation();
     let buffer: RouteItem = {...item};
     this.routesStatuses.setStatus(item, RouteStatus.ToggleVisibility)
     this.routeService.updateRoute(buffer).pipe()
@@ -82,7 +83,8 @@ export class RoutesComponent {
       });
   }
 
-  hideRoute(item: RouteItem) {
+  hideRoute(event: Event, item: RouteItem) {
+    event.stopPropagation();
     let buffer: RouteItem = {...item};
     this.routesStatuses.setStatus(item, RouteStatus.ToggleVisibility)
     this.routeService.updateRoute(buffer).pipe()

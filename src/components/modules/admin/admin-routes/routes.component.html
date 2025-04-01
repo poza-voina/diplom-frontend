@@ -52,7 +52,7 @@
         </div>
         <div class="card-footer">
           <div class="btn-group">
-            <button (click)="item.isHidden ? showRoute(item) : hideRoute(item)" class="btn btn-primary btn-sm">
+            <button (click)="item.isHidden ? showRoute($event, item) : hideRoute($event, item)" class="btn btn-primary btn-sm">
               <i *ngIf="item.isHidden" class="bi bi-eye-slash"></i>
               <i *ngIf="!item.isHidden" class="bi bi-eye"></i>
               <div *ngIf="routesStatuses.getStatus(item) == RouteStatus.ToggleVisibility" class="spinner-border text-white spinner-border-sm ms-2" role="status">
