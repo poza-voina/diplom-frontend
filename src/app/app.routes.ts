@@ -1,13 +1,73 @@
 import {Routes} from '@angular/router';
-import {AdminMainPageComponent} from '../components/pages/admin-main-page/admin-main-page.component';
-import {RoutesComponent} from '../components/modules/admin/admin-routes/routes.component';
-import {AboutRouteComponent} from '../components/modules/admin/admin-about-route/about-route.component';
-import {RouteMapComponent} from '../components/modules/admin/admin-route-map/route-map.component';
-import {AdminDashboardComponent} from '../components/modules/admin/admin-dashboard/admin-dashboard.component';
 import {TestComponent} from '../components/test/test.component';
+import {MainPageComponent} from '../components/modules/user/pages/main-page/main-page.component';
+import {MainWrapperComponent} from '../components/modules/user/wrappers/main-wrapper/main-wrapper.component';
+import {
+  UserRegistrationPageComponent
+} from '../components/modules/user/pages/registration-page/user-registration-page.component';
+import {
+  UserAuthorizationPageComponent
+} from '../components/modules/user/pages/authorization-page/user-authorization-page.component';
+import {AdminMainPageComponent} from '../components/pages/admin-main-page/admin-main-page.component';
+import {AdminDashboardComponent} from '../components/modules/admin/admin-dashboard/admin-dashboard.component';
+import {AboutRouteComponent} from '../components/modules/admin/admin-about-route/about-route.component';
+import {RoutesComponent} from '../components/modules/admin/admin-routes/routes.component';
+import {RouteMapComponent} from '../components/modules/admin/admin-route-map/route-map.component';
+import {CatalogWrapperComponent} from '../components/modules/user/wrappers/catalog-wrapper/catalog-wrapper.component';
+import {
+  RoutesCatalogPageComponent
+} from '../components/modules/user/pages/catalogs/routes-catalog-page/routes-catalog-page.component';
+import {
+  RoutesCategoriesCatalogPageComponent
+} from '../components/modules/user/pages/catalogs/routes-categories-catalog-page/routes-categories-catalog-page.component';
+import {
+  FavoriteRoutesCatalogPageComponent
+} from '../components/modules/user/pages/catalogs/favorite-routes-catalog-page/favorite-routes-catalog-page.component';
+import {
+  ReservationRoutesCatalogPageComponent
+} from '../components/modules/user/pages/catalogs/reservation-routes-catalog-page/reservation-routes-catalog-page.component';
 
 export const routes: Routes = [
   {path: 'test', component: TestComponent},
+  {
+    path: '',
+    component: MainPageComponent,
+  },
+  {
+    path: 'routes',
+    component: MainWrapperComponent,
+    children: [
+      {
+        path: '', component: CatalogWrapperComponent, children: [
+          {
+            path: '',
+            component: RoutesCatalogPageComponent,
+          },
+          {
+            path: 'categories',
+            component: RoutesCategoriesCatalogPageComponent,
+          },
+          {
+            path: 'favorites',
+            component: FavoriteRoutesCatalogPageComponent,
+          },
+          {
+            path: 'reservation',
+            component: ReservationRoutesCatalogPageComponent,
+          }
+        ]
+      },
+    ]
+  },
+  {
+    path: "registration",
+    component: UserRegistrationPageComponent,
+  },
+  {
+    path: "authorization",
+    component: UserAuthorizationPageComponent,
+  },
+
   {
     path: 'admin',
     component: AdminMainPageComponent,

@@ -3,3 +3,8 @@ export enum RoutesSort {
   ByTitle = 'ByTitle',
   ByCreating = 'ByCreating',
 }
+
+export enum RoutesFilter {
+  ShowVisible = 'ShowVisible',
+  ShowHidden = 'ShowHidden',
+}

@@ -1,0 +1,49 @@
+<!-- home.component.html -->
+<div class="container-fluid p-0">
+
+  <!-- Hero Section -->
+  <section class="hero-section d-flex align-items-center justify-content-center text-center text-white"
+           style="height: 90vh; background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('assets/hero.jpg') center/cover no-repeat;">
+    <div>
+      <h1 class="display-4 fw-bold">Откройте новые горизонты</h1>
+      <p class="lead mb-4">Планируйте и бронируйте незабываемые путешествия</p>
+      <a routerLink="/routes" class="btn btn-outline-light btn-lg">Посмотреть маршруты</a>
+    </div>
+  </section>
+
+  <!-- Cards Section -->
+  <section class="container py-5">
+    <div class="row g-4 text-center">
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body">
+            <i class="bi bi-map fs-1 text-primary"></i>
+            <h5 class="card-title mt-3">Маршруты</h5>
+            <p class="card-text">Готовые маршруты с детальной информацией, временем и локациями.</p>
+            <a routerLink="/routes" class="btn btn-sm btn-outline-primary">Перейти</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body">
+            <i class="bi bi-geo-alt-fill fs-1 text-success"></i>
+            <h5 class="card-title mt-3">Точки интереса</h5>
+            <p class="card-text">Описания, фото и координаты ключевых точек маршрутов.</p>
+            <a routerLink="/points" class="btn btn-sm btn-outline-success">Подробнее</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body">
+            <i class="bi bi-person-lines-fill fs-1 text-warning"></i>
+            <h5 class="card-title mt-3">Профиль</h5>
+            <p class="card-text">Управляйте бронированиями, личной информацией и настройками.</p>
+            <a routerLink="/profile" class="btn btn-sm btn-outline-warning">В профиль</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

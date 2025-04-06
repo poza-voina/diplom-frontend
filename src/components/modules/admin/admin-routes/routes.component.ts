@@ -1,7 +1,7 @@
 import {Component, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {tap} from 'rxjs';
-import {RoutesSort} from './routesSort';
+import {RoutesFilter, RoutesSort} from './routesSort';
 import * as bootstrap from 'bootstrap';
 import {Router} from '@angular/router';
 import { NewRouteFormComponent } from '../../../forms/new-route-form/new-route-form.component';
@@ -12,10 +12,10 @@ import {GetRoutesDto} from '../../../../services/GetRoutesDto';
 
 @Component({
   selector: 'app-admin-routes',
-  standalone: true,  // Если используете standalone компоненты в Angular
-  imports: [CommonModule, ModalWindowComponent, NewRouteFormComponent],  // Добавьте CommonModule для работы с ngFor
+  standalone: true,
+  imports: [CommonModule, ModalWindowComponent, NewRouteFormComponent],
   templateUrl: './routes.component.html',
-  styleUrls: ['./routes.component.css']  // Правильное имя свойства
+  styleUrls: ['./routes.component.css']
 })
 
 export class RoutesComponent {
@@ -163,12 +163,6 @@ export class RoutesComponent {
     }
     this.loadRoutes();
   }
-}
-
-
-enum RoutesFilter {
-  ShowHidden = "ShowHidden",
-  ShowVisible = "ShowVisible",
 }
 
 enum RoutesLoadingStatus {

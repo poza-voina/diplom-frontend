@@ -1,0 +1,9 @@
+<div class="container mt-3 mb-0 text-center p-3">
+  <h2 class="m-0">{{ header }}</h2>
+</div>
+<div class="container d-flex flex-row">
+  <app-routes-side-bar></app-routes-side-bar>
+  <div class="container">
+    <router-outlet (activate)="onActivate($event)"></router-outlet>
+  </div>
+</div>
