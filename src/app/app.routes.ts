@@ -26,6 +26,9 @@ import {
 import {
   ReservationRoutesCatalogPageComponent
 } from '../components/modules/user/pages/catalogs/reservation-routes-catalog-page/reservation-routes-catalog-page.component';
+import {
+  AdminRoutesCategoriesComponent
+} from '../components/modules/admin/admin-routes-categories/admin-routes-categories.component';
 
 export const routes: Routes = [
   {path: 'test', component: TestComponent},
@@ -80,6 +83,10 @@ export const routes: Routes = [
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'
+      },
+      {
+        path: 'categories',
+        component: AdminRoutesCategoriesComponent
       },
       {
         path: 'dashboard',
