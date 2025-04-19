@@ -1,3 +1,6 @@
+import {RouteCategoryItem} from './RouteCategoryItem';
+import {CategoryItem} from '../dto/CategoryItem';
+
 export interface RouteItem {
   id: number;
   title: string;
@@ -7,4 +10,5 @@ export interface RouteItem {
   baseCost: number | null;
   creationDateTime: string;
   isHidden: boolean;
+  routeCategories: CategoryItem[];
 }

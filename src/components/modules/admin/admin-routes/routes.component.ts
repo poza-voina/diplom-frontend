@@ -8,7 +8,7 @@ import { NewRouteFormComponent } from '../../../forms/new-route-form/new-route-f
 import {ModalWindowComponent} from '../../../base/modal-window/modal-window.component';
 import {RouteItem} from '../../../../data/RouteItem';
 import {RouteService} from '../../../../services/RouteService';
-import {GetRoutesDto} from '../../../../services/GetRoutesDto';
+import {GetRoutesDto} from '../../../../dto/GetRoutesDto';
 
 @Component({
   selector: 'app-admin-routes',

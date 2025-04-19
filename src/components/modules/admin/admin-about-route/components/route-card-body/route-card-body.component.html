@@ -1,0 +1,14 @@
+<ng-container [ngSwitch]="routeCardStatus" *ngIf="routeItem">
+  <h5 class="card-title">
+    <ng-container *ngSwitchCase="RouteCardStatus.None">{{ routeItem.title }}</ng-container>
+    <input *ngSwitchCase="RouteCardStatus.Editing" [(ngModel)]="routeItem.title"
+           class="form-control heading-input" value="{{routeItem.title}}">
+  </h5>
+  <h6 class="card-subtitle">Описание маршрута</h6>
+  <p *ngSwitchCase="RouteCardStatus.None" class="card-text">{{ routeItem.description }}</p>
+  <textarea *ngSwitchCase="RouteCardStatus.Editing" [(ngModel)]="routeItem.description"
+            class="form-control">{{ routeItem.description }}</textarea>
+</ng-container>
+<ng-container *ngIf="!routeItem">
+  <h5 class="card-title">Не удалось найти информацию о маршруте</h5>
+</ng-container>

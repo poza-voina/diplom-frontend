@@ -1,0 +1,33 @@
+<div class="container d-flex flex-column align-items-center" [ngSwitch]="routeCardStatus">
+  <ul class="list-group mb-2 w-100">
+    <li *ngFor="let item of getCategories()"
+        class="list-group-item list-group-item-custom d-flex justify-content-between align-items-center">
+      <div *ngIf="isShowingAllCategories || isChecked(item)" class="d-flex flex-row">
+        <input *ngSwitchCase="RouteCardStatus.Editing"
+               class="form-check-input me-2"
+               type="checkbox"
+               [value]="item"
+               [checked]="isChecked(item)"
+               (change)="toggleCategory(item)"
+        />
+        {{ item.title }}
+      </div>
+    </li>
+  </ul>
+
+  <div *ngIf="routeCategories.length == 0 && this.routeCardStatus == RouteCardStatus.None" class="card-subtitle">У маршрута нет категорий</div>
+
+  <div *ngSwitchCase="RouteCardStatus.Editing" class="btn-group btn-group-sm" role="group">
+    <button class="btn btn-sm btn-secondary" (click)="toggleShowAllCategories()">
+      <ng-container *ngIf="!isShowingAllCategories">
+        Показать существующие категории
+      </ng-container>
+      <ng-container *ngIf="isShowingAllCategories">
+        Скрыть неиспользованные категории
+      </ng-container>
+    </button>
+    <button *ngIf="isShowingAllCategories" class="btn btn-sm btn-secondary">
+      Добавить новую категорию <i class="bi bi-plus"></i>
+    </button>
+  </div>
+</div>

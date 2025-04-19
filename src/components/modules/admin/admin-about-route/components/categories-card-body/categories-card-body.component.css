@@ -1,0 +1,11 @@
+.list-group-item-custom {
+  border-top: 1px solid #dee2e6;
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
+  border-radius: 0;
+}
+
+.list-group-item-custom:first-child {
+  border-top: none;
+}

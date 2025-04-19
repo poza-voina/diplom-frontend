@@ -2,8 +2,12 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {FilterRouteCategoriesRequest} from '../dto/FilterRouteCategoriesRequest';
 import { CategoryItem } from '../dto/CategoryItem';
-import {GetRoutesDto} from './GetRoutesDto';
 
+import {Injectable} from '@angular/core';
+
+@Injectable({
+  providedIn: 'root'
+})
 export class RouteCategoriesService {
   private defaultApiParams = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
 
@@ -15,9 +19,8 @@ export class RouteCategoriesService {
     return this.http.get<CategoryItem>(`${this.apiUrl}/${id}`);
   }
 
-  filter(request : FilterRouteCategoriesRequest): Observable<CategoryItem[]> {
-    // не работает!
-    return this.http.get<CategoryItem[]>(`${this.apiUrl}`, );
+  getAll(): Observable<CategoryItem[]> {
+    return this.http.get<CategoryItem[]>(`${this.apiUrl}`);
   }
 
   create(categoryItem: CategoryItem): Observable<CategoryItem> {

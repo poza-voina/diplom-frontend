@@ -1,0 +1,9 @@
+<div class="card-header">
+  <ul class="nav nav-tabs card-header-tabs">
+    <li class="nav-item" *ngFor="let item of navigationItems; let i = index">
+      <button [ngClass]="{'nav-link': true, 'active': i === activeTabIndex}"
+              (click)="handleTabClick(item, i)">{{ item.label }}
+      </button>
+    </li>
+  </ul>
+</div>

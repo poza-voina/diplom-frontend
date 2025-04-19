@@ -12,7 +12,7 @@
                [(ngModel)]="routeCuePointItem.title">
       </h4>
       <ng-container *ngIf="isExpanded">
-        <h5 class="card-subtitle mb-2 text-muted">Описание маршрута</h5>
+        <h5 class="card-subtitle mb-2 text-muted">Описание ключевой точки</h5>
         <div class="card-text">
           <p *ngSwitchCase="CuePointStatus.None" class="card-text">{{ routeCuePointItem.description }}</p>
           <textarea *ngSwitchCase="CuePointStatus.Editing" [(ngModel)]="routeCuePointItem.description"

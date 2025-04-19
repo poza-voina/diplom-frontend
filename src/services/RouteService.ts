@@ -2,9 +2,9 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {RouteItem} from '../data/RouteItem';
-import {GetRoutesDto} from './GetRoutesDto';
 import {RouteExampleItem} from '../data/RouteExampleItem';
 import {IRouteCuePointItem} from '../data/CuePoint';
+import {GetRoutesDto} from '../dto/GetRoutesDto';
 
 @Injectable({
   providedIn: 'root'
