@@ -1,6 +1,6 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {IRegistrationUserDto} from '../../../../../dto/IRegistrationUserDto';
-import {UserService} from '../../../../../services/UserService';
+import {UserService} from '../../../../../services/user.service';
 import {tap} from 'rxjs';
 
 @Component({

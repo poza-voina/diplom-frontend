@@ -4,7 +4,7 @@ import {NgForOf, NgIf} from '@angular/common';
 import {AdminModule} from '../admin.module';
 import {CuePointCard, ICuePointCard} from '../../../../dto/ICuePointCard';
 import {ActivatedRoute, Router} from '@angular/router';
-import {RouteService} from '../../../../services/RouteService';
+import {RouteService} from '../../../../services/route.service';
 import {map} from 'rxjs';
 import {RouteCuePointItem} from '../../../../data/CuePoint';
 

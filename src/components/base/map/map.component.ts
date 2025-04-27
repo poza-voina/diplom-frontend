@@ -1,6 +1,6 @@
 // map.component.ts
 import { Component, ElementRef, OnInit, OnDestroy, Input } from '@angular/core';
-import {YandexMapService} from '../../../services/YandexMapService';
+import {YandexMapService} from '../../../services/yandex-map.service';
 
 
 @Component({

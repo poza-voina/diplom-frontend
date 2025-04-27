@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {AdminModule} from '../../modules/admin/admin.module';
-import {RouterLink, Router, RouterOutlet} from '@angular/router';
+import {Router, RouterLink, RouterOutlet} from '@angular/router';
 import {BreadcrumbComponent} from '../../modules/admin/breadcrumb/breadcrumb.component';
 import {NgIf} from '@angular/common';
 import {AdminDashboardComponent} from '../../modules/admin/admin-dashboard/admin-dashboard.component';
+import {AuthService} from '../../../services/auth.service';
 
 @Component({
   selector: 'app-admin-main-page',
@@ -11,18 +12,42 @@ import {AdminDashboardComponent} from '../../modules/admin/admin-dashboard/admin
     AdminModule,
     RouterOutlet,
     BreadcrumbComponent,
-    RouterLink,
     NgIf,
-    AdminDashboardComponent
+    AdminDashboardComponent,
+    RouterLink
   ],
   templateUrl: './admin-main-page.component.html',
   styleUrl: './admin-main-page.component.css'
 })
-export class AdminMainPageComponent {
+export class AdminMainPageComponent implements OnInit {
+  constructor(private router: Router, private authService: AuthService, private cdr: ChangeDetectorRef) {
+  }
 
-  constructor(private router : Router) { }
+  ngOnInit(): void {
+    this.check()
+  }
 
   isMain() {
     return this.router.url === '/admin/dashboard';
+  }
+
+  check() {
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/admin/auth']).then(r => {
+        console.log('Маршрутизация выполнена', r);
+      }).catch(error => {
+        console.log('Ошибка маршрутизации', error);
+      });
+    }
+  }
+
+  isAuthenticated() {
+    console.log(`isAuthenticated = ${this.authService.isAuthenticated()}`);
+    return this.authService.isAuthenticated();
+  }
+
+  logout() {
+    this.authService.logout();
+    this.check();
   }
 }

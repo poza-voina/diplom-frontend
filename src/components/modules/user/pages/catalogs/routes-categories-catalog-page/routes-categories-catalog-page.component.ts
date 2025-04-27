@@ -3,7 +3,7 @@ import {
   DefaultCategoriesCatalogueComponent
 } from '../../../components/default-categories-catalog/default-categories-catalog.component';
 import {RouteCategoryItem} from '../../../../../../data/RouteCategoryItem';
-import {RouteCategoriesService} from '../../../../../../services/RouteCategoriesService';
+import {RouteCategoriesService} from '../../../../../../services/route-categories.service';
 import { CategoryItem } from '../../../../../../dto/CategoryItem';
 
 @Component({

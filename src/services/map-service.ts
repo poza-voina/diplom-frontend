@@ -1,14 +1,19 @@
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
+import {API_URLS} from '../api-routes.config';
+import {BaseApiService} from './base-api-service';
+import {AuthService} from './auth.service';
 
 @Injectable(
   {providedIn: 'root'}
 )
-export class MapService {
-  private apiUrl = 'https://localhost:5233/api/map/address';
+export class MapService extends BaseApiService {
+  private apiUrl = `${API_URLS.admins}/map/address`;
 
-  constructor(private http: HttpClient) {  }
+  constructor(http: HttpClient, authService: AuthService) {
+    super(http, authService);
+  }
 
   getAddressWithCoords(addressWithCoords: AddressWithCoords): Observable<AddressWithCoords> {
     let params = new HttpParams();
@@ -19,7 +24,7 @@ export class MapService {
       }
     });
 
-    return this.http.get<AddressWithCoords>(`${this.apiUrl}`, { params });
+    return this.http.get<AddressWithCoords>(`${this.apiUrl}`, { params, ...this.getOptions() });
   }
 }
 

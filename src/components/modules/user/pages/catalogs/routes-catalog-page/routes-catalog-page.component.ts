@@ -1,7 +1,7 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {DefaultCatalogueComponent} from '../../../components/default-catalog/default-catalog.component';
 import { RouteItem } from '../../../../../../data/RouteItem';
-import {RouteService} from '../../../../../../services/RouteService';
+import {RouteService} from '../../../../../../services/route.service';
 import {RoutesFilter} from '../../../../admin/admin-routes/routesSort';
 import {GetRoutesDto} from '../../../../../../dto/GetRoutesDto';
 

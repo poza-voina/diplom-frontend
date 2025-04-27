@@ -5,7 +5,6 @@ import {RouterOutlet} from '@angular/router';
 @Component({
   selector: 'app-catalog-wrapper',
   imports: [
-    RoutesSideBarComponent,
     RouterOutlet
   ],
   templateUrl: './catalog-wrapper.component.html',

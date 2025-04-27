@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {NgForOf, NgIf} from "@angular/common";
 import {RouteItem} from '../../../../../data/RouteItem';
-import {RouteService} from '../../../../../services/RouteService';
+import {RouteService} from '../../../../../services/route.service';
 
 @Component({
   selector: 'app-default-catalogue',

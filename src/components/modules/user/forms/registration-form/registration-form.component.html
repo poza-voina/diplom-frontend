@@ -1,6 +1,5 @@
 <div class="card shadow-sm">
-  <h5 class="card-title text-center mb-4">Регистрация</h5>
-  <div>
+  <div class="container">
     <div class="m-4">
       <label class="form-label">Электронная почта</label>
       <input [(ngModel)]="registrationUser.email" type="email" class="form-control" required>
@@ -29,9 +28,11 @@
       <label class="form-label">Повторите пароль</label>
       <input [(ngModel)]="registrationUser.repeatPassword" type="password" class="form-control" required>
     </div>
-    <button (click)="handleSendForm()" class="btn btn-primary w-100">Зарегистрироваться</button>
+    <div class="m-4">
+      <button (click)="handleSendForm()" class="btn btn-primary w-100">Зарегистрироваться</button>
+    </div>
   </div>
-  <div class="text-center mt-3">
+  <div class="text-center mb-4">
     <a href="#">Уже есть аккаунт? Войти</a>
   </div>
 </div>

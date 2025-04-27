@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import { RouteCategoriesService } from '../../../../services/RouteCategoriesService';
+import { RouteCategoriesService } from '../../../../services/route-categories.service';
 
 @Component({
   selector: 'app-admin-routes-categories',

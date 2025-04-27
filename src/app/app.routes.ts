@@ -29,19 +29,39 @@ import {
 import {
   AdminRoutesCategoriesComponent
 } from '../components/modules/admin/admin-routes-categories/admin-routes-categories.component';
+import {TestUserExampleComponent} from '../components/test-user-example/test-user-example.component';
+import {
+  AuthorizationPageComponent
+} from '../components/modules/admin/pages/authorization-page/authorization-page.component';
 
 export const routes: Routes = [
-  {path: 'test', component: TestComponent},
+  {path: 'test1', component: TestComponent},
+  {path: 'test2', component: TestUserExampleComponent},
   {
     path: '',
     component: MainPageComponent,
+  },
+  {
+    path: '',
+    component: MainWrapperComponent,
+    children: [
+      {
+        path: "registration",
+        component: UserRegistrationPageComponent,
+      },
+      {
+        path: "login",
+        component: UserAuthorizationPageComponent,
+      },
+    ]
   },
   {
     path: 'routes',
     component: MainWrapperComponent,
     children: [
       {
-        path: '', component: CatalogWrapperComponent, children: [
+        path: '', component: CatalogWrapperComponent,
+        children: [
           {
             path: '',
             component: RoutesCatalogPageComponent,
@@ -57,20 +77,15 @@ export const routes: Routes = [
           {
             path: 'reservation',
             component: ReservationRoutesCatalogPageComponent,
-          }
+          },
         ]
       },
     ]
   },
   {
-    path: "registration",
-    component: UserRegistrationPageComponent,
+    path: "admin/auth",
+    component: AuthorizationPageComponent
   },
-  {
-    path: "authorization",
-    component: UserAuthorizationPageComponent,
-  },
-
   {
     path: 'admin',
     component: AdminMainPageComponent,

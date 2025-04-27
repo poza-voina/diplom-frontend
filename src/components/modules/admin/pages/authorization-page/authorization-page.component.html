@@ -1,0 +1,13 @@
+<div class="container d-flex justify-content-center align-items-center vh-100">
+  <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
+
+    <h1 class="text-center mb-4">Вход в панель администратора</h1>
+
+    <div *ngIf="isLoginError" class="alert alert-danger text-center" role="alert">
+      Пользователь не найден
+    </div>
+
+    <app-authorization-form (completedForm)="handleCompletedForm($event)"></app-authorization-form>
+
+  </div>
+</div>

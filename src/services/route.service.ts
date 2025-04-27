@@ -5,26 +5,32 @@ import {RouteItem} from '../data/RouteItem';
 import {RouteExampleItem} from '../data/RouteExampleItem';
 import {IRouteCuePointItem} from '../data/CuePoint';
 import {GetRoutesDto} from '../dto/GetRoutesDto';
+import {API_URLS} from '../api-routes.config';
+import {AuthService} from './auth.service';
+import {AuthTokenNotFoundError} from '../exceptions/auth-token-not-found.error';
+import {BaseApiService} from './base-api-service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class RouteService {
+export class RouteService extends BaseApiService {
 
-  private apiUrl = 'https://localhost:5233/api/routes';
+  private apiUrl = `${API_URLS.admins}/routes`;
 
-  constructor(private http: HttpClient) { }
+  constructor(http: HttpClient, authService: AuthService) {
+    super(http, authService);
+  }
 
   getRoute(id: number): Observable<RouteItem> {
-    return this.http.get<RouteItem>(`${this.apiUrl}/${id}`);
+    return this.http.get<RouteItem>(`${this.apiUrl}/${id}`, this.getOptions());
   }
 
   getRouteExamples(id: number): Observable<RouteExampleItem[]> {
-    return this.http.get<RouteExampleItem[]>(`${this.apiUrl}/${id}/examples`);
+    return this.http.get<RouteExampleItem[]>(`${this.apiUrl}/${id}/examples`, this.getOptions());
   }
 
   getRouteCuePoints(id: number) : Observable<IRouteCuePointItem[]> {
-    return this.http.get<IRouteCuePointItem[]>(`${this.apiUrl}/${id}/cue-points`);
+    return this.http.get<IRouteCuePointItem[]>(`${this.apiUrl}/${id}/cue-points`, this.getOptions());
   }
 
   getRoutes(dto: GetRoutesDto): Observable<RouteItem[]> {
@@ -43,21 +49,18 @@ export class RouteService {
       }
     });
 
-    return this.http.get<RouteItem[]>(this.apiUrl, { params });
+    return this.http.get<RouteItem[]>(this.apiUrl, { params, ...this.getOptions() });
   }
 
   updateRoute(route : RouteItem): Observable<RouteItem> {
-    return this.http.put<RouteItem>(this.apiUrl, route);
+    return this.http.put<RouteItem>(this.apiUrl, route, this.getOptions());
   }
 
   createRoute(route: RouteItem): Observable<RouteItem> {
-    return this.http.post<RouteItem>(this.apiUrl, route, {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    });
+    return this.http.post<RouteItem>(this.apiUrl, route, this.getOptions());
   }
 
   updateRouteCuePoints(cuePointItems: IRouteCuePointItem[]): Observable<IRouteCuePointItem[]> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.put<IRouteCuePointItem[]>(this.apiUrl + "/update-cue-points", cuePointItems, { headers });
+    return this.http.put<IRouteCuePointItem[]>(this.apiUrl + "/update-cue-points", cuePointItems, this.getOptions());
   }
 }

@@ -7,7 +7,7 @@ import {Router} from '@angular/router';
 import { NewRouteFormComponent } from '../../../forms/new-route-form/new-route-form.component';
 import {ModalWindowComponent} from '../../../base/modal-window/modal-window.component';
 import {RouteItem} from '../../../../data/RouteItem';
-import {RouteService} from '../../../../services/RouteService';
+import {RouteService} from '../../../../services/route.service';
 import {GetRoutesDto} from '../../../../dto/GetRoutesDto';
 
 @Component({

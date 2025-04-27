@@ -5,7 +5,7 @@ import {UserAuthorizationPageComponent} from './pages/authorization-page/user-au
 import {AuthorizationFormComponent} from './forms/authorization-form/authorization-form.component';
 import {RegistrationFormComponent} from './forms/registration-form/registration-form.component';
 import {FormsModule} from '@angular/forms';
-import {UserService} from '../../../services/UserService';
+import {UserService} from '../../../services/user.service';
 
 @NgModule({
   declarations: [

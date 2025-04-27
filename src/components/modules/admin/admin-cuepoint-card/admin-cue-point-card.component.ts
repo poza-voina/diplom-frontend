@@ -3,7 +3,7 @@ import {IRouteCuePointItem} from '../../../../data/CuePoint';
 import { AddressStatus } from '../../../../enums/address.status';
 import { NavBarStatus, NavBarStatusHelper } from '../../../../enums/nav-bar.status';
 import { CuePointStatus } from '../../../../enums/cue-point.status';
-import {YandexSuggestionsService} from '../../../../services/yandex-suggest-service';
+import {YandexSuggestionsService} from '../../../../services/yandex-suggest.service';
 import {MapService} from '../../../../services/map-service';
 
 @Component({

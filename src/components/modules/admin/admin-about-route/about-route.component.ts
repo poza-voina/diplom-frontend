@@ -2,7 +2,7 @@ import {MapComponent} from '../../../base/map/map.component';
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {NgForOf, NgIf, NgSwitch, NgSwitchCase} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {RouteService} from '../../../../services/RouteService';
+import {RouteService} from '../../../../services/route.service';
 import {RouteItem} from '../../../../data/RouteItem';
 import {RouteExampleItem} from '../../../../data/RouteExampleItem';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -15,7 +15,7 @@ import {CategoriesCardBodyComponent} from './components/categories-card-body/cat
 import {RouteCardBodyComponent} from './components/route-card-body/route-card-body.component';
 import {RouteCardStatus} from './data/route-card.status';
 import {AboutRouteNavigationBarStatus} from './data/about-route-navigation-bar.status';
-import {RouteCategoriesService} from '../../../../services/RouteCategoriesService';
+import {RouteCategoriesService} from '../../../../services/route-categories.service';
 import {RouteCategoryItem} from '../../../../data/RouteCategoryItem';
 import {CategoryItem} from '../../../../dto/CategoryItem';
 

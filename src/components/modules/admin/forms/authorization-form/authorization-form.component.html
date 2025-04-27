@@ -1,0 +1,13 @@
+<div class="container vw-90 p-0">
+  <div class="mb">
+    <label class="form-label">Электронная почта</label>
+    <input [(ngModel)]="credentials.email" type="email" class="form-control" required>
+  </div>
+  <div class="mb-4">
+    <label class="form-label">Пароль</label>
+    <input [(ngModel)]="credentials.password" type="password" class="form-control" required>
+  </div>
+  <div class="mt-4">
+    <button (click)="handleSendForm()" class="btn btn-primary w-100">Войти</button>
+  </div>
+</div>
