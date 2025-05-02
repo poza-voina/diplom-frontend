@@ -1,0 +1,66 @@
+<div class="container py-5">
+
+  <!-- Главная картинка маршрута -->
+  <div class="text-center">
+    <img src="https://source.unsplash.com/1200x400/?nature,travel" class="img-fluid route-cover mb-4" alt="Обложка маршрута">
+    <h1 class="fw-bold">Путешествие вдоль побережья</h1>
+  </div>
+
+  <!-- Информация о маршруте и календарь -->
+  <div class="row my-4 align-items-stretch">
+    <div class="col-md-6">
+      <div class="info-box p-4 bg-white rounded-4 shadow-sm border h-100 d-flex flex-column justify-content-between">
+        <div>
+          <h5 class="fw-bold mb-1">Информация о маршруте</h5>
+
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Цена:</span>
+            <span class="fw-semibold text-primary">2000 ₽</span>
+          </div>
+
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Всего мест:</span>
+            <span class="fw-semibold">12</span>
+          </div>
+
+          <div class="d-flex justify-content-between mb-3">
+            <span class="text-muted">Осталось мест:</span>
+            <span class="fw-semibold text-success">5</span>
+          </div>
+
+          <h5 class="fw-bold mb-2 mt-4">Описание:</h5>
+          <p class="text-muted mb-0">
+            Незабываемая прогулка вдоль моря с посещением достопримечательностей и живописных пляжей.
+          </p>
+        </div>
+
+        <button class="btn btn-primary w-100 mt-4">
+          Записаться на маршрут
+        </button>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="calendar-container p-4 bg-white rounded-4 shadow-sm border h-100">
+        <app-calendar></app-calendar>
+      </div>
+    </div>
+  </div>
+
+  <!-- Карта -->
+  <div class="map-container mb-4">
+    <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3A08fbf0e28d1b7d36a4ffb1ff4c234592417be214f32c96f7dfd0c72f4e2b63b6&source=constructor"
+            width="100%" height="400" frameborder="0" allowfullscreen="true"></iframe>
+  </div>
+
+  <hr class="my-4">
+
+  <!-- Ключевые точки -->
+  <div *ngFor="let point of points" class="mb-4">
+    <h2 class="fw-semibold">{{ point.title }}</h2>
+    <img src="point.imageUrl" class="img-fluid rounded-3 mb-2" alt="{{ point.title }}">
+    <p class="text-muted">{{ point.description }}</p>
+    <hr>
+  </div>
+
+</div>

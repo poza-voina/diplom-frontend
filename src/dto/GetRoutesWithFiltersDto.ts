@@ -1,6 +1,6 @@
 import {RoutesFilter, RoutesSort} from '../components/modules/admin/admin-routes/routesSort';
 
-export class GetRoutesDto {
+export class GetRoutesWithFiltersDto {
   pageNumber: number;
   countPerPage: number;
   sortType: RoutesSort | undefined;

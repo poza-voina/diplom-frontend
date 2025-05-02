@@ -1,0 +1,41 @@
+<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+  <div class="form-container">
+    <h2 class="form-title">{{this.formLabel}}</h2>
+
+    <div *ngFor="let field of fields">
+      <div class="form-group">
+        <label [for]="field.name" class="form-label">{{ field.label }}</label>
+
+        <!-- Ввод для текстовых данных -->
+        <input
+          *ngIf="field.type !== 'textarea'"
+          [type]="field.type"
+          [formControlName]="field.name"
+          [id]="field.name"
+          [required]="field.required"
+          class="form-input"
+        />
+
+        <!-- Ввод для текстовых областей -->
+        <textarea
+          *ngIf="field.type === 'textarea'"
+          [formControlName]="field.name"
+          [id]="field.name"
+          [required]="field.required"
+          class="form-input"
+        ></textarea>
+
+        <div
+          class="error-messages"
+          *ngIf="formGroup.get(field.name)?.touched && formGroup.get(field.name)?.invalid"
+        >
+          <div *ngFor="let error of getControlErrors(field.name)">
+            {{ error }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-submit" [disabled]="formGroup.invalid">{{this.submitLabel}}</button>
+  </div>
+</form>

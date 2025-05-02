@@ -3,7 +3,7 @@ import {DefaultCatalogueComponent} from '../../../components/default-catalog/def
 import { RouteItem } from '../../../../../../data/RouteItem';
 import {RouteService} from '../../../../../../services/route.service';
 import {RoutesFilter} from '../../../../admin/admin-routes/routesSort';
-import {GetRoutesDto} from '../../../../../../dto/GetRoutesDto';
+import {GetRoutesWithFiltersDto} from '../../../../../../dto/GetRoutesWithFiltersDto';
 
 @Component({
   selector: 'app-routes-catalog-page',
@@ -28,8 +28,8 @@ export class RoutesCatalogPageComponent implements OnInit {
 
     this.loadCatalogEvent.emit(this.header);
 
-    let getRoutesDto: GetRoutesDto = new GetRoutesDto({pageNumber: 1, countPerPage: 10, filters: [RoutesFilter.ShowVisible]});
-    this.routeService.getRoutes(getRoutesDto).subscribe(
+    let getRoutesDto: GetRoutesWithFiltersDto = new GetRoutesWithFiltersDto({pageNumber: 1, countPerPage: 10, filters: [RoutesFilter.ShowVisible]});
+    this.routeService.getVisibleRoutes(getRoutesDto).subscribe(
       {
         next: (routes: RouteItem[]) => {
           this.routes = routes;

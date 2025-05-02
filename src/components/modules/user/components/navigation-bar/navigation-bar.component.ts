@@ -1,7 +1,8 @@
-import {Component, HostListener} from '@angular/core';
+import {Component, HostListener, Injectable, Input, OnInit} from '@angular/core';
 import {RouterLink} from '@angular/router';
 import {NgClass, NgIf} from '@angular/common';
 import {MobileMenuComponent} from './mobile-menu/mobile-menu.component';
+import {ClientAuthService} from '../../service/client-auth.service';
 
 @Component({
   selector: 'app-navigation-bar',
@@ -14,10 +15,11 @@ import {MobileMenuComponent} from './mobile-menu/mobile-menu.component';
   templateUrl: './navigation-bar.component.html',
   styleUrl: './navigation-bar.component.css'
 })
-export class NavigationBarComponent {
+export class NavigationBarComponent implements OnInit {
   dropdownOpen = false;
-
   isMobile: boolean = false;
+
+  constructor(protected authService: ClientAuthService) {  }
 
   ngOnInit() {
     this.checkScreenSize();
@@ -31,6 +33,7 @@ export class NavigationBarComponent {
   checkScreenSize() {
     this.isMobile = window.innerWidth < 992;
   }
+
   toggleDropdown(event: MouseEvent) {
     event.stopPropagation(); // Чтобы клик по кнопке не закрывал меню
     this.dropdownOpen = !this.dropdownOpen;
@@ -42,5 +45,9 @@ export class NavigationBarComponent {
     if (!clickedInside) {
       this.dropdownOpen = false;
     }
+  }
+
+  logoutHandler() {
+    this.authService.removeToken();
   }
 }

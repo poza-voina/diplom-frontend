@@ -1,0 +1,59 @@
+.calendar {
+  width: 100%;
+  max-width: 400px; /* Ограничиваем максимальный размер */
+  margin: 0 auto; /* Центрируем внутри контейнера */
+}
+
+.calendar-header {
+  background-color: #fff;
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.prev-month, .next-month {
+  cursor: pointer;
+  font-size: 18px;
+  color: #007bff;
+}
+
+.month-year {
+  flex-grow: 1;
+}
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background-color: #f1f1f1;
+  padding: 5px 0;
+}
+
+.day {
+  text-align: center;
+  font-size: 12px;
+  color: #555;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 5px;
+}
+
+.cell {
+  text-align: center;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.cell:hover {
+  background-color: #f0f0f0;
+}
+
+.empty {
+  background-color: #f9f9f9;
+}

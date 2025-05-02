@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
 import {AuthorizationFormComponent} from '../../forms/authorization-form/authorization-form.component';
 import {ILoginCredentials} from '../../../../../dto/login-credentials.interface';
-import {BaseUserService} from '../../../../../services/base-user.service';
-import {AdminUserService} from '../../services/admin-user.service';
-import {AuthService} from '../../../../../services/auth.service';
 import {NgIf} from '@angular/common';
+import {AdminAuthService} from '../../services/admin-auth.service';
 
 @Component({
   selector: 'app-authorization-page',
@@ -18,15 +16,15 @@ import {NgIf} from '@angular/common';
 export class AuthorizationPageComponent {
   isLoginError: boolean = false;
 
-  constructor(private adminUserService: AdminUserService, private authService: AuthService) {
+  constructor(private authService: AdminAuthService) {
   }
 
   handleCompletedForm(credentials: ILoginCredentials) {
-    this.adminUserService.getJwt(credentials).subscribe(
+    this.authService.getJwt(credentials).subscribe(
       {
         next: (next: string) => {
           this.isLoginError = false;
-          this.authService.login(next)
+          this.authService.setToken(next)
           window.history.back();
         },
         error: err => {

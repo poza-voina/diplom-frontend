@@ -18,6 +18,7 @@ import {AboutRouteNavigationBarStatus} from './data/about-route-navigation-bar.s
 import {RouteCategoriesService} from '../../../../services/route-categories.service';
 import {RouteCategoryItem} from '../../../../data/RouteCategoryItem';
 import {CategoryItem} from '../../../../dto/CategoryItem';
+import {AdminActionsService} from '../../../../services/admin-actions.service';
 
 @Component({
   selector: 'app-admin-about-route',
@@ -47,15 +48,15 @@ export class AboutRouteComponent implements OnInit {
   currentNavigationBarStatus: AboutRouteNavigationBarStatus = AboutRouteNavigationBarStatus.Route;
   protected readonly RouteCardStatus = RouteCardStatus;
   protected readonly AboutRouteNavigationBarStatus = AboutRouteNavigationBarStatus;
-  private routeService: RouteService;
   routeCategories: CategoryItem[] = [];
   allCategories: CategoryItem[] = [];
 
   constructor(
-    private route: ActivatedRoute, routeService: RouteService,
+    private route: ActivatedRoute,
+    private routeService: RouteService,
+    private adminActionsService: AdminActionsService,
     private router: Router, private cdr: ChangeDetectorRef,
     private routeCategoriesService: RouteCategoriesService) {
-    this.routeService = routeService;
     this.routeId = +this.route.snapshot.paramMap.get('routeId')!;
   }
 
@@ -100,7 +101,7 @@ export class AboutRouteComponent implements OnInit {
   updateAboutRoute() {
     if (this.routeItem != null) {
       this.routeItem.routeCategories = this.routeCategories;
-      this.routeService.updateRoute(this.routeItem).pipe().subscribe(
+      this.adminActionsService.updateRoute(this.routeItem).pipe().subscribe(
         {
           next: (x) => this.routeItem = x,
           error: (error) => console.log("Не удалось обновить маршрут"),

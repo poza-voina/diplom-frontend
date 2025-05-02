@@ -33,6 +33,8 @@ import {TestUserExampleComponent} from '../components/test-user-example/test-use
 import {
   AuthorizationPageComponent
 } from '../components/modules/admin/pages/authorization-page/authorization-page.component';
+import {RouteComponent} from '../components/modules/user/pages/route/route.component';
+import {ProfilePageComponent} from '../components/modules/user/pages/profile-page/profile-page.component';
 
 export const routes: Routes = [
   {path: 'test1', component: TestComponent},
@@ -53,6 +55,14 @@ export const routes: Routes = [
         path: "login",
         component: UserAuthorizationPageComponent,
       },
+      {
+        path: "route",
+        component: RouteComponent,
+      },
+      {
+        path: "profile",
+        component: ProfilePageComponent
+      }
     ]
   },
   {

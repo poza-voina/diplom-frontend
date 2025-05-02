@@ -1,1 +1,6 @@
-<p>authorization-page works!</p>
+<div class="container-fluid d-flex flex-column justify-content-center align-items-baseline">
+  <div class="container w-75">
+    <app-base-form [fields]="this.fields" [submitLabel]="this.submitLabel" [formLabel]="this.formLabel" (formSubmit)="handleFormSubmit($event)">
+    </app-base-form>
+  </div>
+</div>

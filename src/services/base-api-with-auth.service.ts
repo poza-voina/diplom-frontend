@@ -1,11 +1,12 @@
 import {AuthTokenNotFoundError} from '../exceptions/auth-token-not-found.error';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {AuthService} from './auth.service';
+import {AdminAuthService} from '../components/modules/admin/services/admin-auth.service';
+import {BaseAuthService} from './base-auth.service';
 
-export class BaseApiService {
+export abstract class BaseApiWithAuthService {
   protected token: string | null = '';
 
-  constructor(protected http: HttpClient, protected authService: AuthService) {
+  protected constructor(protected http: HttpClient, protected authService: BaseAuthService) {
     this.token = this.authService.getToken();
   }
 

@@ -7,6 +7,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {RouteService} from '../../../../services/route.service';
 import {map} from 'rxjs';
 import {RouteCuePointItem} from '../../../../data/CuePoint';
+import {AdminActionsService} from '../../../../services/admin-actions.service';
 
 @Component({
   selector: 'app-admin-route-map',
@@ -28,8 +29,12 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
   @ViewChild(MapComponent) mapElement!: MapComponent;
   showScrollButton: boolean = false;
 
-  constructor(private route: ActivatedRoute, private routeService: RouteService, private cdr: ChangeDetectorRef, private router: Router) {
-    this.routeService = routeService;
+  constructor(
+    private route: ActivatedRoute,
+    private routeService: RouteService,
+    private adminActionsService: AdminActionsService,
+    private cdr: ChangeDetectorRef,
+    private router: Router) {
     this.routeId = +this.route.snapshot.paramMap.get('routeId')!;
   }
 
@@ -110,7 +115,11 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
   }
 
   handleAddNewCard(parentCard: ICuePointCard | null = null): void {
-    let cuePointCard = new CuePointCard({isHovered: false, sortIndex: -1, CuePointCard: RouteCuePointItem.createEmpty()});
+    let cuePointCard = new CuePointCard({
+      isHovered: false,
+      sortIndex: -1,
+      CuePointCard: RouteCuePointItem.createEmpty()
+    });
     if (!parentCard) {
       this.cuePointCards.push(cuePointCard);
     } else {
@@ -128,9 +137,13 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
         cuePointItem.routeId = this.routeId;
         return cuePointItem;
       });
-    this.routeService.updateRouteCuePoints(cuePointItems).subscribe({
-      error: cuePointItems => {this.isSavingCuePoints = false;},
-      complete: () => {this.isSavingCuePoints = false;}
+    this.adminActionsService.updateRouteCuePoints(cuePointItems).subscribe({
+      error: cuePointItems => {
+        this.isSavingCuePoints = false;
+      },
+      complete: () => {
+        this.isSavingCuePoints = false;
+      }
     });
   }
 
@@ -140,7 +153,11 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
   }
 
   scrollTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
+  goToRoute(): void {
+    this.router.navigate(['/admin/route', this.routeId]);
   }
 
   private removeBySortIndex(sortIndex: number) {
@@ -176,10 +193,6 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
         item.sortIndex--;
       }
     }
-  }
-
-  goToRoute(): void {
-    this.router.navigate(['/admin/route', this.routeId]);
   }
 }
 

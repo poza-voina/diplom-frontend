@@ -11,8 +11,6 @@
       <a routerLink="/routes" class="text-dark text-decoration-none small fw-semibold">Маршруты</a>
       <div class="vr"></div>
       <a routerLink="/routes/categories" class="text-dark text-decoration-none small">Категории</a>
-      <div class="vr"></div>
-      <a routerLink="/routes/reservation" class="text-dark text-decoration-none small">Брони</a>
     </div>
 
     <!-- Мобильное меню -->
@@ -37,9 +35,18 @@
           *ngIf="dropdownOpen"
           style="display: block; position: absolute; right: 0;"
         >
-          <a routerLink="/profile" class="dropdown-item">Профиль</a>
-          <hr class="dropdown-divider" />
-          <a class="dropdown-item">Выйти</a>
+          <ng-container *ngIf="authService.isAuthenticated()">
+            <a routerLink="/profile" class="dropdown-item">Профиль</a>
+            <hr class="dropdown-divider"/>
+            <a class="dropdown-item" (click)="logoutHandler()">Выйти</a>
+          </ng-container>
+
+          <ng-container *ngIf="!authService.isAuthenticated()">
+            <a routerLink="/login" class="dropdown-item">Войти</a>
+            <hr class="dropdown-divider"/>
+            <a routerLink="/registration" class="dropdown-item">Зарегистрироваться</a>
+          </ng-container>
+
         </div>
       </div>
     </div>

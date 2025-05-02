@@ -1,0 +1,19 @@
+<div class="calendar">
+  <header class="calendar-header">
+    <span class="prev-month" (click)="changeMonth(-1)">&#10094;</span>
+    <span class="month-year">{{ monthName }} {{ year }}</span>
+    <span class="next-month" (click)="changeMonth(1)">&#10095;</span>
+  </header>
+  <div class="calendar-days">
+    <div class="day">Пн</div>
+    <div class="day">Вт</div>
+    <div class="day">Ср</div>
+    <div class="day">Чт</div>
+    <div class="day">Пт</div>
+    <div class="day">Сб</div>
+    <div class="day">Вс</div>
+  </div>
+  <div class="calendar-grid">
+    <div *ngFor="let day of daysInMonth" class="cell" [class.empty]="day === null">{{ day }}</div>
+  </div>
+</div>

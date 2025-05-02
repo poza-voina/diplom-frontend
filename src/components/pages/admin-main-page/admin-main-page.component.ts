@@ -4,7 +4,8 @@ import {Router, RouterLink, RouterOutlet} from '@angular/router';
 import {BreadcrumbComponent} from '../../modules/admin/breadcrumb/breadcrumb.component';
 import {NgIf} from '@angular/common';
 import {AdminDashboardComponent} from '../../modules/admin/admin-dashboard/admin-dashboard.component';
-import {AuthService} from '../../../services/auth.service';
+import {BaseAuthService} from '../../../services/base-auth.service';
+import {AdminAuthService} from '../../modules/admin/services/admin-auth.service';
 
 @Component({
   selector: 'app-admin-main-page',
@@ -20,7 +21,7 @@ import {AuthService} from '../../../services/auth.service';
   styleUrl: './admin-main-page.component.css'
 })
 export class AdminMainPageComponent implements OnInit {
-  constructor(private router: Router, private authService: AuthService, private cdr: ChangeDetectorRef) {
+  constructor(private router: Router, private authService: AdminAuthService, private cdr: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
@@ -47,7 +48,7 @@ export class AdminMainPageComponent implements OnInit {
   }
 
   logout() {
-    this.authService.logout();
+    this.authService.removeToken();
     this.check();
   }
 }

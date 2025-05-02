@@ -5,16 +5,17 @@ import { CategoryItem } from '../dto/CategoryItem';
 
 import {Injectable} from '@angular/core';
 import {API_URLS} from '../api-routes.config';
-import {BaseApiService} from './base-api-service';
-import {AuthService} from './auth.service';
+import {BaseApiWithAuthService} from './base-api-with-auth.service';
+import {BaseAuthService} from './base-auth.service';
+import {AdminAuthService} from '../components/modules/admin/services/admin-auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class RouteCategoriesService extends BaseApiService {
+export class RouteCategoriesService extends BaseApiWithAuthService {
   private apiUrl = `${API_URLS.admins}/categories`;
 
-  constructor(http: HttpClient, authService: AuthService) {
+  constructor(http: HttpClient, authService: AdminAuthService) {
     super(http, authService);
   }
 

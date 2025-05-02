@@ -1,0 +1,22 @@
+/* Уменьшаем отступы и размеры элементов */
+.fc .fc-toolbar {
+  padding: 4px 0;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1em;
+}
+
+.fc .fc-col-header-cell {
+  padding: 4px 0;
+  font-size: 0.8em;
+}
+
+.fc .fc-daygrid-day-frame {
+  padding: 2px;
+}
+
+.fc .fc-daygrid-day-number {
+  font-size: 0.8em;
+  padding: 2px;
+}

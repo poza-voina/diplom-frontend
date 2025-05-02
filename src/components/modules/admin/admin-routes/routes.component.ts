@@ -4,11 +4,12 @@ import {tap} from 'rxjs';
 import {RoutesFilter, RoutesSort} from './routesSort';
 import * as bootstrap from 'bootstrap';
 import {Router} from '@angular/router';
-import { NewRouteFormComponent } from '../../../forms/new-route-form/new-route-form.component';
+import {NewRouteFormComponent} from '../../../forms/new-route-form/new-route-form.component';
 import {ModalWindowComponent} from '../../../base/modal-window/modal-window.component';
 import {RouteItem} from '../../../../data/RouteItem';
 import {RouteService} from '../../../../services/route.service';
-import {GetRoutesDto} from '../../../../dto/GetRoutesDto';
+import {GetRoutesWithFiltersDto} from '../../../../dto/GetRoutesWithFiltersDto';
+import {AdminActionsService} from '../../../../services/admin-actions.service';
 
 @Component({
   selector: 'app-admin-routes',
@@ -20,25 +21,24 @@ import {GetRoutesDto} from '../../../../dto/GetRoutesDto';
 
 export class RoutesComponent {
   @ViewChild(NewRouteFormComponent) newRouteFormComponent!: NewRouteFormComponent;
-
+  routes: RouteItem[] = [];
+  routesLoadingStatus: RoutesLoadingStatus = RoutesLoadingStatus.Completed;
+  routesStatuses: RoutesStatuses = new RoutesStatuses(this.routes);
+  selectedSort: RoutesSort = RoutesSort.None;
+  addNewRouteModalId: string = "newRouteForm";
+  filters: RoutesFilter[] = [];
   protected readonly RoutesLoadingStatus = RoutesLoadingStatus;
   protected readonly RouteStatus = RouteStatus;
   protected readonly RoutesSortHelper: RoutesSortHelper = new RoutesSortHelper();
-
-  routes: RouteItem[] = [];
-  routesLoadingStatus : RoutesLoadingStatus = RoutesLoadingStatus.Completed;
-  routesStatuses : RoutesStatuses = new RoutesStatuses(this.routes);
-
-  selectedSort: RoutesSort = RoutesSort.None;
   othersSort: RoutesSort[] = this.RoutesSortHelper.getKeys().slice(1);
-
-  addNewRouteModalId: string = "newRouteForm";
-
-  filters: RoutesFilter[] = [];
   private pageNumber: number = 1;
   private countPerPage: number = 10;
 
-  constructor(private routeService: RouteService, private router: Router) {}
+  constructor(
+    private routeService: RouteService,
+    private adminActionsService: AdminActionsService,
+    private router: Router) {
+  }
 
   ngOnInit(): void {
     this.loadRoutes();
@@ -46,10 +46,15 @@ export class RoutesComponent {
   }
 
   loadRoutes(): void {
-    let getRoutesDto: GetRoutesDto = new GetRoutesDto({pageNumber: this.pageNumber, countPerPage: this.countPerPage, sortType: this.selectedSort, filters: this.filters});
+    let getRoutesDto: GetRoutesWithFiltersDto = new GetRoutesWithFiltersDto({
+      pageNumber: this.pageNumber,
+      countPerPage: this.countPerPage,
+      sortType: this.selectedSort,
+      filters: this.filters
+    });
     this.routesLoadingStatus = RoutesLoadingStatus.Loading;
 
-    this.routeService.getRoutes(getRoutesDto)
+    this.adminActionsService.getRoutes(getRoutesDto)
       .pipe(
         tap(routes => this.routes = routes)
       )
@@ -71,7 +76,7 @@ export class RoutesComponent {
     event.stopPropagation();
     let buffer: RouteItem = {...item};
     this.routesStatuses.setStatus(item, RouteStatus.ToggleVisibility)
-    this.routeService.updateRoute(buffer).pipe()
+    this.adminActionsService.updateRoute(buffer).pipe()
       .subscribe({
         error: (error) => {
           this.routesStatuses.setStatus(item, RouteStatus.None)
@@ -87,7 +92,7 @@ export class RoutesComponent {
     event.stopPropagation();
     let buffer: RouteItem = {...item};
     this.routesStatuses.setStatus(item, RouteStatus.ToggleVisibility)
-    this.routeService.updateRoute(buffer).pipe()
+    this.adminActionsService.updateRoute(buffer).pipe()
       .subscribe({
         error: (error) => {
           this.routesStatuses.setStatus(item, RouteStatus.None)
@@ -134,7 +139,7 @@ export class RoutesComponent {
   }
 
   createNewRoute(routeItem: RouteItem) {
-    this.routeService.createRoute(routeItem).pipe().subscribe({
+    this.adminActionsService.createRoute(routeItem).pipe().subscribe({
       error: (error) => {
         this.newRouteFormComponent.afterSaveHandler("Не удалось сохранить маршрут");
       },
@@ -179,7 +184,7 @@ enum RouteStatus {
 
 
 class RoutesStatuses {
-  dictionary: { [key: number]:  RouteStatus} = {};
+  dictionary: { [key: number]: RouteStatus } = {};
 
   constructor(items: RouteItem[]) {
     items.forEach(item => this.dictionary[item.id] = RouteStatus.None);
@@ -189,7 +194,7 @@ class RoutesStatuses {
     items.forEach(item => this.dictionary[item.id] = RouteStatus.None);
   }
 
-  getStatus(item: RouteItem) : RouteStatus {
+  getStatus(item: RouteItem): RouteStatus {
     return this.dictionary[item.id];
   }
 
@@ -201,7 +206,8 @@ class RoutesStatuses {
 
 class RoutesSortHelper {
 
-  public constructor() {}
+  public constructor() {
+  }
 
   getValues(): string[] {
     return Object.values(RoutesSort);

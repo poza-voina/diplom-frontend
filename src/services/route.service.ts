@@ -4,11 +4,14 @@ import {Observable} from 'rxjs';
 import {RouteItem} from '../data/RouteItem';
 import {RouteExampleItem} from '../data/RouteExampleItem';
 import {IRouteCuePointItem} from '../data/CuePoint';
-import {GetRoutesDto} from '../dto/GetRoutesDto';
+import {GetRoutesWithFiltersDto} from '../dto/GetRoutesWithFiltersDto';
 import {API_URLS} from '../api-routes.config';
-import {AuthService} from './auth.service';
+import {BaseAuthService} from './base-auth.service';
 import {AuthTokenNotFoundError} from '../exceptions/auth-token-not-found.error';
-import {BaseApiService} from './base-api-service';
+import {BaseApiWithAuthService} from './base-api-with-auth.service';
+import {AdminAuthService} from '../components/modules/admin/services/admin-auth.service';
+import {BaseApiService} from './base-api.service';
+import {IGetAllDto} from '../dto/get-all-dto.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +20,8 @@ export class RouteService extends BaseApiService {
 
   private apiUrl = `${API_URLS.admins}/routes`;
 
-  constructor(http: HttpClient, authService: AuthService) {
-    super(http, authService);
+  constructor(private http: HttpClient) {
+    super();
   }
 
   getRoute(id: number): Observable<RouteItem> {
@@ -33,34 +36,7 @@ export class RouteService extends BaseApiService {
     return this.http.get<IRouteCuePointItem[]>(`${this.apiUrl}/${id}/cue-points`, this.getOptions());
   }
 
-  getRoutes(dto: GetRoutesDto): Observable<RouteItem[]> {
-    let params = new HttpParams();
-
-    Object.keys(dto).forEach(key => {
-      const value = dto[key as keyof GetRoutesDto];
-
-      // Проверяем, если это массив (например, фильтры)
-      if (Array.isArray(value)) {
-        value.forEach(val => {
-          params = params.append(key, val.toString()); // Для каждого элемента массива добавляем отдельный параметр
-        });
-      } else if (value !== undefined && value !== null) {
-        params = params.set(key, value.toString());
-      }
-    });
-
-    return this.http.get<RouteItem[]>(this.apiUrl, { params, ...this.getOptions() });
-  }
-
-  updateRoute(route : RouteItem): Observable<RouteItem> {
-    return this.http.put<RouteItem>(this.apiUrl, route, this.getOptions());
-  }
-
-  createRoute(route: RouteItem): Observable<RouteItem> {
-    return this.http.post<RouteItem>(this.apiUrl, route, this.getOptions());
-  }
-
-  updateRouteCuePoints(cuePointItems: IRouteCuePointItem[]): Observable<IRouteCuePointItem[]> {
-    return this.http.put<IRouteCuePointItem[]>(this.apiUrl + "/update-cue-points", cuePointItems, this.getOptions());
+  getVisibleRoutes(getRoutesDto: IGetAllDto) : Observable<RouteItem[]> {
+    return this.http.get<RouteItem[]>(`${this.apiUrl}/visible-routes`, this.getOptions());
   }
 }
