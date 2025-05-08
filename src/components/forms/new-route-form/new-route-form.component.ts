@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {FormFieldComponent} from '../../base/form-field/form-field.component';
-import {RouteItem} from '../../../data/RouteItem';
+import {IRouteItem} from '../../../data/IRouteItem';
 import {FormsModule} from '@angular/forms';
 
 @Component({
@@ -13,9 +13,9 @@ import {FormsModule} from '@angular/forms';
   styleUrl: './new-route-form.component.css'
 })
 export class NewRouteFormComponent {
-  @Output() saveEvent: EventEmitter<RouteItem> = new EventEmitter();
+  @Output() saveEvent: EventEmitter<IRouteItem> = new EventEmitter();
   @Output() afterSaveEvent: EventEmitter<null> = new EventEmitter();
-  routeItem: RouteItem = <RouteItem>{title: "", isHidden: true}
+  routeItem: IRouteItem = <IRouteItem>{title: "", isHidden: true}
   error: string | null = null;
 
   saveHandler() {

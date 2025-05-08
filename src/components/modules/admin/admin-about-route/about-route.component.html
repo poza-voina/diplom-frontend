@@ -30,22 +30,7 @@
       </div>
     </div>
 
-    <table class="table">
-      <thead>
-      <tr>
-        <th>Дата начала</th>
-        <th>Дата окончания</th>
-        <th>Дата создания</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let item of routeExamples">
-        <td>{{ item.creationDateTime }}</td>
-        <td>{{ item.startDateTime }}</td>
-        <td>{{ item.endDateTime }}</td>
-      </tr>
-      </tbody>
-    </table>
+    <app-route-examples-table [routeId]="routeId"></app-route-examples-table>
   </div>
 
 </div>

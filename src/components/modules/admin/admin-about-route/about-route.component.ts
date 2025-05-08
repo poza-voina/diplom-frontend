@@ -3,8 +3,8 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {NgForOf, NgIf, NgSwitch, NgSwitchCase} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {RouteService} from '../../../../services/route.service';
-import {RouteItem} from '../../../../data/RouteItem';
-import {RouteExampleItem} from '../../../../data/RouteExampleItem';
+import {IRouteItem} from '../../../../data/IRouteItem';
+import {IRouteExampleItem} from '../../../../data/IRouteExampleItem';
 import {ActivatedRoute, Router} from '@angular/router';
 import {tap} from 'rxjs';
 import {
@@ -17,8 +17,14 @@ import {RouteCardStatus} from './data/route-card.status';
 import {AboutRouteNavigationBarStatus} from './data/about-route-navigation-bar.status';
 import {RouteCategoriesService} from '../../../../services/route-categories.service';
 import {RouteCategoryItem} from '../../../../data/RouteCategoryItem';
-import {CategoryItem} from '../../../../dto/CategoryItem';
+import {ICategoryItem} from '../../../../dto/ICategoryItem';
 import {AdminActionsService} from '../../../../services/admin-actions.service';
+import {RouteExamplesTableComponent} from '../components/route-examples-table/route-examples-table.component';
+import {ModalWindowComponent} from '../../../base/modal-window/modal-window.component';
+import {AddNewCategoryComponent} from '../add-new-category/add-new-category.component';
+import {NewRouteFormComponent} from '../../../forms/new-route-form/new-route-form.component';
+import {INewCategoryItem} from '../../../../dto/new-category-item.interface';
+import * as bootstrap from 'bootstrap';
 
 @Component({
   selector: 'app-admin-about-route',
@@ -32,13 +38,16 @@ import {AdminActionsService} from '../../../../services/admin-actions.service';
     DefaultNavigationCardHeaderComponent,
     CategoriesCardBodyComponent,
     RouteCardBodyComponent,
+    RouteExamplesTableComponent,
+    ModalWindowComponent,
+    AddNewCategoryComponent,
+    NewRouteFormComponent,
   ],
   templateUrl: './about-route.component.html',
   styleUrl: './about-route.component.css'
 })
 export class AboutRouteComponent implements OnInit {
-  routeItem: RouteItem | null = null;
-  routeExamples: RouteExampleItem[] = [];
+  routeItem: IRouteItem | null = null;
   routeCardStatus: RouteCardStatus = RouteCardStatus.None;
   routeId: number;
   navigationItems: IHeaderNavigationItem<AboutRouteNavigationBarStatus>[] = [
@@ -48,8 +57,9 @@ export class AboutRouteComponent implements OnInit {
   currentNavigationBarStatus: AboutRouteNavigationBarStatus = AboutRouteNavigationBarStatus.Route;
   protected readonly RouteCardStatus = RouteCardStatus;
   protected readonly AboutRouteNavigationBarStatus = AboutRouteNavigationBarStatus;
-  routeCategories: CategoryItem[] = [];
-  allCategories: CategoryItem[] = [];
+  routeCategories: ICategoryItem[] = [];
+  allCategories: ICategoryItem[] = [];
+  addNewCategoryModelId: string = "addNewCategoryModel1";
 
   constructor(
     private route: ActivatedRoute,
@@ -62,14 +72,13 @@ export class AboutRouteComponent implements OnInit {
 
   ngOnInit() {
     this.loadRoute();
-    this.loadRouteExamples();
     this.loadCategories();
   }
 
   loadRoute() {
     this.routeService.getRoute(this.routeId).subscribe(
       {
-        next: (next: RouteItem) => {
+        next: (next: IRouteItem) => {
           this.routeItem = next;
           this.routeCategories = next.routeCategories;
         },
@@ -78,10 +87,6 @@ export class AboutRouteComponent implements OnInit {
         }
       }
     )
-  }
-
-  loadRouteExamples() {
-    this.routeService.getRouteExamples(this.routeId).pipe(tap(x => this.routeExamples = x)).subscribe({});
   }
 
   ToggleEditRouteCard() {
@@ -133,7 +138,7 @@ export class AboutRouteComponent implements OnInit {
     this.routeCategoriesService.getAll()
       .subscribe(
         {
-          next: (next: CategoryItem[]) => {
+          next: (next: ICategoryItem[]) => {
             this.allCategories = next;
           },
           error: err => {
@@ -141,6 +146,27 @@ export class AboutRouteComponent implements OnInit {
           }
         }
       )
+  }
+
+  createNewCategory($event: INewCategoryItem) {
+
+  }
+
+  openModal(modalId: string): void {
+    const modalElement = document.getElementById(modalId);
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    }
+  }
+
+  closeModal(modalId: string): void {
+    console.log("closeModal", modalId);
+    const modalElement = document.getElementById(modalId);
+    if (modalElement) {
+      const modal = bootstrap.Modal.getInstance(modalElement);
+      modal?.hide();
+    }
   }
 }
 

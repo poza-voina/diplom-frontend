@@ -1,5 +1,5 @@
 import {BaseApiWithAuthService} from './base-api-with-auth.service';
-import {RouteItem} from '../data/RouteItem';
+import {IRouteItem} from '../data/IRouteItem';
 import {Observable} from 'rxjs';
 import {IRouteCuePointItem} from '../data/CuePoint';
 import {API_URLS} from '../api-routes.config';
@@ -7,30 +7,50 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {AdminAuthService} from '../components/modules/admin/services/admin-auth.service';
 import {GetRoutesWithFiltersDto} from '../dto/GetRoutesWithFiltersDto';
 import {Injectable} from '@angular/core';
+import {IRouteExampleItem} from '../data/IRouteExampleItem';
+import {
+  IRouteExampleItemW
+} from '../components/modules/admin/components/route-examples-table/route-examples-table.component';
+import {INewCategoryItem} from '../dto/new-category-item.interface';
+import {ICategoryItem} from '../dto/ICategoryItem';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminActionsService extends BaseApiWithAuthService {
-  private apiUrl = `${API_URLS.admins}/routes`;
+  private apiRoutesUrl = `${API_URLS.admins}/routes`;
+  private apiRoutesExampleUrl = `${API_URLS.admins}/route-examples`;
+  private apiRouteCategoriesUrl = `${API_URLS.admins}/categories`;
 
   constructor(http: HttpClient, authService: AdminAuthService) {
     super(http, authService);
   }
 
-  updateRoute(route : RouteItem): Observable<RouteItem> {
-    return this.http.put<RouteItem>(this.apiUrl, route, this.getOptions());
+  updateRoute(route : IRouteItem): Observable<IRouteItem> {
+    return this.http.put<IRouteItem>(this.apiRoutesUrl, route, this.getOptions());
   }
 
-  createRoute(route: RouteItem): Observable<RouteItem> {
-    return this.http.post<RouteItem>(this.apiUrl, route, this.getOptions());
+  createRoute(route: IRouteItem): Observable<IRouteItem> {
+    return this.http.post<IRouteItem>(this.apiRoutesUrl, route, this.getOptions());
   }
 
   updateRouteCuePoints(cuePointItems: IRouteCuePointItem[]): Observable<IRouteCuePointItem[]> {
-    return this.http.put<IRouteCuePointItem[]>(this.apiUrl + "/update-cue-points", cuePointItems, this.getOptions());
+    return this.http.put<IRouteCuePointItem[]>(this.apiRoutesUrl + "/update-cue-points", cuePointItems, this.getOptions());
   }
 
-  getRoutes(dto: GetRoutesWithFiltersDto): Observable<RouteItem[]> {
+  createOrUpdateRouteExample(routeExampleItem: IRouteExampleItem): Observable<IRouteExampleItem> {
+    return this.http.put<IRouteExampleItem>(this.apiRoutesExampleUrl, routeExampleItem, this.getOptions());
+  }
+
+  deleteRouteExample(index: number) : Observable<any> {
+    return this.http.delete(`${this.apiRoutesExampleUrl}/${index}`, this.getOptions());
+  }
+
+  createOrUpdateRouteExamples(routeExampleItems: IRouteExampleItem[]): Observable<IRouteExampleItem[]> {
+    return this.http.put<IRouteExampleItem[]>(this.apiRoutesExampleUrl + "/by-route", routeExampleItems, this.getOptions());
+  }
+
+  getRoutes(dto: GetRoutesWithFiltersDto): Observable<IRouteItem[]> {
     let params = new HttpParams();
 
     Object.keys(dto).forEach(key => {
@@ -46,6 +66,10 @@ export class AdminActionsService extends BaseApiWithAuthService {
       }
     });
 
-    return this.http.get<RouteItem[]>(this.apiUrl, { params, ...this.getOptions() });
+    return this.http.get<IRouteItem[]>(this.apiRoutesUrl, { params, ...this.getOptions() });
+  }
+
+  createCategory(dto: INewCategoryItem) : Observable<ICategoryItem> {
+   return this.http.post<ICategoryItem>(this.apiRouteCategoriesUrl, dto, this.getOptions());
   }
 }

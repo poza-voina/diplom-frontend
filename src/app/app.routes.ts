@@ -56,7 +56,7 @@ export const routes: Routes = [
         component: UserAuthorizationPageComponent,
       },
       {
-        path: "route",
+        path: "route/:routeId",
         component: RouteComponent,
       },
       {

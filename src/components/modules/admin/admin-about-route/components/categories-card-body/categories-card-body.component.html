@@ -26,8 +26,13 @@
         Скрыть неиспользованные категории
       </ng-container>
     </button>
-    <button *ngIf="isShowingAllCategories" class="btn btn-sm btn-secondary">
+    <button *ngIf="isShowingAllCategories" (click)="openModal(addNewCategoryModelId)" class="btn btn-sm btn-secondary">
       Добавить новую категорию <i class="bi bi-plus"></i>
     </button>
   </div>
 </div>
+
+
+<modal-window modalWindowId="{{addNewCategoryModelId}}">
+  <app-add-new-category (saveEvent)="createNewCategory($event)"></app-add-new-category>
+</modal-window>

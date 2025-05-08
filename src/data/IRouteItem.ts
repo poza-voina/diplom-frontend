@@ -1,7 +1,7 @@
 import {RouteCategoryItem} from './RouteCategoryItem';
-import {CategoryItem} from '../dto/CategoryItem';
+import {ICategoryItem} from '../dto/ICategoryItem';
 
-export interface RouteItem {
+export interface IRouteItem {
   id: number;
   title: string;
   description: string | null;
@@ -10,5 +10,5 @@ export interface RouteItem {
   baseCost: number | null;
   creationDateTime: string;
   isHidden: boolean;
-  routeCategories: CategoryItem[];
+  routeCategories: ICategoryItem[];
 }

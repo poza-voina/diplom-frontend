@@ -1,6 +1,5 @@
-export interface CategoryItem {
+export interface ICategoryItem {
   id: number;
   title: string;
-  description?: string;
   countRoutes: number;
 }

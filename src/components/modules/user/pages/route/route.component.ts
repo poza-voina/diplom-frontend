@@ -1,63 +1,69 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FullCalendarModule} from '@fullcalendar/angular';
-import {NgForOf} from '@angular/common';
-import {CalendarOptions} from '@fullcalendar/core';
-import dayGridPlugin from '@fullcalendar/daygrid';
+import {NgForOf, NgIf, NgOptimizedImage} from '@angular/common';
 import {CalendarComponent} from '../../components/calendar/calendar.component';
+import {ActivatedRoute} from '@angular/router';
+import {RouteService} from '../../../../../services/route.service';
+import {IRouteCuePointItem} from '../../../../../data/CuePoint';
+import {IRouteItem} from '../../../../../data/IRouteItem';
+import {AttachmentService} from '../../../../../services/attachment.service';
 
 @Component({
   selector: 'app-route',
   imports: [
     FullCalendarModule,
     NgForOf,
-    CalendarComponent
+    CalendarComponent,
+    NgOptimizedImage,
+    NgIf
   ],
   templateUrl: './route.component.html',
   styleUrl: './route.component.css'
 })
-export class RouteComponent {
-  points = [
-    {
-      title: 'Старинный маяк',
-      imageUrl: 'https://source.unsplash.com/600x300/?lighthouse',
-      description: 'Построенный в XIX веке маяк. Великолепный вид на море.'
-    },
-    {
-      title: 'Золотой пляж',
-      imageUrl: 'https://source.unsplash.com/600x300/?beach',
-      description: 'Лучший пляж с золотистым песком и чистой водой.'
-    },
-    {
-      title: 'Руины замка',
-      imageUrl: 'https://source.unsplash.com/600x300/?castle',
-      description: 'Средневековые руины, окруженные зеленью.'
-    }
-  ];
+export class RouteComponent implements OnInit {
+  cuePoints: IRouteCuePointItemWithAttachment[] = [];
+  routeItem: IRouteItem | null = null;
 
-  calendarOptions: CalendarOptions = {
-    initialView: 'dayGridMonth',
-    initialDate: '2027-02-01',
-    headerToolbar: {
-      left: 'prev,next',
-      center: 'title',
-      right: ''
-    },
-    plugins: [dayGridPlugin],
-    locale: 'ru',
-    firstDay: 1,
+  private routeId: number;
 
-    // Основные настройки размера:
-    height: 300, // Фиксированная высота всего календаря
-    contentHeight: 'auto', // Автоматическая высота содержимого
-    aspectRatio: 1, // Соотношение сторон (необязательно)
+  constructor(private route: ActivatedRoute, private routeService: RouteService, private attachmentService: AttachmentService) {
+    this.routeId = +this.route.snapshot.paramMap.get('routeId')!;
+  }
 
-    // Оптимизация для компактного отображения:
-    dayMaxEventRows: 1, // Максимум 1 ряд событий в ячейке
-    fixedWeekCount: false, // Не фиксировать количество недель
-    showNonCurrentDates: false, // Скрывать даты из других месяцев
+  ngOnInit(): void {
+    this.routeService.getRouteCuePoints(this.routeId).subscribe({
+      next: (cuePoints) => {
+        const cuePointIds: number[] = cuePoints
+          .map(cp => cp.id)
+          .filter((id): id is number => id !== null);
 
-    events: [
-      // ваши события
-    ]
-  };
+        if (cuePointIds.length === 0) return;
+
+        this.attachmentService.getAttachmentsByCuePoints(cuePointIds).subscribe({
+          next: (attachments: IAttachment[]) => {
+            const cuePointsWithAttachments: IRouteCuePointItemWithAttachment[] = cuePoints.map(cp => {
+              const match = attachments.find((att: IAttachment) => att.cuePointId === cp.id);
+              return {
+                ...cp,
+                imageUri: match?.uri || null
+              };
+            });
+
+            this.cuePoints = cuePointsWithAttachments;
+          }
+        });
+      }
+    });
+  }
+
+}
+
+export interface IRouteCuePointItemWithAttachment extends IRouteCuePointItem {
+  imageUri: string | null;
+}
+export interface IAttachment {
+  id: number;
+  uri: string;
+  cuePointId: number;
+  // другие поля...
 }

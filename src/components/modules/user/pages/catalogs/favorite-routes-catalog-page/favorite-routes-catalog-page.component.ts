@@ -1,6 +1,6 @@
 import {Component, EventEmitter, OnInit} from '@angular/core';
 import {DefaultCatalogueComponent} from '../../../components/default-catalog/default-catalog.component';
-import { RouteItem } from '../../../../../../data/RouteItem';
+import { IRouteItem } from '../../../../../../data/IRouteItem';
 
 @Component({
   selector: 'app-favorite-routes-catalog-page',
@@ -11,7 +11,7 @@ import { RouteItem } from '../../../../../../data/RouteItem';
   styleUrl: './favorite-routes-catalog-page.component.css'
 })
 export class FavoriteRoutesCatalogPageComponent implements OnInit {
-  routes: RouteItem[] = [];
+  routes: IRouteItem[] = [];
   private loadCatalogEvent = new EventEmitter<string>();
   private header: string = "Избранные маршруты";
 

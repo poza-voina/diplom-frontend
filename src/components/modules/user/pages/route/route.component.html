@@ -3,7 +3,7 @@
   <!-- Главная картинка маршрута -->
   <div class="text-center">
     <img src="https://source.unsplash.com/1200x400/?nature,travel" class="img-fluid route-cover mb-4" alt="Обложка маршрута">
-    <h1 class="fw-bold">Путешествие вдоль побережья</h1>
+    <h1 class="fw-bold">{{this.routeItem?.title}}</h1>
   </div>
 
   <!-- Информация о маршруте и календарь -->
@@ -15,22 +15,22 @@
 
           <div class="d-flex justify-content-between mb-2">
             <span class="text-muted">Цена:</span>
-            <span class="fw-semibold text-primary">2000 ₽</span>
+            <span class="fw-semibold text-primary">{{ this.routeItem?.baseCost }} ₽</span>
           </div>
 
           <div class="d-flex justify-content-between mb-2">
             <span class="text-muted">Всего мест:</span>
-            <span class="fw-semibold">12</span>
+            <span class="fw-semibold">{{ this.routeItem?.maxCountPeople }}</span>
           </div>
 
           <div class="d-flex justify-content-between mb-3">
             <span class="text-muted">Осталось мест:</span>
-            <span class="fw-semibold text-success">5</span>
+            <span class="fw-semibold text-success">0</span>
           </div>
 
           <h5 class="fw-bold mb-2 mt-4">Описание:</h5>
           <p class="text-muted mb-0">
-            Незабываемая прогулка вдоль моря с посещением достопримечательностей и живописных пляжей.
+           {{this.routeItem?.description}}
           </p>
         </div>
 
@@ -56,9 +56,9 @@
   <hr class="my-4">
 
   <!-- Ключевые точки -->
-  <div *ngFor="let point of points" class="mb-4">
+  <div *ngFor="let point of cuePoints" class="mb-4">
     <h2 class="fw-semibold">{{ point.title }}</h2>
-    <img src="point.imageUrl" class="img-fluid rounded-3 mb-2" alt="{{ point.title }}">
+    <img *ngIf="point.imageUri" [src]="point.imageUri" alt="Картинка"/>
     <p class="text-muted">{{ point.description }}</p>
     <hr>
   </div>

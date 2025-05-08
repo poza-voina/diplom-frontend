@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {NgIf, NgSwitch, NgSwitchCase} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouteCardStatus} from '../../data/route-card.status';
-import {RouteItem} from '../../../../../../data/RouteItem';
+import {IRouteItem} from '../../../../../../data/IRouteItem';
 import {ModalWindowComponent} from '../../../../../base/modal-window/modal-window.component';
 
 @Component({
@@ -20,9 +20,9 @@ import {ModalWindowComponent} from '../../../../../base/modal-window/modal-windo
 })
 export class RouteCardBodyComponent {
   @Input()
-  routeItem?: RouteItem;
+  routeItem?: IRouteItem;
   protected readonly RouteCardStatus = RouteCardStatus;
-  @Output() routeItemChange = new EventEmitter<RouteItem | null>();
+  @Output() routeItemChange = new EventEmitter<IRouteItem | null>();
   @Input() routeCardStatus!: RouteCardStatus;
   @Output() routeCardStatusChange = new EventEmitter<RouteCardStatus>();
 }

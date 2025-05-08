@@ -1,6 +1,6 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {DefaultCatalogueComponent} from '../../../components/default-catalog/default-catalog.component';
-import { RouteItem } from '../../../../../../data/RouteItem';
+import { IRouteItem } from '../../../../../../data/IRouteItem';
 
 @Component({
   selector: 'app-reservation-routes-catalog-page',
@@ -11,7 +11,7 @@ import { RouteItem } from '../../../../../../data/RouteItem';
   styleUrl: './reservation-routes-catalog-page.component.css'
 })
 export class ReservationRoutesCatalogPageComponent implements OnInit {
-  routes: RouteItem[] = [];
+  routes: IRouteItem[] = [];
 
   header: string = "Заброннированные маршруты";
 

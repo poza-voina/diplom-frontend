@@ -1,0 +1,59 @@
+<table class="table">
+  <thead>
+  <tr>
+    <th>Дата начала</th>
+    <th>Дата окончания</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let item of routeExamples; let i = index">
+    <td>
+      <input type="datetime-local" class="form-control"
+             [(ngModel)]="item.startDateTime"
+             (ngModelChange)="onStartDateChange(i)"
+             name="start{{i}}"/>
+    </td>
+    <td>
+      <input type="datetime-local" class="form-control"
+             [(ngModel)]="item.endDateTime" name="end{{i}}"/>
+    </td>
+    <td>
+      <div *ngIf="item.status === RouteExampleItemWStatus.EDITING" class="btn-group mr-2">
+        <button class="btn btn-secondary btn-sm" (click)="handleSave(i)">
+          <i class="bi bi-floppy"></i>
+        </button>
+
+        <button class="btn btn-secondary btn-sm" (click)="handleRemove(i)">
+          <i class="bi bi-trash"></i>
+        </button>
+      </div>
+      <div *ngIf="item.status === RouteExampleItemWStatus.DEFAULT" class="dropdown">
+        <button class="btn btn-secondary btn-sm"
+                id="dropdownMenuButton{{i}}"
+                (click)="toggleDropdown(i)">
+          ⋮
+        </button>
+        <ul class="dropdown-menu custom-dropdown-left" [attr.aria-labelledby]="'dropdownMenuButton' + i">
+          <li><button class="dropdown-item" (click)="handleEdit(i)">Редактировать</button></li>
+          <li><button class="dropdown-item" (click)="handleRemove(i)">Удалить</button></li>
+        </ul>
+      </div>
+    </td>
+  </tr>
+
+  <!-- Строка с кнопкой добавления -->
+  <tr>
+    <td colspan="4" class="text-center">
+      <div class="btn-group mr-2">
+        <button class="btn btn-sm btn-primary" (click)="addRouteExample()">
+          <i class="bi bi-plus-circle me-1"></i> Добавить экземпляр маршрута
+        </button>
+        <button *ngIf="routeExamples.length > 0" class="btn btn-sm btn-primary" (click)="handleSaveAll()"><i
+          class="bi bi-floppy"></i> Сохранить все
+        </button>
+      </div>
+    </td>
+  </tr>
+  </tbody>
+</table>

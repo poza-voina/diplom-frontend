@@ -1,20 +1,23 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {DefaultCatalogueComponent} from '../../../components/default-catalog/default-catalog.component';
-import { RouteItem } from '../../../../../../data/RouteItem';
+import { IRouteItem } from '../../../../../../data/IRouteItem';
 import {RouteService} from '../../../../../../services/route.service';
 import {RoutesFilter} from '../../../../admin/admin-routes/routesSort';
 import {GetRoutesWithFiltersDto} from '../../../../../../dto/GetRoutesWithFiltersDto';
+import {NgForOf, NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-routes-catalog-page',
   imports: [
-    DefaultCatalogueComponent
+    DefaultCatalogueComponent,
+    NgForOf,
+    NgIf
   ],
   templateUrl: './routes-catalog-page.component.html',
   styleUrl: './routes-catalog-page.component.css'
 })
 export class RoutesCatalogPageComponent implements OnInit {
-  routes: RouteItem[] = []
+  routes: IRouteItem[] = []
   header: string = "Маршруты";
 
   @Output()
@@ -31,7 +34,7 @@ export class RoutesCatalogPageComponent implements OnInit {
     let getRoutesDto: GetRoutesWithFiltersDto = new GetRoutesWithFiltersDto({pageNumber: 1, countPerPage: 10, filters: [RoutesFilter.ShowVisible]});
     this.routeService.getVisibleRoutes(getRoutesDto).subscribe(
       {
-        next: (routes: RouteItem[]) => {
+        next: (routes: IRouteItem[]) => {
           this.routes = routes;
         },
         error: (error: Error) => console.log(error),

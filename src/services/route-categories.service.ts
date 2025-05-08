@@ -1,7 +1,7 @@
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {FilterRouteCategoriesRequest} from '../dto/FilterRouteCategoriesRequest';
-import { CategoryItem } from '../dto/CategoryItem';
+import { ICategoryItem } from '../dto/ICategoryItem';
 
 import {Injectable} from '@angular/core';
 import {API_URLS} from '../api-routes.config';
@@ -19,20 +19,20 @@ export class RouteCategoriesService extends BaseApiWithAuthService {
     super(http, authService);
   }
 
-  get(id: number): Observable<CategoryItem> {
-    return this.http.get<CategoryItem>(`${this.apiUrl}/${id}`, this.getOptions());
+  get(id: number): Observable<ICategoryItem> {
+    return this.http.get<ICategoryItem>(`${this.apiUrl}/${id}`, this.getOptions());
   }
 
-  getAll(): Observable<CategoryItem[]> {
-    return this.http.get<CategoryItem[]>(`${this.apiUrl}`, this.getOptions());
+  getAll(): Observable<ICategoryItem[]> {
+    return this.http.get<ICategoryItem[]>(`${this.apiUrl}`, this.getOptions());
   }
 
-  create(categoryItem: CategoryItem): Observable<CategoryItem> {
-    return this.http.post<CategoryItem>(`${this.apiUrl}`, categoryItem, this.getOptions());
+  create(categoryItem: ICategoryItem): Observable<ICategoryItem> {
+    return this.http.post<ICategoryItem>(`${this.apiUrl}`, categoryItem, this.getOptions());
   }
 
-  update(categoryItem: CategoryItem) : Observable<CategoryItem> {
-    return this.http.put<CategoryItem>(`${this.apiUrl}`, categoryItem, this.getOptions());
+  update(categoryItem: ICategoryItem) : Observable<ICategoryItem> {
+    return this.http.put<ICategoryItem>(`${this.apiUrl}`, categoryItem, this.getOptions());
   }
 
   delete(id: number) : Observable<object> {
