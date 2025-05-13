@@ -6,8 +6,8 @@ import {CuePointCard, ICuePointCard} from '../../../../dto/ICuePointCard';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RouteService} from '../../../../services/route.service';
 import {map} from 'rxjs';
-import {RouteCuePointItem} from '../../../../data/CuePoint';
 import {AdminActionsService} from '../../../../services/admin-actions.service';
+import {RouteCuePointItem} from '../../../../data/cuePoint/CuePoint';
 
 @Component({
   selector: 'app-admin-route-map',

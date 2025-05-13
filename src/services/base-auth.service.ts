@@ -2,6 +2,7 @@ import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {ILoginCredentials} from '../dto/login-credentials.interface';
 import {Injectable} from "@angular/core";
+import {jwtDecode} from 'jwt-decode';
 
 export abstract class BaseAuthService {
   protected readonly tokenKey!: string;
@@ -38,8 +39,25 @@ export abstract class BaseAuthService {
     localStorage.removeItem(this.tokenKey);
   }
 
-  // Проверить наличие токена
   isAuthenticated(): boolean {
-    return this.getToken() !== null;
+    const token = this.getToken();
+
+    if (!token) return false;
+
+    try {
+      const decoded: JwtPayload = jwtDecode(token);
+
+      const currentTime = Math.floor(Date.now() / 1000); // Текущее время в секундах
+
+      return decoded.exp > currentTime; // true, если токен ещё действителен
+    } catch (error) {
+      console.error('Ошибка при декодировании токена:', error);
+      return false;
+    }
   }
+}
+
+
+export interface JwtPayload {
+  exp: number; // Время истечения срока действия токена (в секундах)
 }

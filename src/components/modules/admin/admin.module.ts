@@ -5,6 +5,7 @@ import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {AdminMainHeaderComponent} from './admin-main-header/admin-main-header.component';
 import {BreadcrumbComponent} from './breadcrumb/breadcrumb.component';
+import {UploadImageComponent} from "../default-components/upload-image/upload-image.component";
 
 @NgModule({
   declarations: [
@@ -16,10 +17,11 @@ import {BreadcrumbComponent} from './breadcrumb/breadcrumb.component';
     AdminCuePointCardComponent,
     AdminMainHeaderComponent
   ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    BreadcrumbComponent,
-  ]
+    imports: [
+        CommonModule,
+        FormsModule,
+        BreadcrumbComponent,
+        UploadImageComponent,
+    ]
 })
 export class AdminModule { }

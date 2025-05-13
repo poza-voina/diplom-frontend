@@ -1,3 +1,3 @@
-export interface INewCategoryItem {
+export interface INewCategoryRequest {
   title: string;
 }

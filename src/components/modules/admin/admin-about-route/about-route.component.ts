@@ -1,12 +1,9 @@
 import {MapComponent} from '../../../base/map/map.component';
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {NgForOf, NgIf, NgSwitch, NgSwitchCase} from '@angular/common';
+import {NgIf, NgSwitch, NgSwitchCase} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {RouteService} from '../../../../services/route.service';
-import {IRouteItem} from '../../../../data/IRouteItem';
-import {IRouteExampleItem} from '../../../../data/IRouteExampleItem';
 import {ActivatedRoute, Router} from '@angular/router';
-import {tap} from 'rxjs';
 import {
   DefaultNavigationCardHeaderComponent
 } from '../../default-components/default-navigation-card-header/default-navigation-card-header.component';
@@ -16,15 +13,14 @@ import {RouteCardBodyComponent} from './components/route-card-body/route-card-bo
 import {RouteCardStatus} from './data/route-card.status';
 import {AboutRouteNavigationBarStatus} from './data/about-route-navigation-bar.status';
 import {RouteCategoriesService} from '../../../../services/route-categories.service';
-import {RouteCategoryItem} from '../../../../data/RouteCategoryItem';
-import {ICategoryItem} from '../../../../dto/ICategoryItem';
+import {ICategory} from '../../../../dto/ICategory';
 import {AdminActionsService} from '../../../../services/admin-actions.service';
 import {RouteExamplesTableComponent} from '../components/route-examples-table/route-examples-table.component';
-import {ModalWindowComponent} from '../../../base/modal-window/modal-window.component';
-import {AddNewCategoryComponent} from '../add-new-category/add-new-category.component';
-import {NewRouteFormComponent} from '../../../forms/new-route-form/new-route-form.component';
-import {INewCategoryItem} from '../../../../dto/new-category-item.interface';
+import {INewCategoryRequest} from '../../../../dto/new-category-item.interface';
 import * as bootstrap from 'bootstrap';
+import {UploadImageCardBodyComponent} from './components/upload-image-card-body/upload-image-card-body.component';
+import {AttachmentService} from '../../../../services/attachment.service';
+import {IBaseRoute, IRouteWithAttachment} from '../../../../data/route/IBaseRoute';
 
 @Component({
   selector: 'app-admin-about-route',
@@ -34,39 +30,39 @@ import * as bootstrap from 'bootstrap';
     FormsModule,
     NgSwitch,
     NgSwitchCase,
-    NgForOf,
     DefaultNavigationCardHeaderComponent,
     CategoriesCardBodyComponent,
     RouteCardBodyComponent,
     RouteExamplesTableComponent,
-    ModalWindowComponent,
-    AddNewCategoryComponent,
-    NewRouteFormComponent,
+    UploadImageCardBodyComponent,
   ],
   templateUrl: './about-route.component.html',
   styleUrl: './about-route.component.css'
 })
 export class AboutRouteComponent implements OnInit {
-  routeItem: IRouteItem | null = null;
+  routeItem: IRouteWithAttachment | null = null;
   routeCardStatus: RouteCardStatus = RouteCardStatus.None;
   routeId: number;
   navigationItems: IHeaderNavigationItem<AboutRouteNavigationBarStatus>[] = [
     {label: "Маршрут", value: AboutRouteNavigationBarStatus.Route},
     {label: "Категории маршрута", value: AboutRouteNavigationBarStatus.RouteCategories},
+    {label: "Изображение маршрута", value: AboutRouteNavigationBarStatus.RouteAttachment},
   ];
   currentNavigationBarStatus: AboutRouteNavigationBarStatus = AboutRouteNavigationBarStatus.Route;
   protected readonly RouteCardStatus = RouteCardStatus;
   protected readonly AboutRouteNavigationBarStatus = AboutRouteNavigationBarStatus;
-  routeCategories: ICategoryItem[] = [];
-  allCategories: ICategoryItem[] = [];
+  routeCategories: ICategory[] = [];
+  allCategories: ICategory[] = [];
   addNewCategoryModelId: string = "addNewCategoryModel1";
+  private file?: File;
 
   constructor(
     private route: ActivatedRoute,
     private routeService: RouteService,
     private adminActionsService: AdminActionsService,
     private router: Router, private cdr: ChangeDetectorRef,
-    private routeCategoriesService: RouteCategoriesService) {
+    private routeCategoriesService: RouteCategoriesService,
+    private attachmentService: AttachmentService) {
     this.routeId = +this.route.snapshot.paramMap.get('routeId')!;
   }
 
@@ -78,7 +74,7 @@ export class AboutRouteComponent implements OnInit {
   loadRoute() {
     this.routeService.getRoute(this.routeId).subscribe(
       {
-        next: (next: IRouteItem) => {
+        next: (next: IRouteWithAttachment) => {
           this.routeItem = next;
           this.routeCategories = next.routeCategories;
         },
@@ -106,7 +102,7 @@ export class AboutRouteComponent implements OnInit {
   updateAboutRoute() {
     if (this.routeItem != null) {
       this.routeItem.routeCategories = this.routeCategories;
-      this.adminActionsService.updateRoute(this.routeItem).pipe().subscribe(
+      this.adminActionsService.updateRoute(this.routeItem).subscribe(
         {
           next: (x) => this.routeItem = x,
           error: (error) => console.log("Не удалось обновить маршрут"),
@@ -114,6 +110,11 @@ export class AboutRouteComponent implements OnInit {
           }
         }
       );
+      if (this.file) {
+        this.attachmentService.uploadRouteAttachment(this.file, this.routeId).subscribe(
+          {error: error => console.log("Не удалось обновить картинку")}
+        )
+      }
     }
   }
 
@@ -138,7 +139,7 @@ export class AboutRouteComponent implements OnInit {
     this.routeCategoriesService.getAll()
       .subscribe(
         {
-          next: (next: ICategoryItem[]) => {
+          next: (next: ICategory[]) => {
             this.allCategories = next;
           },
           error: err => {
@@ -148,7 +149,7 @@ export class AboutRouteComponent implements OnInit {
       )
   }
 
-  createNewCategory($event: INewCategoryItem) {
+  createNewCategory($event: INewCategoryRequest) {
 
   }
 
@@ -167,6 +168,10 @@ export class AboutRouteComponent implements OnInit {
       const modal = bootstrap.Modal.getInstance(modalElement);
       modal?.hide();
     }
+  }
+
+  onFileSelected(file: File) {
+    this.file = file;
   }
 }
 

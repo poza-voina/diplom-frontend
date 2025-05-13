@@ -57,3 +57,114 @@
 .empty {
   background-color: #f9f9f9;
 }
+
+.light-booked .date {
+  background-color: #d3f8d3; /* светло-зелёный */
+}
+
+.medium-booked .date {
+  background-color: #fce694; /* жёлтый */
+}
+
+.heavy-booked .date {
+  background-color: #f8a5a5; /* красноватый */
+}
+.highlighted {
+  background-color: yellow;
+  border-radius: 50%;
+  font-weight: bold;
+}
+
+.cell.highlighted {
+  background-color: yellow; /* Например, подсветка желтым */
+}
+
+
+
+.cell {
+  position: relative;
+}
+
+.tooltip {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 1000;
+  visibility: visible;
+  display: block;
+  opacity: 1;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+  pointer-events: auto;
+  transition: opacity 0.2s;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+  width: 200px;
+}
+
+.tooltip-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.tooltip-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tooltip-item {
+  padding: 5px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.tooltip-time {
+  font-size: 14px;
+  color: #ffffff;
+  margin: 0;
+}
+
+.tooltip-seats {
+  font-size: 14px;
+  color: #ffffff;
+  margin: 0;
+  font-weight: 600;
+}
+
+/* Добавление стилей для свободных мест */
+.tooltip-seats {
+  color: #00e676; /* Зелёный для доступных мест */
+}
+
+.tooltip-item:last-child {
+  border-bottom: none; /* Убираем нижнюю границу у последнего элемента */
+}
+
+.tooltip-item:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Легкое выделение при наведении */
+}
+
+
+
+
+.tooltip.ng-trigger {
+  opacity: 1;
+}
+.cell.green {
+  background-color: #d3f8d3; /* светло-зелёный */ /* Если есть свободные места */
+}
+
+.cell.red {
+  background-color: #f8a5a5; /* Если мест нет */
+}
+
+.cell.empty {
+  background-color: transparent;
+}
+
+.cell.empty {
+  background-color: transparent;  /* Для пустых ячеек */
+}

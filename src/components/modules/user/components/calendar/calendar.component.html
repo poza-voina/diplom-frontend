@@ -4,6 +4,7 @@
     <span class="month-year">{{ monthName }} {{ year }}</span>
     <span class="next-month" (click)="changeMonth(1)">&#10095;</span>
   </header>
+
   <div class="calendar-days">
     <div class="day">Пн</div>
     <div class="day">Вт</div>
@@ -13,7 +14,30 @@
     <div class="day">Сб</div>
     <div class="day">Вс</div>
   </div>
+
   <div class="calendar-grid">
-    <div *ngFor="let day of daysInMonth" class="cell" [class.empty]="day === null">{{ day }}</div>
+    <div *ngFor="let day of daysInMonth" class="cell"
+         [class.empty]="day === null"
+         [class.green]="isDayHasAvailableSeats(day)"
+         [class.red]="isDayFullyBooked(day)"
+         (click)="toggleShowMenu(day, $event)" (mouseenter)="showMenu(day, $event)" (mouseleave)="onMouseLeaveCell()">
+      {{ day }}
+    </div>
+  </div>
+
+  <!-- Всплывающее меню -->
+  <!-- Всплывающее меню -->
+  <div *ngIf="(tooltipVisible && routesForSelectedDay.length > 0)" class="tooltip" [ngStyle]="{top: mouseY + 'px', left: mouseX + 'px'}">
+    <h3 class="tooltip-title">Маршруты для дня {{ selectedDay }}</h3>
+    <ul class="tooltip-list">
+      <li *ngFor="let route of routesForSelectedDay" class="tooltip-item" (click)="handleSelectRoute(route)">
+        <p class="tooltip-time">
+          {{ route.startDateTime | date:'HH:mm' }} - {{ route.endDateTime | date:'HH:mm' }}
+        </p>
+        <p class="tooltip-seats">
+          Свободных мест: {{ route.countRecords }} из {{ MAX_SEATS }}
+        </p>
+      </li>
+    </ul>
   </div>
 </div>

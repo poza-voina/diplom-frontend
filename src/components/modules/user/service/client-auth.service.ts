@@ -10,13 +10,12 @@ import {IUserProfileDto} from '../../../../dto/IUserProfileDto';
   providedIn: 'root'
 })
 export class ClientAuthService extends BaseAuthService {
-  registerRoute!: string;
+  registerRoute: string = `${API_URLS.clients}/client/register`;
   private static tokenKey: string = 'clientTokenKey';
 
   constructor(http: HttpClient) {
-    let authRoute = `${API_URLS.clients}/auth`;
+    let authRoute = `${API_URLS.clients}/client/auth`;
     super(http, authRoute, ClientAuthService.tokenKey);
-    this.registerRoute = authRoute + '/register';
   }
 
   public register(user: IRegistrationUserDto): Observable<IUserProfileDto> {

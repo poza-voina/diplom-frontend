@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {NgForOf} from "@angular/common";
-import {ICategoryItem} from '../../../../../dto/ICategoryItem';
+import {ICategory} from '../../../../../dto/ICategory';
 
 @Component({
   selector: 'app-default-categories-catalogue',
@@ -12,5 +12,5 @@ import {ICategoryItem} from '../../../../../dto/ICategoryItem';
 })
 export class DefaultCategoriesCatalogueComponent {
   @Input()
-  categories: ICategoryItem[] = []
+  categories: ICategory[] = []
 }

@@ -1,11 +1,82 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {ClientActionsService} from '../../../../../services/client-actions.service';
+import {ClientService} from '../../../../../services/client.service';
+import {IUserProfileDto} from '../../../../../dto/IUserProfileDto';
+import {IBookRouteExampleRecord, IRouteExampleRecord} from '../../../../../data/IRouteExampleRecord';
+import {IGetBooksRequestWithPaginate} from '../../../../../data/book/IGetBooksRequestWithPaginate';
+import {NgForOf} from '@angular/common';
+import {RouteService} from '../../../../../services/route.service';
+import {RouteHelper} from '../../../../../services/route.helper';
+import {IBaseRoute} from '../../../../../data/route/IBaseRoute';
 
 @Component({
   selector: 'app-profile-page',
-  imports: [],
+  imports: [
+    NgForOf
+  ],
   templateUrl: './profile-page.component.html',
   styleUrl: './profile-page.component.css'
 })
-export class ProfilePageComponent {
+export class ProfilePageComponent implements OnInit {
+  profileView: IUserProfileDto | null = null;
+  routeExampleRecordsView: IBookRouteExampleRecord[] | null = null;
+  routes: IBaseRoute[] | null = null;
+  currentPageNumber: number = 1;
+  currentPageSize: number = 10;
+  loadingErrors: LoadingErrors<ProfilePageComponent> = new LoadingErrors<ProfilePageComponent>();
 
+  constructor(private clientService: ClientService, private clientActionsService: ClientActionsService, private routeService: RouteService) {
+  }
+
+  ngOnInit(): void {
+    this.clientService.getProfile().subscribe(
+      {
+        next: value => this.profileView = value,
+        error: error => {
+          this.loadingErrors.push('profileView');
+          console.log("Не удалось загрузить профиль", error)
+        }
+      }
+    )
+
+    let getBooksRequest: IGetBooksRequestWithPaginate = {pageNumber: this.currentPageNumber, pageSize: this.currentPageSize};
+    this.clientActionsService.getBooks(getBooksRequest).subscribe(
+      {
+        next: value => {
+          this.routeExampleRecordsView = value
+        },
+        error: error => {
+          this.loadingErrors.push('routeExampleRecordsView');
+          console.log("Не удалось загрузить профиль записи", error)
+        }
+      }
+    )
+
+  }
+
+  getRecordStatus(status: string) :string {
+    return RouteHelper.ConvertRouteExampleRecordStatusToMessage(status);
+  }
 }
+
+export class LoadingError<T> {
+  property: keyof T;
+
+  constructor(property: keyof T) {
+    this.property = property;
+  }
+}
+
+
+export class LoadingErrors<T> {
+  errors: LoadingError<T>[] = [];
+
+  push(property: keyof T): void {
+    this.errors.push(new LoadingError<T>(property));
+  }
+
+  isError(property: keyof T): boolean {
+    return this.errors.some(error => error.property === property);
+  }
+}
+

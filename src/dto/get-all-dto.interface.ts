@@ -1,4 +1,4 @@
-export interface IGetAllDto {
+export interface IGetVisibleRouteWithPaginate {
   pageNumber: number,
   countPerPage: number
 }

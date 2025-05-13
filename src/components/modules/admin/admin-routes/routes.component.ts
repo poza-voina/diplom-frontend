@@ -6,10 +6,10 @@ import * as bootstrap from 'bootstrap';
 import {Router} from '@angular/router';
 import {NewRouteFormComponent} from '../../../forms/new-route-form/new-route-form.component';
 import {ModalWindowComponent} from '../../../base/modal-window/modal-window.component';
-import {IRouteItem} from '../../../../data/IRouteItem';
 import {RouteService} from '../../../../services/route.service';
 import {GetRoutesWithFiltersDto} from '../../../../dto/GetRoutesWithFiltersDto';
 import {AdminActionsService} from '../../../../services/admin-actions.service';
+import { IBaseRoute } from '../../../../data/route/IBaseRoute';
 
 @Component({
   selector: 'app-admin-routes',
@@ -21,7 +21,7 @@ import {AdminActionsService} from '../../../../services/admin-actions.service';
 
 export class RoutesComponent {
   @ViewChild(NewRouteFormComponent) newRouteFormComponent!: NewRouteFormComponent;
-  routes: IRouteItem[] = [];
+  routes: IBaseRoute[] = [];
   routesLoadingStatus: RoutesLoadingStatus = RoutesLoadingStatus.Completed;
   routesStatuses: RoutesStatuses = new RoutesStatuses(this.routes);
   selectedSort: RoutesSort = RoutesSort.None;
@@ -72,9 +72,9 @@ export class RoutesComponent {
     this.router.navigate(['/admin/routes', id]);
   }
 
-  showRoute(event: Event, item: IRouteItem) {
+  showRoute(event: Event, item: IBaseRoute) {
     event.stopPropagation();
-    let buffer: IRouteItem = {...item};
+    let buffer: IBaseRoute = {...item};
     this.routesStatuses.setStatus(item, RouteStatus.ToggleVisibility)
     this.adminActionsService.updateRoute(buffer).pipe()
       .subscribe({
@@ -88,9 +88,9 @@ export class RoutesComponent {
       });
   }
 
-  hideRoute(event: Event, item: IRouteItem) {
+  hideRoute(event: Event, item: IBaseRoute) {
     event.stopPropagation();
-    let buffer: IRouteItem = {...item};
+    let buffer: IBaseRoute = {...item};
     this.routesStatuses.setStatus(item, RouteStatus.ToggleVisibility)
     this.adminActionsService.updateRoute(buffer).pipe()
       .subscribe({
@@ -138,7 +138,7 @@ export class RoutesComponent {
     }
   }
 
-  createNewRoute(routeItem: IRouteItem) {
+  createNewRoute(routeItem: IBaseRoute) {
     this.adminActionsService.createRoute(routeItem).pipe().subscribe({
       error: (error) => {
         this.newRouteFormComponent.afterSaveHandler("Не удалось сохранить маршрут");
@@ -186,19 +186,19 @@ enum RouteStatus {
 class RoutesStatuses {
   dictionary: { [key: number]: RouteStatus } = {};
 
-  constructor(items: IRouteItem[]) {
+  constructor(items: IBaseRoute[]) {
     items.forEach(item => this.dictionary[item.id] = RouteStatus.None);
   }
 
-  update(items: IRouteItem[]) {
+  update(items: IBaseRoute[]) {
     items.forEach(item => this.dictionary[item.id] = RouteStatus.None);
   }
 
-  getStatus(item: IRouteItem): RouteStatus {
+  getStatus(item: IBaseRoute): RouteStatus {
     return this.dictionary[item.id];
   }
 
-  setStatus(item: IRouteItem, status: RouteStatus) {
+  setStatus(item: IBaseRoute, status: RouteStatus) {
     this.dictionary[item.id] = status;
   }
 }

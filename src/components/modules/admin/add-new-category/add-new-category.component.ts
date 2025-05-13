@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {FormFieldComponent} from "../../../base/form-field/form-field.component";
 import {FormsModule} from "@angular/forms";
-import {ICategoryItem} from '../../../../dto/ICategoryItem';
-import {INewCategoryItem} from '../../../../dto/new-category-item.interface';
-import {IRouteItem} from '../../../../data/IRouteItem';
+import {ICategory} from '../../../../dto/ICategory';
+import {INewCategoryRequest} from '../../../../dto/new-category-item.interface';
+
 
 @Component({
   selector: 'app-add-new-category',
@@ -15,8 +15,8 @@ import {IRouteItem} from '../../../../data/IRouteItem';
   styleUrl: './add-new-category.component.css'
 })
 export class AddNewCategoryComponent {
-  categoryItem: INewCategoryItem = {title: ''};
-  @Output() saveEvent: EventEmitter<INewCategoryItem> = new EventEmitter();
+  categoryItem: INewCategoryRequest = {title: ''};
+  @Output() saveEvent: EventEmitter<INewCategoryRequest> = new EventEmitter();
   @Output() afterSaveEvent = new EventEmitter<any>();
 
   saveHandler() {

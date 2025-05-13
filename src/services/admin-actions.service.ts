@@ -1,18 +1,15 @@
+import {Injectable} from '@angular/core';
 import {BaseApiWithAuthService} from './base-api-with-auth.service';
-import {IRouteItem} from '../data/IRouteItem';
-import {Observable} from 'rxjs';
-import {IRouteCuePointItem} from '../data/CuePoint';
 import {API_URLS} from '../api-routes.config';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {AdminAuthService} from '../components/modules/admin/services/admin-auth.service';
+import {IBaseRouteCuePoint} from '../data/cuePoint/CuePoint';
+import { Observable } from 'rxjs';
+import {IBaseRoute, IRouteWithAttachment} from '../data/route/IBaseRoute';
+import {IRouteExample} from '../data/IRouteExample';
 import {GetRoutesWithFiltersDto} from '../dto/GetRoutesWithFiltersDto';
-import {Injectable} from '@angular/core';
-import {IRouteExampleItem} from '../data/IRouteExampleItem';
-import {
-  IRouteExampleItemW
-} from '../components/modules/admin/components/route-examples-table/route-examples-table.component';
-import {INewCategoryItem} from '../dto/new-category-item.interface';
-import {ICategoryItem} from '../dto/ICategoryItem';
+import {INewCategoryRequest} from '../dto/new-category-item.interface';
+import {ICategory} from '../dto/ICategory';
 
 @Injectable({
   providedIn: 'root'
@@ -26,50 +23,49 @@ export class AdminActionsService extends BaseApiWithAuthService {
     super(http, authService);
   }
 
-  updateRoute(route : IRouteItem): Observable<IRouteItem> {
-    return this.http.put<IRouteItem>(this.apiRoutesUrl, route, this.getOptions());
+  updateRoute(route : IBaseRoute): Observable<IRouteWithAttachment> {
+    return this.http.put<IRouteWithAttachment>(this.apiRoutesUrl, route, this.getOptions());
   }
 
-  createRoute(route: IRouteItem): Observable<IRouteItem> {
-    return this.http.post<IRouteItem>(this.apiRoutesUrl, route, this.getOptions());
+  createRoute(route: IBaseRoute): Observable<IBaseRoute> {
+    return this.http.post<IBaseRoute>(this.apiRoutesUrl, route, this.getOptions());
   }
 
-  updateRouteCuePoints(cuePointItems: IRouteCuePointItem[]): Observable<IRouteCuePointItem[]> {
-    return this.http.put<IRouteCuePointItem[]>(this.apiRoutesUrl + "/update-cue-points", cuePointItems, this.getOptions());
+  updateRouteCuePoints(cuePointItems: IBaseRouteCuePoint[]): Observable<IBaseRouteCuePoint[]> {
+    return this.http.put<IBaseRouteCuePoint[]>(this.apiRoutesUrl + "/update-cue-points", cuePointItems, this.getOptions());
   }
 
-  createOrUpdateRouteExample(routeExampleItem: IRouteExampleItem): Observable<IRouteExampleItem> {
-    return this.http.put<IRouteExampleItem>(this.apiRoutesExampleUrl, routeExampleItem, this.getOptions());
+  createOrUpdateRouteExample(routeExampleItem: IRouteExample): Observable<IRouteExample> {
+    return this.http.put<IRouteExample>(this.apiRoutesExampleUrl, routeExampleItem, this.getOptions());
   }
 
   deleteRouteExample(index: number) : Observable<any> {
     return this.http.delete(`${this.apiRoutesExampleUrl}/${index}`, this.getOptions());
   }
 
-  createOrUpdateRouteExamples(routeExampleItems: IRouteExampleItem[]): Observable<IRouteExampleItem[]> {
-    return this.http.put<IRouteExampleItem[]>(this.apiRoutesExampleUrl + "/by-route", routeExampleItems, this.getOptions());
+  createOrUpdateRouteExamples(routeExampleItems: IRouteExample[]): Observable<IRouteExample[]> {
+    return this.http.put<IRouteExample[]>(this.apiRoutesExampleUrl + "/by-route", routeExampleItems, this.getOptions());
   }
 
-  getRoutes(dto: GetRoutesWithFiltersDto): Observable<IRouteItem[]> {
+  getRoutes(dto: GetRoutesWithFiltersDto): Observable<IRouteWithAttachment[]> {
     let params = new HttpParams();
 
     Object.keys(dto).forEach(key => {
       const value = dto[key as keyof GetRoutesWithFiltersDto];
 
-      // Проверяем, если это массив (например, фильтры)
       if (Array.isArray(value)) {
         value.forEach(val => {
-          params = params.append(key, val.toString()); // Для каждого элемента массива добавляем отдельный параметр
+          params = params.append(key, val.toString());
         });
       } else if (value !== undefined && value !== null) {
         params = params.set(key, value.toString());
       }
     });
 
-    return this.http.get<IRouteItem[]>(this.apiRoutesUrl, { params, ...this.getOptions() });
+    return this.http.get<IRouteWithAttachment[]>(this.apiRoutesUrl, { params, ...this.getOptions() });
   }
 
-  createCategory(dto: INewCategoryItem) : Observable<ICategoryItem> {
-   return this.http.post<ICategoryItem>(this.apiRouteCategoriesUrl, dto, this.getOptions());
+  createCategory(dto: INewCategoryRequest) : Observable<ICategory> {
+   return this.http.post<ICategory>(this.apiRouteCategoriesUrl, dto, this.getOptions());
   }
 }

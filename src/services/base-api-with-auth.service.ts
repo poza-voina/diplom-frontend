@@ -11,10 +11,11 @@ export abstract class BaseApiWithAuthService {
   }
 
   protected checkToken() : string {
-    if (!this.token) {
+    if (!this.authService.isAuthenticated()) {
       throw new AuthTokenNotFoundError("Токен не найден");
     }
-    return this.token;
+    this.token = this.authService.getToken();
+    return this.token ? this.token : '';
   }
 
   protected getOptions(): { headers: HttpHeaders } {

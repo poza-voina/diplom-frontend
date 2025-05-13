@@ -3,10 +3,10 @@ import {NgForOf, NgIf, NgSwitch, NgSwitchCase} from '@angular/common';
 import {RouteCardStatus} from '../../data/route-card.status';
 import * as bootstrap from 'bootstrap';
 import {FormsModule} from '@angular/forms';
-import {ICategoryItem} from '../../../../../../dto/ICategoryItem';
+import {ICategory} from '../../../../../../dto/ICategory';
 import {AddNewCategoryComponent} from '../../../add-new-category/add-new-category.component';
 import {ModalWindowComponent} from '../../../../../base/modal-window/modal-window.component';
-import {INewCategoryItem} from '../../../../../../dto/new-category-item.interface';
+import {INewCategoryRequest} from '../../../../../../dto/new-category-item.interface';
 import {AdminActionsService} from '../../../../../../services/admin-actions.service';
 
 @Component({
@@ -27,13 +27,13 @@ export class CategoriesCardBodyComponent {
   @Input() routeCardStatus!: RouteCardStatus;
   @Output() routeCardStatusChange = new EventEmitter<RouteCardStatus>();
   @Input()
-  allCategories: ICategoryItem[] = [];
+  allCategories: ICategory[] = [];
   @Output()
-  allCategoriesChange = new EventEmitter<ICategoryItem[]>();
+  allCategoriesChange = new EventEmitter<ICategory[]>();
   @Input()
-  routeCategories: ICategoryItem[] = [];
+  routeCategories: ICategory[] = [];
   @Output()
-  routeCategoriesChange = new EventEmitter<ICategoryItem[]>();
+  routeCategoriesChange = new EventEmitter<ICategory[]>();
   isShowingAllCategories: boolean = false;
   test: boolean = false;
   addNewCategoryModelId: string = "addNewCategoryModel";
@@ -42,7 +42,7 @@ export class CategoriesCardBodyComponent {
   constructor(private adminActionsService: AdminActionsService) {
   }
 
-  handleRemoveCategory(item: ICategoryItem) {
+  handleRemoveCategory(item: ICategory) {
     this.routeCategories = this.routeCategories.filter(c => c !== item);
   }
 
@@ -74,7 +74,7 @@ export class CategoriesCardBodyComponent {
     return this.getIntersectionFilteredCategories().concat(this.getDifferenceCategories());
   }
 
-  isChecked(item: ICategoryItem): boolean {
+  isChecked(item: ICategory): boolean {
     return this.routeCategories.some(c => c.title === item.title);
   }
 
@@ -88,7 +88,7 @@ export class CategoriesCardBodyComponent {
       !this.routeCategories.some(c => c.title === x.title));
   }
 
-  toggleCategory(item: ICategoryItem) {
+  toggleCategory(item: ICategory) {
     const index = this.routeCategories.findIndex(x => x.title === item.title);
 
     if (index > -1) {
@@ -110,7 +110,7 @@ export class CategoriesCardBodyComponent {
     return this.isShowingAllCategories ? this.getAllCategories() : this.getIntersectionFilteredCategories();
   }
 
-  createNewCategory(item: INewCategoryItem) {
+  createNewCategory(item: INewCategoryRequest) {
     this.adminActionsService.createCategory(item).subscribe(
       {
         next: (response) => this.allCategories.push(response),

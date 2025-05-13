@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {NgForOf, NgIf} from '@angular/common';
-import {IRouteExampleItem} from '../../../../../data/IRouteExampleItem';
+import {IRouteExample} from '../../../../../data/IRouteExample';
 import {map} from 'rxjs';
 import {RouteService} from '../../../../../services/route.service';
 import {FormsModule} from '@angular/forms';
@@ -43,12 +43,12 @@ export class RouteExamplesTableComponent implements OnInit {
     });
   }
 
-  mapRouteExample(item: IRouteExampleItem): IRouteExampleItemW {
+  mapRouteExample(item: IRouteExample): IRouteExampleItemW {
     this.reformatExamplesDatetime(item);
     return {...item, status: RouteExampleItemWStatus.DEFAULT} as IRouteExampleItemW
   }
 
-  reformatExamplesDatetime(data: IRouteExampleItem) {
+  reformatExamplesDatetime(data: IRouteExample) {
     data.creationDateTime = this.reformatDatetime(data.creationDateTime);
     data.startDateTime = this.reformatDatetime(data.startDateTime);
     data.endDateTime = this.reformatDatetime(data.endDateTime);
@@ -87,7 +87,8 @@ export class RouteExamplesTableComponent implements OnInit {
       routeId: 0,
       startDateTime: defaultDatetime,
       endDateTime: defaultDatetime,
-      status: RouteExampleItemWStatus.EDITING
+      status: RouteExampleItemWStatus.EDITING,
+      countRecords: 0
     }
   }
 
@@ -167,6 +168,6 @@ export enum RouteExampleItemWStatus {
   EDITING
 }
 
-export interface IRouteExampleItemW extends IRouteExampleItem {
+export interface IRouteExampleItemW extends IRouteExample {
   status: RouteExampleItemWStatus;
 }

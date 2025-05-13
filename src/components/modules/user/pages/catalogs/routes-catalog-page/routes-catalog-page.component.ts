@@ -1,10 +1,10 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {DefaultCatalogueComponent} from '../../../components/default-catalog/default-catalog.component';
-import { IRouteItem } from '../../../../../../data/IRouteItem';
 import {RouteService} from '../../../../../../services/route.service';
-import {RoutesFilter} from '../../../../admin/admin-routes/routesSort';
-import {GetRoutesWithFiltersDto} from '../../../../../../dto/GetRoutesWithFiltersDto';
 import {NgForOf, NgIf} from '@angular/common';
+import {IGetVisibleRouteWithPaginate} from '../../../../../../dto/get-all-dto.interface';
+import {IRouteWithAttachment} from '../../../../../../data/route/IBaseRoute';
+import {S3Helper} from '../../../../../../services/s3.helper';
 
 @Component({
   selector: 'app-routes-catalog-page',
@@ -17,7 +17,7 @@ import {NgForOf, NgIf} from '@angular/common';
   styleUrl: './routes-catalog-page.component.css'
 })
 export class RoutesCatalogPageComponent implements OnInit {
-  routes: IRouteItem[] = []
+  routes: IRouteWithAttachment[] = []
   header: string = "Маршруты";
 
   @Output()
@@ -27,14 +27,13 @@ export class RoutesCatalogPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("RoutesCatalogPageComponent init");
-
     this.loadCatalogEvent.emit(this.header);
 
-    let getRoutesDto: GetRoutesWithFiltersDto = new GetRoutesWithFiltersDto({pageNumber: 1, countPerPage: 10, filters: [RoutesFilter.ShowVisible]});
+    let getRoutesDto: IGetVisibleRouteWithPaginate = {pageNumber: 1, countPerPage: 10};
+
     this.routeService.getVisibleRoutes(getRoutesDto).subscribe(
       {
-        next: (routes: IRouteItem[]) => {
+        next: (routes: IRouteWithAttachment[]) => {
           this.routes = routes;
         },
         error: (error: Error) => console.log(error),
@@ -42,5 +41,12 @@ export class RoutesCatalogPageComponent implements OnInit {
         }
       }
     )
+  }
+
+  getImage(uri: string | null) {
+    if (uri === null) {
+      return null;
+    }
+    return S3Helper.getImageUrlOrDefault(uri)
   }
 }

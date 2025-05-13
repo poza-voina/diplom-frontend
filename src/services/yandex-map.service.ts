@@ -29,6 +29,23 @@ export class YandexMapService {
     });
   }
 
+  // Обработка клика по карте: получение координат и адреса
+  setClickListener(map: any, callback: (coords: [number, number], address: string) => void) {
+    map.events.add('click', (e: any) => {
+      const coords: [number, number] = e.get('coords');
+
+      (window as any)['ymaps'].geocode(coords).then((res: any) => {
+        const firstGeoObject = res.geoObjects.get(0);
+        const address = firstGeoObject?.getAddressLine() || 'Адрес не найден';
+
+        callback(coords, address);
+      }, (err: any) => {
+        console.error('Ошибка геокодирования:', err);
+        callback(coords, 'Ошибка получения адреса');
+      });
+    });
+  }
+
   // Получение подсказок адреса
   getAddressSuggestions(query: string): Observable<string[]> {
     return new Observable((observer: Observer<string[]>) => {

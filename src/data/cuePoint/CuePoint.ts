@@ -1,4 +1,6 @@
-export interface IRouteCuePointItem {
+import {IAttachment} from '../IAttachment';
+
+export interface IBaseRouteCuePoint {
   id: number | null;
   title: string | null;
   description: string | null;
@@ -11,7 +13,11 @@ export interface IRouteCuePointItem {
   address: string | null;
 }
 
-export class RouteCuePointItem implements IRouteCuePointItem  {
+export interface IRouteCuePointWithAttachment extends IBaseRouteCuePoint {
+  attachment: IAttachment;
+}
+
+export class RouteCuePointItem implements IBaseRouteCuePoint  {
     id: number | null;
     title: string | null;
     description: string | null;

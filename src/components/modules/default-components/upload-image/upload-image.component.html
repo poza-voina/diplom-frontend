@@ -1,0 +1,21 @@
+<div
+  class=""
+  [class.border-info]="isDragging"
+  (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave()"
+  (drop)="onDrop($event)"
+  (click)="fileInput.click()"
+  style="cursor: pointer;"
+>
+  <div *ngIf="!previewUrl" class="d-flex flex-column justify-content-center align-items-center h-100">
+    <i class="bi bi-image fs-1 text-secondary"></i>
+    <p class="text-muted mb-0">Перетащите изображение сюда или кликните для выбора</p>
+  </div>
+
+  <div *ngIf="previewUrl" class="text-center">
+    <img [src]="previewUrl" [alt]="fileName" class="img-fluid rounded shadow-sm"/>
+    <p class="text-muted small mt-2">{{ fileName }}</p>
+  </div>
+
+  <input #fileInput type="file" accept="image/*" hidden (change)="onFileInputChange($event)" />
+</div>

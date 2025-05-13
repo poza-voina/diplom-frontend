@@ -31,7 +31,7 @@
       <div class="col" *ngFor="let route of routes">
         <a href="/route/{{route.id}}" class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
           <img
-            src="#"
+            [src]="getImage(route?.attachment?.uri || null)"
             class="card-img-top object-fit-cover"
             style="height: 200px"
             alt="Фото маршрута"

@@ -21,12 +21,6 @@ import {
   RoutesCategoriesCatalogPageComponent
 } from '../components/modules/user/pages/catalogs/routes-categories-catalog-page/routes-categories-catalog-page.component';
 import {
-  FavoriteRoutesCatalogPageComponent
-} from '../components/modules/user/pages/catalogs/favorite-routes-catalog-page/favorite-routes-catalog-page.component';
-import {
-  ReservationRoutesCatalogPageComponent
-} from '../components/modules/user/pages/catalogs/reservation-routes-catalog-page/reservation-routes-catalog-page.component';
-import {
   AdminRoutesCategoriesComponent
 } from '../components/modules/admin/admin-routes-categories/admin-routes-categories.component';
 import {TestUserExampleComponent} from '../components/test-user-example/test-user-example.component';
@@ -79,14 +73,6 @@ export const routes: Routes = [
           {
             path: 'categories',
             component: RoutesCategoriesCatalogPageComponent,
-          },
-          {
-            path: 'favorites',
-            component: FavoriteRoutesCatalogPageComponent,
-          },
-          {
-            path: 'reservation',
-            component: ReservationRoutesCatalogPageComponent,
           },
         ]
       },

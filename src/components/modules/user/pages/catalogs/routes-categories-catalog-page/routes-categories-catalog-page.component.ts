@@ -4,7 +4,7 @@ import {
 } from '../../../components/default-categories-catalog/default-categories-catalog.component';
 import {RouteCategoryItem} from '../../../../../../data/RouteCategoryItem';
 import {RouteCategoriesService} from '../../../../../../services/route-categories.service';
-import { ICategoryItem } from '../../../../../../dto/ICategoryItem';
+import { ICategory } from '../../../../../../dto/ICategory';
 
 @Component({
   selector: 'app-routes-categories-catalog-page',
@@ -18,7 +18,7 @@ export class RoutesCategoriesCatalogPageComponent implements OnInit {
   header: string = "Категории маршрутов";
   @Output()
   loadCatalogEvent = new EventEmitter<string>();
-  categories: ICategoryItem[] = [];
+  categories: ICategory[] = [];
 
   constructor(private service: RouteCategoriesService) {
   }

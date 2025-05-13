@@ -20,6 +20,7 @@
                              (routeCardStatusChange)="routeCardStatus = $event"></app-route-card-body>
         <app-categories-card-body
           *ngSwitchCase="AboutRouteNavigationBarStatus.RouteCategories" [(routeCategories)]="routeCategories" [(allCategories)]="allCategories" [(routeCardStatus)]="routeCardStatus"></app-categories-card-body>
+        <app-upload-image-card-body [attachment]="routeItem?.attachment || null" [(routeCardStatus)]="routeCardStatus" (fileSelected)="onFileSelected($event)" *ngSwitchCase="AboutRouteNavigationBarStatus.RouteAttachment"></app-upload-image-card-body>
       </div>
       <div [ngSwitch]="routeCardStatus" class="card-footer">
         <button *ngSwitchCase="RouteCardStatus.None" class="btn btn-primary" (click)="ToggleEditRouteCard()">Изменить

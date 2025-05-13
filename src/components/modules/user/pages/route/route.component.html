@@ -1,66 +1,112 @@
-<div class="container py-5">
-
+<div class="container p-0">
   <!-- Главная картинка маршрута -->
-  <div class="text-center">
-    <img src="https://source.unsplash.com/1200x400/?nature,travel" class="img-fluid route-cover mb-4" alt="Обложка маршрута">
-    <h1 class="fw-bold">{{this.routeItem?.title}}</h1>
+  <div class="position-relative text-center mb-4">
+    <h2 class="fw-bold">{{ routeItem?.title }}</h2>
+    <p class="lead" style="font-size: 1.25rem; text-align: left;">{{ routeItem?.description }}</p>
+    <img
+      [src]="getImageUrl(routeItem?.attachment?.uri || null)"
+      alt="Изображение маршрута"
+      class="nfo-box p-0 bg-white rounded-4 shadow-sm border w-100"
+      style="max-height: 400px; object-fit: cover; image-rendering: auto;"
+    />
   </div>
 
-  <!-- Информация о маршруте и календарь -->
   <div class="row my-4 align-items-stretch">
     <div class="col-md-6">
       <div class="info-box p-4 bg-white rounded-4 shadow-sm border h-100 d-flex flex-column justify-content-between">
         <div>
-          <h5 class="fw-bold mb-1">Информация о маршруте</h5>
+          <ng-container *ngIf="routeItem as route; else noRoute">
+            <h5 class="fw-bold mb-1">Информация о маршруте</h5>
 
-          <div class="d-flex justify-content-between mb-2">
-            <span class="text-muted">Цена:</span>
-            <span class="fw-semibold text-primary">{{ this.routeItem?.baseCost }} ₽</span>
-          </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Цена:</span>
+              <span class="fw-semibold text-primary">{{ route.baseCost }} ₽</span>
+            </div>
 
-          <div class="d-flex justify-content-between mb-2">
-            <span class="text-muted">Всего мест:</span>
-            <span class="fw-semibold">{{ this.routeItem?.maxCountPeople }}</span>
-          </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Всего мест:</span>
+              <span class="fw-semibold">{{ route.maxCountPeople }}</span>
+            </div>
 
-          <div class="d-flex justify-content-between mb-3">
-            <span class="text-muted">Осталось мест:</span>
-            <span class="fw-semibold text-success">0</span>
-          </div>
+            <ng-container *ngIf="viewRouteExampleItem as example">
+              <div class="d-flex justify-content-between  mb-2">
+                <span class="text-muted">Осталось мест:</span>
+                <span class="fw-semibold text-success">{{ remainingSeats }}</span>
+              </div>
 
-          <h5 class="fw-bold mb-2 mt-4">Описание:</h5>
-          <p class="text-muted mb-0">
-           {{this.routeItem?.description}}
-          </p>
+              <div class="d-flex justify-content-between  mb-2">
+                <span class="text-muted">Дата начала:</span>
+                <span class="fw-semibold">{{ viewRouteExampleItem.startDateTime | date:'dd.MM.yyyy HH:mm' }}</span>
+              </div>
+
+              <div class="d-flex justify-content-between  mb-2">
+                <span class="text-muted">Дата конца:</span>
+                <span class="fw-semibold">{{ viewRouteExampleItem.endDateTime | date:'dd.MM.yyyy HH:mm' }}</span>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="viewRouteExampleRecord">
+              <h5 class="fw-bold mb-1">Информация о записи</h5>
+              <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">Статус записи:</span>
+                <span class="fw-semibold text-primary">{{ getRecordStatus(viewRouteExampleRecord.status) }}</span>
+              </div>
+            </ng-container>
+          </ng-container>
+
+          <ng-template #noRoute>
+            <div>Информация о маршруте не найдена</div>
+          </ng-template>
         </div>
 
-        <button class="btn btn-primary w-100 mt-4">
-          Записаться на маршрут
-        </button>
+        <ng-container *ngIf="isAuth; else loginLink">
+          <button *ngIf="!isBooked" class="btn btn-primary w-100 mt-4" (click)="book()" [disabled]="isButtonBookDisabled">
+            Записаться на маршрут
+          </button>
+          <button *ngIf="isBooked" class="btn btn-primary w-100 mt-4" (click)="unBook()">Отписаться от маршрута</button>
+        </ng-container>
+
+        <ng-template #loginLink>
+          <a [routerLink]="['/login']" class="btn btn-primary w-100 mt-4">
+            Авторизуйтесь, чтобы записаться на маршрут
+          </a>
+        </ng-template>
       </div>
     </div>
 
     <div class="col-md-6">
       <div class="calendar-container p-4 bg-white rounded-4 shadow-sm border h-100">
-        <app-calendar></app-calendar>
+        <app-calendar *ngIf="routeItem" (onSelectMonth)="onSelectMonth($event)"
+                      (onInit)="onSelectMonth($event)"
+                      (onSelectRouteExample)="handleSelectDay($event)"
+                      [routeId]="routeItem?.id || 0"
+                      [routeExamplesByMonth]="routeExamplesByMonth"
+        ></app-calendar>
       </div>
     </div>
   </div>
 
   <!-- Карта -->
   <div class="map-container mb-4">
-    <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3A08fbf0e28d1b7d36a4ffb1ff4c234592417be214f32c96f7dfd0c72f4e2b63b6&source=constructor"
-            width="100%" height="400" frameborder="0" allowfullscreen="true"></iframe>
+    <iframe
+      src="https://yandex.ru/map-widget/v1/?um=constructor%3A08fbf0e28d1b7d36a4ffb1ff4c234592417be214f32c96f7dfd0c72f4e2b63b6&source=constructor"
+      width="100%" height="400" frameborder="0" allowfullscreen="true"></iframe>
   </div>
 
   <hr class="my-4">
 
-  <!-- Ключевые точки -->
   <div *ngFor="let point of cuePoints" class="mb-4">
-    <h2 class="fw-semibold">{{ point.title }}</h2>
-    <img *ngIf="point.imageUri" [src]="point.imageUri" alt="Картинка"/>
-    <p class="text-muted">{{ point.description }}</p>
+    <div class="d-flex align-items-start">
+      <!-- Изображение слева -->
+      <img *ngIf="point?.attachment?.uri" [src]="getImageUrl(point.attachment.uri)" alt="Картинка" class="img-fluid me-3"
+           style="max-width: 200px; height: auto;">
+
+      <!-- Текстовый блок справа -->
+      <div class="flex-grow-1">
+        <h2 class="fw-semibold">{{ point.title }}</h2>
+        <p class="text-muted">{{ point.description }}</p>
+      </div>
+    </div>
     <hr>
   </div>
-
 </div>

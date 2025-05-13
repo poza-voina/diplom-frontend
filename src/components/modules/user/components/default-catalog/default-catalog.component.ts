@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {NgForOf, NgIf} from "@angular/common";
-import {IRouteItem} from '../../../../../data/IRouteItem';
 import {RouteService} from '../../../../../services/route.service';
+import {IBaseRoute} from '../../../../../data/route/IBaseRoute';
 
 @Component({
   selector: 'app-default-catalogue',
@@ -14,7 +14,7 @@ import {RouteService} from '../../../../../services/route.service';
 })
 export class DefaultCatalogueComponent {
   @Input()
-  routes: IRouteItem[] = []
+  routes: IBaseRoute[] = []
 
   constructor(private routeService: RouteService) {
   }

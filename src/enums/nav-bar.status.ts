@@ -1,6 +1,7 @@
 export enum NavBarStatus {
-  Name = 'Name',
+  Info = 'Info',
   Address = 'Address',
+  Image = 'Image',
 }
 
 
@@ -26,10 +27,12 @@ export class NavBarStatusHelper {
 
   getDescription(sort: NavBarStatus): string {
     switch (sort) {
-      case NavBarStatus.Name:
-        return "Имя"
+      case NavBarStatus.Info:
+        return "Общаяя информация"
       case NavBarStatus.Address:
         return 'Адрес';
+        case NavBarStatus.Image:
+          return 'Изображение';
     }
   }
 
