@@ -7,7 +7,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {RouteService} from '../../../../services/route.service';
 import {map} from 'rxjs';
 import {AdminActionsService} from '../../../../services/admin-actions.service';
-import {RouteCuePointItem} from '../../../../data/cuePoint/CuePoint';
+import {IBaseRouteCuePoint, RouteCuePointItem} from '../../../../data/cuePoint/CuePoint';
 import {CuePointStatus} from '../../../../enums/cue-point.status';
 
 @Component({
@@ -33,6 +33,7 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
   outputPoint: IPoint | null = null;
   cardIndex: number = -100;
   editedCard: ICuePointCard | null = null;
+  routePoints: IBaseRouteCuePoint[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -73,10 +74,12 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
           error: cuePointsCards => {
           },
           complete: () => {
-            this.mapElement.addPointsToMap(this.extractCoordsWithAddresses())
+
           }
         }
       );
+
+    this.changeRoutePoints()
   }
 
   updateCuePointsPositions() {
@@ -92,14 +95,28 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
 
     this.cuePointCards = this.updateCuePointsPositions();
     this.cdr.detectChanges();
+    this.changeRoutePoints()
   }
 
   moveLower(index: number) {
     this.updateIndex(index, index + 1);
+    this.changeRoutePoints()
   }
 
   moveHigher(index: number) {
     this.updateIndex(index, index - 1);
+    this.changeRoutePoints()
+  }
+
+  changeRoutePoints() {
+    const sortedCuePoints = this.cuePointCards
+      .filter(card => !!card.cuePointItem) // исключаем undefined
+      .sort((a, b) => a.sortIndex - b.sortIndex) // сортируем карточки по индексу
+      .map(card => card.cuePointItem!);
+
+    this.routePoints = sortedCuePoints;
+    console.log(`CHANGEROUTEPOINTS, ${this.routePoints}`);
+    console.log(`CHANGEROUTEPOINTS, ${this.cuePointCards.length}`);
   }
 
   insertCard(parentCard: ICuePointCard, card: ICuePointCard) {
@@ -224,5 +241,6 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
       this.editedCard.cuePointItem.latitude = this.outputPoint.latitude;
       this.editedCard.cuePointItem.longitude = this.outputPoint.longitude;
     }
+    this.changeRoutePoints()
   }
 }

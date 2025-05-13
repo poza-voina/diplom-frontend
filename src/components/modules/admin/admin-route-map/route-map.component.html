@@ -1,7 +1,7 @@
 <div class="container container-lg d-flex flex-column flex-md-row p-0">
   <div class="container container-sm d-flex flex-column mt-2" style="max-width: 400px">
     <div class="map-container ratio-1x1 mb-3">
-      <app-map [canSelectPoint]="this.canSelectPoint" (onOutputPoint)="handleOutputPoint($event)" class="map"></app-map>
+      <app-map [routePoints]="this.routePoints" [canSelectPoint]="this.canSelectPoint" (onOutputPoint)="handleOutputPoint($event)" class="map"></app-map>
     </div>
     <button class="btn btn-primary" (click)="saveRoute()">Сохранить
       <div *ngIf="isSavingCuePoints" class="spinner-border text-white spinner-border-sm ms-2" role="status">

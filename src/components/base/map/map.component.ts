@@ -10,6 +10,8 @@ import {
   EventEmitter
 } from '@angular/core';
 import { YandexMapService } from '../../../services/yandex-map.service';
+import {ICuePointCard} from '../../../dto/ICuePointCard';
+import {IBaseRouteCuePoint} from '../../../data/cuePoint/CuePoint';
 
 export interface IPoint {
   latitude: number,
@@ -32,6 +34,7 @@ export class MapComponent implements OnInit, OnDestroy, OnChanges {
 
   @Output()
   onOutputPoint = new EventEmitter<IPoint>();
+  @Input() routePoints: IBaseRouteCuePoint[] = [];
 
   constructor(
     public yandexMapService: YandexMapService,
@@ -50,6 +53,7 @@ export class MapComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
     if (changes['canSelectPoint']) {
       if (this.map) {
         this.updateClickListener();
@@ -59,6 +63,9 @@ export class MapComponent implements OnInit, OnDestroy, OnChanges {
         this.map.geoObjects.remove(this.currentPointMarker);
         this.currentPointMarker = null;
       }
+    }
+    if (changes['routePoints'] && this.map) {
+      this.renderRoutePoints();
     }
   }
 
@@ -101,6 +108,16 @@ export class MapComponent implements OnInit, OnDestroy, OnChanges {
       this.yandexMapService.removeClickListener(this.map, this.clickListenerRef);
       this.clickListenerRef = null;
     }
+  }
+
+  renderRoutePoints() {
+    if (!this.routePoints || this.routePoints.length === 0) return;
+
+    // Отсортируем по sortIndex
+    const sortedPoints = [...this.routePoints].sort((a, b) => a.sortIndex - b.sortIndex);
+    const coords = sortedPoints.map(p => [p.latitude, p.longitude] as [number, number]);
+
+    this.yandexMapService.addRoutePointsToMap(this.map, coords);
   }
 
   addPointToMap(point: [number, number]) {

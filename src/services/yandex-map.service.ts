@@ -7,6 +7,7 @@ import { Observable, Observer } from 'rxjs';
 export class YandexMapService {
   private isYandexLoaded = false;
   private currentPointMarker: any = null;
+  private routePointMarkers: any;
 
   constructor() {}
 
@@ -83,6 +84,27 @@ export class YandexMapService {
         });
       }).catch(error => reject(error));
     });
+  }
+
+  addRoutePointsToMap(map: any, points: [number, number][]) {
+    console.log("addRoutePointsToMap");
+    console.log(points);
+    this.clearRoutePoints(map);
+
+    points.forEach(point => {
+      const routeMarker = new (window as any)['ymaps'].Placemark(point, {}, {
+        preset: 'islands#blueDotIcon' // можно выбрать другой стиль
+      });
+      map.geoObjects.add(routeMarker);
+      this.routePointMarkers.push(routeMarker);
+    });
+  }
+
+  clearRoutePoints(map: any) {
+    if (this.routePointMarkers){
+      this.routePointMarkers.forEach((x: any) => map.geoObjects.remove(x));
+    }
+    this.routePointMarkers = [];
   }
 
   // Добавление точки на карту
