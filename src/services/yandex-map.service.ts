@@ -6,6 +6,7 @@ import { Observable, Observer } from 'rxjs';
 })
 export class YandexMapService {
   private isYandexLoaded = false;
+  private currentPointMarker: any = null;
 
   constructor() {}
 
@@ -82,8 +83,14 @@ export class YandexMapService {
 
   // Добавление точки на карту
   addPointToMap(map: any, point: [number, number]) {
-    const pointMarker = new (window as any)['ymaps'].Placemark(point);
-    map.geoObjects.add(pointMarker);
+    // Удаляем предыдущую точку, если есть
+    if (this.currentPointMarker) {
+      map.geoObjects.remove(this.currentPointMarker);
+    }
+
+    // Создаём новую точку
+    this.currentPointMarker = new (window as any)['ymaps'].Placemark(point);
+    map.geoObjects.add(this.currentPointMarker);
   }
 
   // Добавление нескольких точек
