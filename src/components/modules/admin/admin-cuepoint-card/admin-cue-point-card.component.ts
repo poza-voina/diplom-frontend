@@ -1,5 +1,4 @@
 import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {AddressStatus} from '../../../../enums/address.status';
 import {NavBarStatus, NavBarStatusHelper} from '../../../../enums/nav-bar.status';
 import {CuePointStatus} from '../../../../enums/cue-point.status';
 import {YandexSuggestionsService} from '../../../../services/yandex-suggest.service';
@@ -15,10 +14,11 @@ import {IBaseRouteCuePoint} from '../../../../data/cuePoint/CuePoint';
 export class AdminCuePointCardComponent implements OnInit {
 
   @Input() routeCuePointItem: IBaseRouteCuePoint | undefined;
+  @Input() cuePointStatus: CuePointStatus = CuePointStatus.None;
 
   @Output() public onMoveLower = new EventEmitter();
   @Output() public onMoveHigher = new EventEmitter();
-  @Output() public onPickedPoint = new EventEmitter<boolean>();
+  @Output() public onPickedPoint = new EventEmitter<number | null>();
 
   navBarStatus: NavBarStatus = NavBarStatus.Info;
   isExpanded: boolean = false;
@@ -26,7 +26,6 @@ export class AdminCuePointCardComponent implements OnInit {
   addressSuggestions: string[] = []; // Список подсказок
   query: string = ''; // Строка запроса
   showSuggestions: boolean = false;
-  cuePointStatus: CuePointStatus = CuePointStatus.None;
 
   constructor(private suggestionsService: YandexSuggestionsService, private mapService: MapService, private cdr: ChangeDetectorRef) {
   }
@@ -43,36 +42,13 @@ export class AdminCuePointCardComponent implements OnInit {
       this.routeCuePointItem.longitude != null;
   }
 
-  saveAddress() {
-    const address = this.routeCuePointItem?.address;
-    if (!address) {
-      console.warn('Адрес не задан');
-      return;
-    }
-
-    this.mapService.getAddressWithCoords({ address }).subscribe({
-      next: (response) => {
-        if (response?.address && response?.latitude && response?.longitude) {
-          this.routeCuePointItem!.address = response.address;
-          this.routeCuePointItem!.latitude = response.latitude;
-          this.routeCuePointItem!.longitude = response.longitude;
-        }
-      },
-      error: (err) => {
-        console.error('Ошибка при получении адреса:', err);
-      },
-    });
-  }
-
   toggleEditCuePoint() {
     if (this.cuePointStatus === CuePointStatus.None) {
-      this.onPickedPoint.emit(true);
+      this.onPickedPoint.emit(this.routeCuePointItem!.sortIndex);
     }
     else if (this.cuePointStatus === CuePointStatus.Editing) {
-      this.onPickedPoint.emit(false);
+      this.onPickedPoint.emit(null);
     }
-
-    this.cuePointStatus = this.cuePointStatus == CuePointStatus.None ? CuePointStatus.Editing : CuePointStatus.None;
   }
 
   selectAddress(suggestion: string) {

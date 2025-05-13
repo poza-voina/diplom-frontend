@@ -1,5 +1,5 @@
 import {AfterViewInit, ChangeDetectorRef, Component, HostListener, OnInit, ViewChild} from "@angular/core";
-import {MapComponent} from '../../../base/map/map.component';
+import {IPoint, MapComponent} from '../../../base/map/map.component';
 import {NgForOf, NgIf} from '@angular/common';
 import {AdminModule} from '../admin.module';
 import {CuePointCard, ICuePointCard} from '../../../../dto/ICuePointCard';
@@ -8,6 +8,7 @@ import {RouteService} from '../../../../services/route.service';
 import {map} from 'rxjs';
 import {AdminActionsService} from '../../../../services/admin-actions.service';
 import {RouteCuePointItem} from '../../../../data/cuePoint/CuePoint';
+import {CuePointStatus} from '../../../../enums/cue-point.status';
 
 @Component({
   selector: 'app-admin-route-map',
@@ -29,6 +30,9 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
   @ViewChild(MapComponent) mapElement!: MapComponent;
   showScrollButton: boolean = false;
   canSelectPoint: boolean = false;
+  outputPoint: IPoint | null = null;
+  cardIndex: number = -100;
+  editedCard: ICuePointCard | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -59,7 +63,7 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
   loadCuePoints() {
     this.routeService.getRouteCuePoints(this.routeId)
       .pipe(
-        map(x => x.map(y => new CuePointCard({CuePointCard: y, isHovered: false, sortIndex: y.sortIndex}))))
+        map(x => x.map(y => new CuePointCard({cuePointCard: y, isHovered: false, sortIndex: y.sortIndex, cuePointStatus: CuePointStatus.None}))))
       .subscribe(
         {
           next: cuePointsCards => {
@@ -119,7 +123,8 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
     let cuePointCard = new CuePointCard({
       isHovered: false,
       sortIndex: -1,
-      CuePointCard: RouteCuePointItem.createEmpty()
+      cuePointCard: RouteCuePointItem.createEmpty(),
+      cuePointStatus: CuePointStatus.None
     });
     if (!parentCard) {
       this.cuePointCards.push(cuePointCard);
@@ -196,8 +201,28 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
     }
   }
 
-  handlePickedPoint(canSelectPoint: boolean) {
-    this.canSelectPoint = canSelectPoint;
+  handlePickedPoint(canSelectPoint: number | null) {
+    if (this.editedCard) {
+      this.editedCard.status = CuePointStatus.None;
+    }
+    if (canSelectPoint == null) {
+      this.canSelectPoint = false;
+    } else {
+      this.cardIndex = canSelectPoint;
+      this.editedCard = this.cuePointCards.find(x => x.cuePointItem?.sortIndex == this.cardIndex) || null;
+      if (this.editedCard) {
+        this.editedCard.status = CuePointStatus.Editing;
+      }
+      this.canSelectPoint = true;
+    }
+  }
+
+  handleOutputPoint(point: IPoint) {
+    this.outputPoint = point;
+    if (this.editedCard && this.editedCard.cuePointItem) {
+      this.editedCard.cuePointItem.address = this.outputPoint.address;
+      this.editedCard.cuePointItem.latitude = this.outputPoint.latitude;
+      this.editedCard.cuePointItem.longitude = this.outputPoint.longitude;
+    }
   }
 }
-

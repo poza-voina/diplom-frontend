@@ -1,8 +1,21 @@
-// map.component.ts
-import {Component, ElementRef, OnInit, OnDestroy, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {YandexMapService} from '../../../services/yandex-map.service';
-import {IBaseRouteCuePoint} from '../../../data/cuePoint/CuePoint';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  OnDestroy,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  Output,
+  EventEmitter
+} from '@angular/core';
+import { YandexMapService } from '../../../services/yandex-map.service';
 
+export interface IPoint {
+  latitude: number,
+  longitude: number
+  address: string
+}
 
 @Component({
   selector: 'app-map',
@@ -15,6 +28,10 @@ export class MapComponent implements OnInit, OnDestroy, OnChanges {
   mapPoints: [number, number][] = [];
   private map: any;
   private clickListenerRef: any;
+  private currentPointMarker: any = null;
+
+  @Output()
+  onOutputPoint = new EventEmitter<IPoint>();
 
   constructor(
     public yandexMapService: YandexMapService,
@@ -27,14 +44,21 @@ export class MapComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnDestroy(): void {
     if (this.map) {
-      this.removeClickListener(); // обязательно удаляем
+      this.removeClickListener();
       this.map.destroy();
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['canSelectPoint'] && this.map) {
-      this.updateClickListener();
+    if (changes['canSelectPoint']) {
+      if (this.map) {
+        this.updateClickListener();
+      }
+
+      if (!this.canSelectPoint && this.currentPointMarker) {
+        this.map.geoObjects.remove(this.currentPointMarker);
+        this.currentPointMarker = null;
+      }
     }
   }
 
@@ -46,20 +70,27 @@ export class MapComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   updateClickListener() {
-    this.removeClickListener(); // снять старый, если был
+    this.removeClickListener();
 
     this.clickListenerRef = (coords: [number, number], address: string) => {
       if (!this.canSelectPoint) return;
 
+      // Удалить предыдущую точку, если есть
+      if (this.currentPointMarker) {
+        this.map.geoObjects.remove(this.currentPointMarker);
+      }
+
+      // Добавить новую точку
+      this.currentPointMarker = new (window as any)['ymaps'].Placemark(coords);
+      this.map.geoObjects.add(this.currentPointMarker);
+
       console.log("Выбраны координаты:", coords);
       console.log("Адрес:", address);
-      this.yandexMapService.addPointToMap(this.map, coords);
-
-      console.table([{
-        Latitude: coords[0],
-        Longitude: coords[1],
-        Address: address
-      }]);
+      this.onOutputPoint.emit({
+        latitude: coords[0],
+        longitude: coords[1],
+        address: address
+      });
     };
 
     this.yandexMapService.setClickListener(this.map, this.clickListenerRef);
@@ -73,10 +104,18 @@ export class MapComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   addPointToMap(point: [number, number]) {
-    this.yandexMapService.addPointToMap(this.map, point);
+    if (this.currentPointMarker) {
+      this.map.geoObjects.remove(this.currentPointMarker);
+    }
+
+    this.currentPointMarker = new (window as any)['ymaps'].Placemark(point);
+    this.map.geoObjects.add(this.currentPointMarker);
   }
 
   addPointsToMap(points: [number, number][]) {
-    this.yandexMapService.addPointsToMap(this.map, points);
+    for (const point of points) {
+      const placemark = new (window as any)['ymaps'].Placemark(point);
+      this.map.geoObjects.add(placemark);
+    }
   }
 }

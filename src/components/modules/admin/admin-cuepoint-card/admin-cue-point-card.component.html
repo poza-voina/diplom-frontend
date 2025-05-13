@@ -51,9 +51,9 @@
       <app-upload-image></app-upload-image>
     </div>
   </div>
-  <div [ngSwitch]="navBarStatus" class="card-footer d-flex justify-content-between flex-row">
+  <div class="card-footer d-flex justify-content-between flex-row">
     <div>
-      <button class="btn btn-primary"
+      <button [ngSwitch]="cuePointStatus" class="btn btn-primary"
               (click)="toggleEditCuePoint()">
         <ng-container *ngSwitchCase="CuePointStatus.None">Изменить</ng-container>
         <ng-container *ngSwitchCase="CuePointStatus.Editing">Сохранить</ng-container>

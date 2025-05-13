@@ -6,20 +6,26 @@ export interface ICuePointCard {
   cuePointItem: IBaseRouteCuePoint | undefined;
   isHovered: boolean;
   sortIndex: number;
+  status: CuePointStatus;
 }
 
 export class CuePointCard implements ICuePointCard {
   cuePointItem: IBaseRouteCuePoint;
   isHovered: boolean = false;
   sortIndex: number;
+  status: CuePointStatus;
 
-  constructor({isHovered, sortIndex, CuePointCard}: {
+  constructor({isHovered, sortIndex, cuePointCard, cuePointStatus}: {
     isHovered: boolean,
     sortIndex: number,
-    CuePointCard: IBaseRouteCuePoint
+    cuePointCard: IBaseRouteCuePoint,
+    cuePointStatus: CuePointStatus
   }) {
-    this.cuePointItem = CuePointCard;
+    this.cuePointItem = cuePointCard;
     this.isHovered = isHovered;
     this.sortIndex = sortIndex;
+    this.status = cuePointStatus;
   }
+
+
 }
