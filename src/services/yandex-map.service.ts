@@ -47,6 +47,10 @@ export class YandexMapService {
     });
   }
 
+  removeClickListener(map: any, handler: Function) {
+    map.events.remove('click', handler);
+  }
+
   // Получение подсказок адреса
   getAddressSuggestions(query: string): Observable<string[]> {
     return new Observable((observer: Observer<string[]>) => {

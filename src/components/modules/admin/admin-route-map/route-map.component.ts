@@ -28,6 +28,7 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
   isSavingCuePoints: boolean = false;
   @ViewChild(MapComponent) mapElement!: MapComponent;
   showScrollButton: boolean = false;
+  canSelectPoint: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -193,6 +194,10 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
         item.sortIndex--;
       }
     }
+  }
+
+  handlePickedPoint(canSelectPoint: boolean) {
+    this.canSelectPoint = canSelectPoint;
   }
 }
 

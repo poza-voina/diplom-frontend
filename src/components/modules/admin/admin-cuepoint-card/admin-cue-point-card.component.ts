@@ -18,6 +18,7 @@ export class AdminCuePointCardComponent implements OnInit {
 
   @Output() public onMoveLower = new EventEmitter();
   @Output() public onMoveHigher = new EventEmitter();
+  @Output() public onPickedPoint = new EventEmitter<boolean>();
 
   navBarStatus: NavBarStatus = NavBarStatus.Info;
   isExpanded: boolean = false;
@@ -65,7 +66,10 @@ export class AdminCuePointCardComponent implements OnInit {
 
   toggleEditCuePoint() {
     if (this.cuePointStatus === CuePointStatus.None) {
-      this.saveAddress();
+      this.onPickedPoint.emit(true);
+    }
+    else if (this.cuePointStatus === CuePointStatus.Editing) {
+      this.onPickedPoint.emit(false);
     }
 
     this.cuePointStatus = this.cuePointStatus == CuePointStatus.None ? CuePointStatus.Editing : CuePointStatus.None;
