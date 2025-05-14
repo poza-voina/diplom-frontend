@@ -43,6 +43,9 @@ export class AdminCuePointCardComponent implements OnInit {
   }
 
   toggleEditCuePoint() {
+    console.log("toggleEditCuePoint");
+    console.log(this.routeCuePointItem?.title)
+    console.log("test " + this.routeCuePointItem?.sortIndex)
     if (this.cuePointStatus === CuePointStatus.None) {
       this.onPickedPoint.emit(this.routeCuePointItem!.sortIndex);
     }

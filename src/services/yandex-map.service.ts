@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Observer } from 'rxjs';
+import {IBaseRouteCuePoint} from '../data/cuePoint/CuePoint';
 
 @Injectable({
   providedIn: 'root',
@@ -8,6 +9,7 @@ export class YandexMapService {
   private isYandexLoaded = false;
   private currentPointMarker: any = null;
   private routePointMarkers: any;
+  private polylines: any;
 
   constructor() {}
 
@@ -86,25 +88,60 @@ export class YandexMapService {
     });
   }
 
-  addRoutePointsToMap(map: any, points: [number, number][]) {
+  addRoutePointsToMap(map: any, points: IBaseRouteCuePoint[]) {
     console.log("addRoutePointsToMap");
     console.log(points);
-    this.clearRoutePoints(map);
 
+    this.clearRoutePoints(map);
+    this.clearPolylines(map);
+
+    // Нарисовать маркеры
     points.forEach(point => {
-      const routeMarker = new (window as any)['ymaps'].Placemark(point, {}, {
-        preset: 'islands#blueDotIcon' // можно выбрать другой стиль
+      let coord = [point.latitude, point.longitude] as [number, number];
+      console.log(coord);
+
+      const routeMarker = new (window as any)['ymaps'].Placemark(coord, {
+        // Текст внутри маркера
+        iconContent: point.sortIndex + 1
+      }, {
+        preset: 'islands#icon', // Иконка маркера
+        iconContentColor: '#FFFFFF',  // Цвет текста внутри маркера
+        iconContentFontSize: '14px',  // Размер шрифта
+        iconContentPadding: [5, 5]    // Отступы для текста внутри маркера
       });
+
+      routeMarker.properties.set('balloonContent', point.title);
       map.geoObjects.add(routeMarker);
       this.routePointMarkers.push(routeMarker);
     });
+
+    // Преобразуем точки в массив координат для Polyline
+    const coordinates = points.map(point => [point.latitude, point.longitude]);
+
+    // Нарисовать линию маршрута без стрелок
+    const polyline = new (window as any)['ymaps'].Polyline(coordinates, {}, {
+      strokeColor: "#1E90FF",
+      strokeWidth: 4,
+      strokeOpacity: 0.8
+    });
+
+    map.geoObjects.add(polyline);
+    this.polylines.push(polyline);
   }
 
   clearRoutePoints(map: any) {
+    map.balloon.close();
     if (this.routePointMarkers){
       this.routePointMarkers.forEach((x: any) => map.geoObjects.remove(x));
     }
     this.routePointMarkers = [];
+  }
+
+  clearPolylines(map: any) {
+    if (this.polylines) {
+      this.polylines.forEach((x: any) => map.geoObjects.remove(x));
+    }
+    this.polylines = [];
   }
 
   // Добавление точки на карту

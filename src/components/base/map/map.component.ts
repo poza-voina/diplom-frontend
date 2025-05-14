@@ -36,6 +36,9 @@ export class MapComponent implements OnInit, OnDestroy, OnChanges {
   onOutputPoint = new EventEmitter<IPoint>();
   @Input() routePoints: IBaseRouteCuePoint[] = [];
 
+  @Output()
+  onMapInitialize = new EventEmitter();
+
   constructor(
     public yandexMapService: YandexMapService,
     private el: ElementRef
@@ -72,6 +75,7 @@ export class MapComponent implements OnInit, OnDestroy, OnChanges {
   initializeMap() {
     this.yandexMapService.initializeMap("mapContainer", this.mapPoints).then((map: any) => {
       this.map = map;
+      this.onMapInitialize.emit();
       this.updateClickListener();
     });
   }
@@ -117,7 +121,7 @@ export class MapComponent implements OnInit, OnDestroy, OnChanges {
     const sortedPoints = [...this.routePoints].sort((a, b) => a.sortIndex - b.sortIndex);
     const coords = sortedPoints.map(p => [p.latitude, p.longitude] as [number, number]);
 
-    this.yandexMapService.addRoutePointsToMap(this.map, coords);
+    this.yandexMapService.addRoutePointsToMap(this.map, sortedPoints);
   }
 
   addPointToMap(point: [number, number]) {

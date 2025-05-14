@@ -64,7 +64,7 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
   loadCuePoints() {
     this.routeService.getRouteCuePoints(this.routeId)
       .pipe(
-        map(x => x.map(y => new CuePointCard({cuePointCard: y, isHovered: false, sortIndex: y.sortIndex, cuePointStatus: CuePointStatus.None}))))
+        map(x => x.map(y => new CuePointCard({cuePointItem: y, isHovered: false, cuePointStatus: CuePointStatus.None}))))
       .subscribe(
         {
           next: cuePointsCards => {
@@ -78,12 +78,21 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
           }
         }
       );
-
-    this.changeRoutePoints()
   }
 
   updateCuePointsPositions() {
-    return this.cuePointCards.sort((a, b) => a.sortIndex - b.sortIndex);
+    return this.cuePointCards.sort((a: ICuePointCard, b) => a.cuePointItem.sortIndex - b.cuePointItem.sortIndex);
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeydown(event: KeyboardEvent) {
+    if (event.key.toLowerCase() === 'h') {
+      this.printSortIndexes();
+    }
+  }
+  printSortIndexes() {
+    const indexes = this.cuePointCards.map(point => point.cuePointItem.sortIndex);
+    console.log(indexes);
   }
 
   updateIndex(currentIndex: number, newIndex: number) {
@@ -111,22 +120,22 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
   changeRoutePoints() {
     const sortedCuePoints = this.cuePointCards
       .filter(card => !!card.cuePointItem) // исключаем undefined
-      .sort((a, b) => a.sortIndex - b.sortIndex) // сортируем карточки по индексу
+      .sort((a, b) => a.cuePointItem.sortIndex - b.cuePointItem.sortIndex) // сортируем карточки по индексу
       .map(card => card.cuePointItem!);
 
     this.routePoints = sortedCuePoints;
-    console.log(`CHANGEROUTEPOINTS, ${this.routePoints}`);
-    console.log(`CHANGEROUTEPOINTS, ${this.cuePointCards.length}`);
+    console.log(`CHANGEROUTEPOINTS`);
+    console.log(this.routePoints);
   }
 
   insertCard(parentCard: ICuePointCard, card: ICuePointCard) {
     for (let item of this.cuePointCards) {
-      if (item.sortIndex > parentCard.sortIndex) {
-        item.sortIndex++;
+      if (item.cuePointItem.sortIndex > parentCard.cuePointItem.sortIndex) {
+        item.cuePointItem.sortIndex++;
       }
     }
 
-    card.sortIndex = parentCard.sortIndex + 1;
+    card.cuePointItem.sortIndex = parentCard.cuePointItem.sortIndex + 1;
     this.cuePointCards.push(card);
     this.cuePointCards = this.updateCuePointsPositions();
     this.cdr.detectChanges();
@@ -136,14 +145,17 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
     cuePointCard.isHovered = !cuePointCard.isHovered;
   }
 
-  handleAddNewCard(parentCard: ICuePointCard | null = null): void {
+  handleAddNewCard(parentCard: ICuePointCard | null | undefined = null): void {
+    let cuePointItem = RouteCuePointItem.createEmpty();
+    cuePointItem.sortIndex = -1;
+
     let cuePointCard = new CuePointCard({
       isHovered: false,
-      sortIndex: -1,
-      cuePointCard: RouteCuePointItem.createEmpty(),
+      cuePointItem: cuePointItem,
       cuePointStatus: CuePointStatus.None
     });
     if (!parentCard) {
+      cuePointCard.cuePointItem.sortIndex = 0;
       this.cuePointCards.push(cuePointCard);
     } else {
       this.insertCard(parentCard, cuePointCard);
@@ -153,19 +165,14 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
   saveRoute() {
     this.isSavingCuePoints = true;
     let cuePointItems = this.cuePointCards
-      .filter(x => x.cuePointItem)
-      .map(x => {
-        let cuePointItem = x.cuePointItem!;
-        cuePointItem.sortIndex = x.sortIndex;
-        cuePointItem.routeId = this.routeId;
-        return cuePointItem;
-      });
+      .map(x => x.cuePointItem);
+
     this.adminActionsService.updateRouteCuePoints(cuePointItems).subscribe({
-      error: cuePointItems => {
+      error: error => {
         this.isSavingCuePoints = false;
       },
       complete: () => {
-        this.isSavingCuePoints = false;
+        this.isSavingCuePoints = true;
       }
     });
   }
@@ -179,15 +186,11 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
     window.scrollTo({top: 0, behavior: 'smooth'});
   }
 
-  goToRoute(): void {
-    this.router.navigate(['/admin/route', this.routeId]);
-  }
-
   private removeBySortIndex(sortIndex: number) {
-    this.cuePointCards = this.cuePointCards.filter(x => x.sortIndex !== sortIndex);
+    this.cuePointCards = this.cuePointCards.filter(x => x.cuePointItem.sortIndex !== sortIndex);
 
     for (let item of this.cuePointCards) {
-      item.sortIndex--;
+      item.cuePointItem.sortIndex--;
     }
   }
 
@@ -197,10 +200,10 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
     }
 
     for (let item of this.cuePointCards) {
-      if (item.sortIndex === currentIndex) {
-        item.sortIndex = newIndex;
-      } else if (item.sortIndex < this.cuePointCards.length - 1 && item.sortIndex >= newIndex && item.sortIndex <= currentIndex) {
-        item.sortIndex++;
+      if (item.cuePointItem.sortIndex === currentIndex) {
+        item.cuePointItem.sortIndex = newIndex;
+      } else if (item.cuePointItem.sortIndex < this.cuePointCards.length - 1 && item.cuePointItem.sortIndex >= newIndex && item.cuePointItem.sortIndex <= currentIndex) {
+        item.cuePointItem.sortIndex++;
       }
     }
   }
@@ -210,15 +213,17 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
       return;
     }
     for (let item of this.cuePointCards) {
-      if (item.sortIndex == currentIndex) {
-        item.sortIndex = newIndex;
-      } else if (item.sortIndex >= 1 && item.sortIndex >= currentIndex && item.sortIndex <= newIndex) {
-        item.sortIndex--;
+      if (item.cuePointItem.sortIndex == currentIndex) {
+        item.cuePointItem.sortIndex = newIndex;
+      } else if (item.cuePointItem.sortIndex >= 1 && item.cuePointItem.sortIndex >= currentIndex && item.cuePointItem.sortIndex <= newIndex) {
+        item.cuePointItem.sortIndex--;
       }
     }
   }
 
   handlePickedPoint(canSelectPoint: number | null) {
+    console.log("handlePickedPoint");
+    console.log(canSelectPoint);
     if (this.editedCard) {
       this.editedCard.status = CuePointStatus.None;
     }
@@ -241,6 +246,11 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
       this.editedCard.cuePointItem.latitude = this.outputPoint.latitude;
       this.editedCard.cuePointItem.longitude = this.outputPoint.longitude;
     }
+
+    this.changeRoutePoints()
+  }
+
+  handleMapInitialize() {
     this.changeRoutePoints()
   }
 }
