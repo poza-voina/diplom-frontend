@@ -117,11 +117,23 @@ export class MapComponent implements OnInit, OnDestroy, OnChanges {
   renderRoutePoints() {
     if (!this.routePoints || this.routePoints.length === 0) return;
 
-    // Отсортируем по sortIndex
     const sortedPoints = [...this.routePoints].sort((a, b) => a.sortIndex - b.sortIndex);
     const coords = sortedPoints.map(p => [p.latitude, p.longitude] as [number, number]);
 
+    // Центрируем карту на первой точке маршрута
+    const firstPoint = sortedPoints[0];
+    if (firstPoint) {
+      this.map.setCenter([firstPoint.latitude, firstPoint.longitude], 12);  // Устанавливаем центр и уровень масштабирования (12 - это пример)
+    }
+
     this.yandexMapService.addRoutePointsToMap(this.map, sortedPoints);
+  }
+
+  centering(index: number) {
+    const point = this.routePoints[index];
+    if (point) {
+      this.map.setCenter([point.latitude, point.longitude], 12);  // Устанавливаем центр и уровень масштабирования (12 - это пример)
+    }
   }
 
   addPointToMap(point: [number, number]) {

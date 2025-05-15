@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FullCalendarModule} from '@fullcalendar/angular';
 import {DatePipe, NgForOf, NgIf, NgSwitch} from '@angular/common';
 import {CalendarComponent} from '../../components/calendar/calendar.component';
@@ -14,6 +14,7 @@ import {RouteHelper} from '../../../../../services/route.helper';
 import {IRouteCuePointWithAttachment} from '../../../../../data/cuePoint/CuePoint';
 import {IRouteWithAttachment} from '../../../../../data/route/IBaseRoute';
 import {S3Helper} from '../../../../../services/s3.helper';
+import {MapComponent} from '../../../../base/map/map.component';
 
 @Component({
   selector: 'app-route',
@@ -24,7 +25,8 @@ import {S3Helper} from '../../../../../services/s3.helper';
     NgIf,
     DatePipe,
     RouterLink,
-    NgSwitch
+    NgSwitch,
+    MapComponent
   ],
   templateUrl: './route.component.html',
   styleUrl: './route.component.css'
@@ -37,6 +39,10 @@ export class RouteComponent implements OnInit {
   viewRouteExampleItem: IRouteExample | null = null;
   viewRouteExampleRecord: IRouteExampleRecord | null = null;
   routeExampleRecords: IRouteExampleRecord[] = [];
+  isMapInitialize: boolean = false;
+  isCuePointsInitialize: boolean = false;
+  @ViewChild(MapComponent) mapElement!: MapComponent;
+  @ViewChild('mapContainer') mapContainer!: ElementRef;
 
   constructor(private route: ActivatedRoute,
               private routeService: RouteService,
@@ -82,6 +88,10 @@ export class RouteComponent implements OnInit {
         },
         error: error => {
           console.log("Не удалось загрузить ключевые точки маршрута");
+        },
+        complete: () => {
+          this.isCuePointsInitialize = true;
+          this.renderCuePoints()
         }
       }
     )
@@ -152,5 +162,33 @@ export class RouteComponent implements OnInit {
     }
     console.log(`URI ${ S3Helper.getImageUrlOrDefault(uri)}`);
     return S3Helper.getImageUrlOrDefault(uri);
+  }
+
+  handleMapInitialize() {
+    this.isMapInitialize = true;
+    this.renderCuePoints();
+  }
+
+  private renderCuePoints() {
+    if (this.isMapInitialize && this.isCuePointsInitialize) {
+      this.mapElement.renderRoutePoints();
+    }
+  }
+
+  handleViewOnMap(sortIndex: number) {
+    this.mapElement.centering(sortIndex)
+    this.scrollToMap()
+  }
+
+  scrollToMap() {
+    if (this.mapContainer) {
+      const elementPosition = this.mapContainer.nativeElement.getBoundingClientRect().top + window.scrollY;
+      const offset = 80;
+
+      window.scrollTo({
+        top: elementPosition - offset,
+        behavior: 'smooth'
+      });
+    }
   }
 }

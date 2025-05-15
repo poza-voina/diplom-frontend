@@ -87,24 +87,33 @@
   </div>
 
   <!-- Карта -->
-  <div class="map-container mb-4">
-    <iframe
-      src="https://yandex.ru/map-widget/v1/?um=constructor%3A08fbf0e28d1b7d36a4ffb1ff4c234592417be214f32c96f7dfd0c72f4e2b63b6&source=constructor"
-      width="100%" height="400" frameborder="0" allowfullscreen="true"></iframe>
+  <div #mapContainer class="map-container mb-4" style="height: 400px;">
+    <app-map (onMapInitialize)="handleMapInitialize()" [routePoints]="cuePoints"  class="map"></app-map>
   </div>
 
   <hr class="my-4">
 
   <div *ngFor="let point of cuePoints" class="mb-4">
-    <div class="d-flex align-items-start">
+    <div class="d-flex align-items-stretch">
       <!-- Изображение слева -->
-      <img *ngIf="point?.attachment?.uri" [src]="getImageUrl(point.attachment.uri)" alt="Картинка" class="img-fluid me-3"
-           style="max-width: 200px; height: auto;">
+      <img *ngIf="point?.attachment?.uri"
+           [src]="getImageUrl(point.attachment.uri)"
+           alt="Картинка"
+           class="img-fluid me-3"
+           style="width: 200px; height: 150px; object-fit: cover; border-radius: 8px;">
 
-      <!-- Текстовый блок справа -->
-      <div class="flex-grow-1">
-        <h2 class="fw-semibold">{{ point.title }}</h2>
-        <p class="text-muted">{{ point.description }}</p>
+      <!-- Контент и кнопка -->
+      <div class="flex-grow-1 d-flex flex-column justify-content-between">
+        <!-- Текст -->
+        <div>
+          <h2 class="fw-semibold mb-1">{{ point.title }}</h2>
+          <p class="text-muted mb-2">{{ point.description }}</p>
+        </div>
+
+        <!-- Кнопка снизу справа -->
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary btn-sm" (click)="handleViewOnMap(point.sortIndex)">Показать на карте</button>
+        </div>
       </div>
     </div>
     <hr>

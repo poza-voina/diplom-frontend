@@ -26,6 +26,7 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
   cuePointCards: ICuePointCard[] = []
   routeId: number;
   isMapAvailable = false;
+  isCuePointsAvailable = false;
   isSavingCuePoints: boolean = false;
   @ViewChild(MapComponent) mapElement!: MapComponent;
   showScrollButton: boolean = false;
@@ -49,7 +50,7 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.isMapAvailable = true;
+
   }
 
   extractCoordsWithAddresses(): [number, number][] {
@@ -74,7 +75,8 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
           error: cuePointsCards => {
           },
           complete: () => {
-
+            this.isCuePointsAvailable = true;
+            this.renderCuePoints();
           }
         }
       );
@@ -251,6 +253,15 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
   }
 
   handleMapInitialize() {
-    this.changeRoutePoints()
+    this.mapElement.renderRoutePoints();
+    this.isMapAvailable = true;
+    this.renderCuePoints()
+  }
+
+  renderCuePoints() {
+    if (this.isMapAvailable && this.isCuePointsAvailable){
+      this.changeRoutePoints();
+      this.mapElement.renderRoutePoints();
+    }
   }
 }
