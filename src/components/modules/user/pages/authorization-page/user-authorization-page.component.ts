@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {BaseFormComponent, IField, ISubmitStatus, SubmitStatus} from '../../forms/base-form/base-form.component';
+import {BaseFormComponent, IField, ILink, ISubmitStatus, SubmitStatus} from '../../forms/base-form/base-form.component';
 import {Validators} from '@angular/forms';
 import {ClientAuthService} from '../../service/client-auth.service';
 import {ILoginCredentials} from '../../../../../dto/login-credentials.interface';
@@ -44,6 +44,10 @@ export class UserAuthorizationPageComponent {
     status: SubmitStatus.DEFAULT,
     message: null
   }
+  links: ILink[] = [
+    {label: "Зарегистрироваться", link: "/registration"},
+    {label: "Восстановить пароль", link: "/recovery-password"},
+  ];
 
   constructor(private clientAuthService: ClientAuthService) {
   }

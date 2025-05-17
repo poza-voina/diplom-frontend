@@ -1,76 +1,75 @@
 <div class="container-fluid mt-4">
   <div class="row">
+    <!-- Меню слева -->
     <div class="col-md-2">
       <div class="list-group">
         <a routerLink="/admin/dashboard" class="list-group-item list-group-item-action active">Главная</a>
         <a routerLink="/admin/routes" class="list-group-item list-group-item-action">Маршруты</a>
         <a routerLink="/admin/categories" class="list-group-item list-group-item-action">Категории</a>
-        <a routerLink="/admin/orders" class="list-group-item list-group-item-action">Заказы</a>
-        <a routerLink="/admin/users" class="list-group-item list-group-item-action">Пользователи</a>
-        <a routerLink="/admin/settings" class="list-group-item list-group-item-action">Настройки</a>
       </div>
     </div>
 
+    <!-- Таблицы справа -->
     <div class="col-md-10">
-      <div class="row mt-3">
-        <div class="col-md-4">
-          <div class="card text-bg-primary mb-3">
-            <div class="card-body">
-              <h5 class="card-title">Всего туров</h5>
-              <p class="card-text">42</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card text-bg-success mb-3">
-            <div class="card-body">
-              <h5 class="card-title">Пользователей</h5>
-              <p class="card-text">315</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card text-bg-warning mb-3">
-            <div class="card-body">
-              <h5 class="card-title">Заказов сегодня</h5>
-              <p class="card-text">12</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card mt-4">
+      <!-- Первая таблица -->
+      <div class="card mb-4">
         <div class="card-header">
-          Последние заказы
+          Маршруты, в ожидании
         </div>
         <div class="card-body">
           <table class="table table-hover">
             <thead>
             <tr>
               <th>#</th>
-              <th>Клиент</th>
-              <th>Тур</th>
-              <th>Дата</th>
+              <th>Название маршрута</th>
+              <th>Дата начала</th>
+              <th>Статус</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-              <td>1</td>
-              <td>Иван Петров</td>
-              <td>Тур в Париж</td>
-              <td>28.03.2025</td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Анна Смирнова</td>
-              <td>Тур в Рим</td>
-              <td>27.03.2025</td>
+            <tr *ngFor="let instance of pendingRoutesExamples; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ instance.route.title }}</td>
+              <td>{{ instance.startDateTime | date: 'dd.MM.yyyy HH:mm' }}</td>
+              <td>{{ instance.status }}</td>
             </tr>
             </tbody>
           </table>
+          <div class="d-flex justify-content-end">
+            <app-paggination [itemsPerPage]="10" [totalPages]="10"></app-paggination>
+          </div>
         </div>
       </div>
 
+      <!-- Вторая таблица -->
+      <div class="card">
+        <div class="card-header">
+          Маршруты с необработанными записями
+        </div>
+        <div class="card-body">
+          <table class="table table-hover">
+            <thead>
+            <tr>
+              <th>#</th>
+              <th>Название маршрута</th>
+              <th>Дата начала</th>
+              <th>Статус</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let instance of pendingRoutesExamples; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ instance.route.title }}</td>
+              <td>{{ instance.startDateTime | date: 'dd.MM.yyyy HH:mm' }}</td>
+              <td>{{ instance.status }}</td>
+            </tr>
+            </tbody>
+          </table>
+          <div class="d-flex justify-content-end">
+            <app-paggination [itemsPerPage]="10" [totalPages]="10"></app-paggination>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

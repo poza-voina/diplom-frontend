@@ -45,7 +45,7 @@ export class RouteExamplesTableComponent implements OnInit {
 
   mapRouteExample(item: IRouteExample): IRouteExampleItemW {
     this.reformatExamplesDatetime(item);
-    return {...item, status: RouteExampleItemWStatus.DEFAULT} as IRouteExampleItemW
+    return {...item, editingStatus: RouteExampleItemWStatus.DEFAULT} as IRouteExampleItemW
   }
 
   reformatExamplesDatetime(data: IRouteExample) {
@@ -85,9 +85,10 @@ export class RouteExamplesTableComponent implements OnInit {
       creationDateTime: '',
       id: 0,
       routeId: 0,
+      status: "Pending",
       startDateTime: defaultDatetime,
       endDateTime: defaultDatetime,
-      status: RouteExampleItemWStatus.EDITING,
+      editingStatus: RouteExampleItemWStatus.EDITING,
       countRecords: 0
     }
   }
@@ -129,7 +130,7 @@ export class RouteExamplesTableComponent implements OnInit {
   handleSave(index: number) {
     this.routeExamples[index].routeId = this.routeId;
     let item = this.routeExamples[index];
-    item.status = RouteExampleItemWStatus.DEFAULT
+    item.editingStatus = RouteExampleItemWStatus.DEFAULT
 
     this.adminActionsService.createOrUpdateRouteExample(item)
       .pipe(
@@ -146,7 +147,7 @@ export class RouteExamplesTableComponent implements OnInit {
 
   handleSaveAll() {
     for (const item of this.routeExamples) {
-      item.status = RouteExampleItemWStatus.DEFAULT
+      item.editingStatus = RouteExampleItemWStatus.DEFAULT
       item.routeId = this.routeId;
     }
 
@@ -159,7 +160,7 @@ export class RouteExamplesTableComponent implements OnInit {
   }
 
   handleEdit(index: number) {
-    this.routeExamples[index].status = RouteExampleItemWStatus.EDITING;
+    this.routeExamples[index].editingStatus = RouteExampleItemWStatus.EDITING;
   }
 }
 
@@ -169,5 +170,5 @@ export enum RouteExampleItemWStatus {
 }
 
 export interface IRouteExampleItemW extends IRouteExample {
-  status: RouteExampleItemWStatus;
+  editingStatus: RouteExampleItemWStatus;
 }

@@ -4,9 +4,9 @@ import {API_URLS} from '../api-routes.config';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {AdminAuthService} from '../components/modules/admin/services/admin-auth.service';
 import {IBaseRouteCuePoint} from '../data/cuePoint/CuePoint';
-import { Observable } from 'rxjs';
+import {Observable} from 'rxjs';
 import {IBaseRoute, IRouteWithAttachment} from '../data/route/IBaseRoute';
-import {IRouteExample} from '../data/IRouteExample';
+import {IGetPendingRoutesExamplesRequest, IRouteExample, IRouteExampleWithRoute} from '../data/IRouteExample';
 import {GetRoutesWithFiltersDto} from '../dto/GetRoutesWithFiltersDto';
 import {INewCategoryRequest} from '../dto/new-category-item.interface';
 import {ICategory} from '../dto/ICategory';
@@ -23,7 +23,7 @@ export class AdminActionsService extends BaseApiWithAuthService {
     super(http, authService);
   }
 
-  updateRoute(route : IBaseRoute): Observable<IRouteWithAttachment> {
+  updateRoute(route: IBaseRoute): Observable<IRouteWithAttachment> {
     return this.http.put<IRouteWithAttachment>(this.apiRoutesUrl, route, this.getOptions());
   }
 
@@ -39,7 +39,7 @@ export class AdminActionsService extends BaseApiWithAuthService {
     return this.http.put<IRouteExample>(this.apiRoutesExampleUrl, routeExampleItem, this.getOptions());
   }
 
-  deleteRouteExample(index: number) : Observable<any> {
+  deleteRouteExample(index: number): Observable<any> {
     return this.http.delete(`${this.apiRoutesExampleUrl}/${index}`, this.getOptions());
   }
 
@@ -62,10 +62,27 @@ export class AdminActionsService extends BaseApiWithAuthService {
       }
     });
 
-    return this.http.get<IRouteWithAttachment[]>(this.apiRoutesUrl, { params, ...this.getOptions() });
+    return this.http.get<IRouteWithAttachment[]>(this.apiRoutesUrl, {params, ...this.getOptions()});
   }
 
-  createCategory(dto: INewCategoryRequest) : Observable<ICategory> {
-   return this.http.post<ICategory>(this.apiRouteCategoriesUrl, dto, this.getOptions());
+  getPendingRoutesExamples(request: IGetPendingRoutesExamplesRequest): Observable<IRouteExampleWithRoute[]> {
+    let params = new HttpParams();
+
+    Object.keys(request).forEach(key => {
+      const value = request[key as keyof IGetPendingRoutesExamplesRequest];
+
+      if (Array.isArray(value)) {
+        value.forEach(val => {
+          params = params.append(key, val.toString());
+        });
+      } else if (value !== undefined && value !== null) {
+        params = params.set(key, value.toString());
+      }
+    });
+    return this.http.get<IRouteExampleWithRoute[]>(`${this.apiRoutesExampleUrl}/by-pending`, {params, ...this.getOptions()});
+  }
+
+  createCategory(dto: INewCategoryRequest): Observable<ICategory> {
+    return this.http.post<ICategory>(this.apiRouteCategoriesUrl, dto, this.getOptions());
   }
 }

@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {NgForOf, NgIf} from '@angular/common';
+import {RouterLink} from '@angular/router';
 
 // Типы полей (можно дополнить по необходимости)
 type FieldType = 'text' | 'email' | 'password' | 'tel' | 'textarea';
@@ -14,18 +15,25 @@ export interface IField {
   errorMessages: { [key: string]: string };
 }
 
+export interface ILink {
+  label: string;
+  link: string;
+}
+
 @Component({
   selector: 'app-base-form',
   imports: [
     ReactiveFormsModule,
     NgIf,
-    NgForOf
+    NgForOf,
+    RouterLink
   ],
   templateUrl: './base-form.component.html',
   styleUrl: './base-form.component.css'
 })
 export class BaseFormComponent implements OnInit {
   @Input() fields: IField[] = [];
+  @Input() links: ILink[] = [];
   @Output() formSubmit: EventEmitter<any> = new EventEmitter();
   formGroup!: FormGroup;
   @Input()

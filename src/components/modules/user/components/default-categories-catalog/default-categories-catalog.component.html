@@ -1,7 +1,6 @@
 <div class="container">
   <div *ngFor="let category of categories" class="card mb-3 shadow-sm rounded-4">
     <div class="d-flex align-items-center p-3">
-      <img src="category.image" class="rounded-3 me-3" style="width: 60px; height: 60px; object-fit: cover;" />
       <div class="flex-grow-1">
         <h5 class="mb-1 fw-semibold">{{ category.title }}</h5>
         <small class="text-muted">{{ category.countRoutes }} маршрутов</small>

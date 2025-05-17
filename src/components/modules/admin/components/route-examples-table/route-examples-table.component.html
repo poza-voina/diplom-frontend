@@ -19,7 +19,13 @@
              [(ngModel)]="item.endDateTime" name="end{{i}}"/>
     </td>
     <td>
-      <div *ngIf="item.status === RouteExampleItemWStatus.EDITING" class="btn-group mr-2">
+      <select class="form-select" [(ngModel)]="item.status">
+        <option value="Pending">Ожидание записей</option>
+        <option value="Closed">Закрыт</option>
+      </select>
+    </td>
+    <td>
+      <div *ngIf="item.editingStatus === RouteExampleItemWStatus.EDITING" class="btn-group mr-2">
         <button class="btn btn-secondary btn-sm" (click)="handleSave(i)">
           <i class="bi bi-floppy"></i>
         </button>
@@ -28,7 +34,7 @@
           <i class="bi bi-trash"></i>
         </button>
       </div>
-      <div *ngIf="item.status === RouteExampleItemWStatus.DEFAULT" class="dropdown">
+      <div *ngIf="item.editingStatus === RouteExampleItemWStatus.DEFAULT" class="dropdown">
         <button class="btn btn-secondary btn-sm"
                 id="dropdownMenuButton{{i}}"
                 (click)="toggleDropdown(i)">

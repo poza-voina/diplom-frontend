@@ -1,0 +1,35 @@
+<ul class="pagination pagination-sm justify-content-center align-items-center gap-1">
+  <li class="page-item" [class.disabled]="currentPage === 1">
+    <button
+      class="btn btn-sm btn-light rounded-start"
+      (click)="selectPage(currentPage - 1)"
+      aria-label="Назад"
+      [disabled]="currentPage === 1"
+      style="border-color: #dee2e6;">
+      <i class="bi bi-chevron-left"></i>
+    </button>
+  </li>
+
+  <li *ngFor="let page of pages"
+      class="page-item"
+      [class.active]="page === currentPage"
+      [class.disabled]="page < 1"
+      [style.pointer-events]="page < 1 ? 'none' : 'auto'">
+    <button *ngIf="page > 0"
+            class="btn btn-sm btn-outline-light px-3"
+            (click)="selectPage(page)"
+            [ngStyle]="{
+            'color': 'black',
+            'border-color': '#dee2e6'
+          }">
+      {{ page }}
+    </button>
+    <span *ngIf="page < 0" class="page-link disabled text-muted px-2" style="cursor: default;">&hellip;</span>
+  </li>
+
+  <li class="page-item" [class.disabled]="currentPage === totalPages">
+    <button class="btn btn-sm btn-light page-link rounded-end" (click)="selectPage(currentPage + 1)" aria-label="Вперёд" [disabled]="currentPage === totalPages" style="color: inherit;">
+      <i class="bi bi-chevron-right"></i>
+    </button>
+  </li>
+</ul>

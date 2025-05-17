@@ -5,13 +5,16 @@ import {NgForOf, NgIf} from '@angular/common';
 import {IGetVisibleRouteWithPaginate} from '../../../../../../dto/get-all-dto.interface';
 import {IRouteWithAttachment} from '../../../../../../data/route/IBaseRoute';
 import {S3Helper} from '../../../../../../services/s3.helper';
+import {PagginationComponent} from '../../../../default-components/paggination/paggination.component';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-routes-catalog-page',
   imports: [
     DefaultCatalogueComponent,
     NgForOf,
-    NgIf
+    NgIf,
+    PagginationComponent
   ],
   templateUrl: './routes-catalog-page.component.html',
   styleUrl: './routes-catalog-page.component.css'
@@ -19,14 +22,18 @@ import {S3Helper} from '../../../../../../services/s3.helper';
 export class RoutesCatalogPageComponent implements OnInit {
   routes: IRouteWithAttachment[] = []
   header: string = "Маршруты";
+  filter: string | null = null;
 
   @Output()
   loadCatalogEvent = new EventEmitter<string>();
 
-  constructor(private routeService: RouteService) {
+  constructor(private routeService: RouteService, private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
+    this.route.queryParamMap.subscribe(params => {
+      this.filter = params.get('filter');})
+
     this.loadCatalogEvent.emit(this.header);
 
     let getRoutesDto: IGetVisibleRouteWithPaginate = {pageNumber: 1, countPerPage: 10};

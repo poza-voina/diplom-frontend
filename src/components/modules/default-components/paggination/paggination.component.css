@@ -1,0 +1,9 @@
+.pagination .page-item.active .page-link {
+  background-color: #dcdcdc; /* светло-серый фон для выбранной */
+  border-color: #dcdcdc;
+  color: black !important; /* цвет текста активной страницы черный */
+}
+
+.pagination .page-link {
+  color: black; /* цвет текста у кнопок */
+}

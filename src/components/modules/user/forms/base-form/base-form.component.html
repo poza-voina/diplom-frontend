@@ -37,5 +37,12 @@
     </div>
 
     <button type="submit" class="btn-submit" [disabled]="formGroup.invalid">{{this.submitLabel}}</button>
+    <div *ngIf="links?.length" class="form-links mt-3 d-flex flex-row justify-content-around">
+      <a *ngFor="let l of links"
+         [routerLink]="l.link"
+         class="my-form-link">
+        {{ l.label }}
+      </a>
+    </div>
   </div>
 </form>

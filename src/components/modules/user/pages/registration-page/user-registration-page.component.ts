@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {UserModule} from '../../user.module';
-import {BaseFormComponent, IField, ISubmitStatus, SubmitStatus} from '../../forms/base-form/base-form.component';
+import {BaseFormComponent, IField, ILink, ISubmitStatus, SubmitStatus} from '../../forms/base-form/base-form.component';
 import {Validators} from '@angular/forms';
 import {IRegistrationUserDto} from '../../../../../dto/IRegistrationUserDto';
 import {ClientAuthService} from '../../service/client-auth.service';
@@ -23,6 +23,9 @@ export class UserRegistrationPageComponent {
     status: SubmitStatus.DEFAULT,
     message: null
   }
+  links: ILink[] = [
+    {label: "Войти", link: "/login"},
+  ];
 
   constructor(private authClientService: ClientAuthService) { }
 

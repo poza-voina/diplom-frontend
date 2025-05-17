@@ -29,6 +29,12 @@ import {
 } from '../components/modules/admin/pages/authorization-page/authorization-page.component';
 import {RouteComponent} from '../components/modules/user/pages/route/route.component';
 import {ProfilePageComponent} from '../components/modules/user/pages/profile-page/profile-page.component';
+import {
+  ResetPasswordPageComponent
+} from '../components/modules/user/pages/reset-password-page/reset-password-page.component';
+import {
+  PasswordRecoveryPageComponent
+} from '../components/modules/user/pages/password-recovery-page/password-recovery-page.component';
 
 export const routes: Routes = [
   {path: 'test1', component: TestComponent},
@@ -48,6 +54,14 @@ export const routes: Routes = [
       {
         path: "login",
         component: UserAuthorizationPageComponent,
+      },
+      {
+        path: "reset-password",
+        component: ResetPasswordPageComponent,
+      },
+      {
+        path: "recovery-password",
+        component: PasswordRecoveryPageComponent,
       },
       {
         path: "route/:routeId",
