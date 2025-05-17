@@ -37,14 +37,14 @@ export class AdminDashboardComponent implements OnInit {
       pageSize: 10,
     };
 
-    this.adminActionsService.getPendingRoutesExamples(pendingRoutesExamplesRequest)
+    this.adminActionsService.getFilteredRoutesExamples(pendingRoutesExamplesRequest)
       .subscribe(
         {
           next: value => this.pendingRoutesExamples = value,
           error: error => console.log("Не удалось загрузить экземпляры маршрутов")
         }
       );
-    this.adminActionsService.getPendingRoutesExamples(pendingRoutesExamplesByUserRequest)
+    this.adminActionsService.getFilteredRoutesExamples(pendingRoutesExamplesByUserRequest)
       .subscribe(
         {
           next: value => this.pendingRoutesExamplesByUser = value,

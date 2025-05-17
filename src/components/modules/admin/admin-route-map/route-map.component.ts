@@ -169,6 +169,8 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
     let cuePointItems = this.cuePointCards
       .map(x => x.cuePointItem);
 
+    cuePointItems.forEach((x) => {x.routeId = this.routeId})
+
     this.adminActionsService.updateRouteCuePoints(cuePointItems).subscribe({
       error: error => {
         this.isSavingCuePoints = false;

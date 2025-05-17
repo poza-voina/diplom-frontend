@@ -1,5 +1,5 @@
 import {MapComponent} from '../../../base/map/map.component';
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {NgIf, NgSwitch, NgSwitchCase} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {RouteService} from '../../../../services/route.service';
@@ -43,6 +43,7 @@ export class AboutRouteComponent implements OnInit {
   routeItem: IRouteWithAttachment | null = null;
   routeCardStatus: RouteCardStatus = RouteCardStatus.None;
   routeId: number;
+  isCreate: boolean = false;
   navigationItems: IHeaderNavigationItem<AboutRouteNavigationBarStatus>[] = [
     {label: "Маршрут", value: AboutRouteNavigationBarStatus.Route},
     {label: "Категории маршрута", value: AboutRouteNavigationBarStatus.RouteCategories},
@@ -53,7 +54,8 @@ export class AboutRouteComponent implements OnInit {
   protected readonly AboutRouteNavigationBarStatus = AboutRouteNavigationBarStatus;
   routeCategories: ICategory[] = [];
   allCategories: ICategory[] = [];
-  addNewCategoryModelId: string = "addNewCategoryModel1";
+  @ViewChild(RouteCardBodyComponent) routeCardBodyComponent!: RouteCardBodyComponent;
+
   private file?: File;
 
   constructor(
@@ -67,8 +69,28 @@ export class AboutRouteComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadRoute();
-    this.loadCategories();
+    this.isCreate = this.route.snapshot.data['isCreate'];
+    if (this.isCreate) {
+      this.routeItem = this.getEmptyRoute();
+      this.routeCardStatus = RouteCardStatus.Editing;
+    } else {
+      this.loadRoute();
+      this.loadCategories();
+    }
+  }
+
+  getEmptyRoute(): IBaseRoute {
+    return {
+      id: 0,
+      title: '',
+      description: null,
+      maxCountPeople: null,
+      minCountPeople: null,
+      baseCost: null,
+      creationDateTime: new Date().toISOString(),
+      isHidden: false,
+      routeCategories: []
+    };
   }
 
   loadRoute() {
@@ -91,9 +113,16 @@ export class AboutRouteComponent implements OnInit {
         this.routeCardStatus = RouteCardStatus.Editing;
         break;
       case RouteCardStatus.Editing:
-        this.updateAboutRoute();
-        this.routeCardStatus = RouteCardStatus.None;
-        break
+        let handleSaveResult=  this.routeCardBodyComponent?.handleSave() ?? true;
+        if (handleSaveResult) {
+          if (this.isCreate) {
+            this.createAboutRoute()
+          } else {
+            this.updateAboutRoute();
+          }
+          this.routeCardStatus = RouteCardStatus.None;
+          break
+        }
     }
 
     this.cdr.detectChanges();
@@ -107,6 +136,26 @@ export class AboutRouteComponent implements OnInit {
           next: (x) => this.routeItem = x,
           error: (error) => console.log("Не удалось обновить маршрут"),
           complete: () => {
+          }
+        }
+      );
+      if (this.file) {
+        this.attachmentService.uploadRouteAttachment(this.file, this.routeId).subscribe(
+          {error: error => console.log("Не удалось обновить картинку")}
+        )
+      }
+    }
+  }
+
+  createAboutRoute() {
+    if (this.routeItem != null) {
+      this.routeItem.routeCategories = this.routeCategories;
+      this.adminActionsService.createRoute(this.routeItem).subscribe(
+        {
+          next: (x) => this.routeItem = x,
+          error: (error) => console.log("Не удалось обновить маршрут"),
+          complete: () => {
+            this.router.navigate(['/admin/routes/' + this.routeItem!.id]);
           }
         }
       );

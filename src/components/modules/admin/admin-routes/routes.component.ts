@@ -138,17 +138,6 @@ export class RoutesComponent {
     }
   }
 
-  createNewRoute(routeItem: IBaseRoute) {
-    this.adminActionsService.createRoute(routeItem).pipe().subscribe({
-      error: (error) => {
-        this.newRouteFormComponent.afterSaveHandler("Не удалось сохранить маршрут");
-      },
-      complete: () => {
-        this.newRouteFormComponent.afterSaveHandler(null);
-      }
-    });
-  }
-
   showHiddenRoute(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
     if (checked) {
@@ -167,6 +156,22 @@ export class RoutesComponent {
       this.filters = this.filters.filter(f => f !== RoutesFilter.ShowVisible);
     }
     this.loadRoutes();
+  }
+
+  goToNewRoute() {
+    this.router.navigate(['/admin/routes/new']);
+  }
+
+  removeRoute(event: Event, i: number) {
+    console.log("removeRoute")
+    event.stopPropagation();
+    let item = this.routes[i];
+    this.adminActionsService.removeRoute(item.id).subscribe(
+      {
+        error: (error) => {console.log("Не удалось удалить маршрут")},
+        complete: () => {this.routes.slice(i, 1)}
+      }
+    );
   }
 }
 

@@ -1,10 +1,9 @@
-<div>{{ this.routeId }}</div>
-<div class="container d-flex flex-row" *ngIf="routeItem != null">
-  <div class="container container-sm d-flex flex-column" style="max-width: 400px">
+<div class="container d-flex flex-row mt-2" *ngIf="routeItem != null">
+  <div class="container container-sm d-flex flex-column " style="max-width: 400px">
     <div class="map-container ratio-1x1 mb-3">
       <app-map class="map"></app-map>
     </div>
-    <button class="btn btn-primary" (click)="goToRouteMap()">Изменить маршрут</button>
+    <button class="btn btn-primary" (click)="goToRouteMap()" [disabled]="isCreate">Изменить маршрут</button>
   </div>
   <div class="container container-lg d-flex flex-column">
     <div class="card mb-3">
@@ -15,7 +14,6 @@
       <div class="card-body" [ngSwitch]="currentNavigationBarStatus">
         <app-route-card-body *ngSwitchCase="AboutRouteNavigationBarStatus.Route"
                              [routeItem]="routeItem"
-                             (routeItemChange)="routeItem = $event"
                              [routeCardStatus]="routeCardStatus"
                              (routeCardStatusChange)="routeCardStatus = $event"></app-route-card-body>
         <app-categories-card-body

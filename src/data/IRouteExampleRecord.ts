@@ -8,9 +8,21 @@ export interface IRouteExampleRecord {
 }
 
 export interface IBookRouteExampleRecord extends IRouteExampleRecord {
-  routeExample : IBookRouteExample
+  routeExample: IBookRouteExample
 }
 
 export interface IBookRouteExample extends IRouteExample {
   route: IBaseRoute;
+}
+
+interface Client {
+  email: string,
+  firstName: string,
+  secondName: string,
+  patronymic?: string,
+  phoneNumber: string,
+}
+
+export interface IRouteExampleRecordWithClient extends IRouteExampleRecord {
+  client: Client
 }

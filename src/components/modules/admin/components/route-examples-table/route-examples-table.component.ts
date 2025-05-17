@@ -6,6 +6,7 @@ import {RouteService} from '../../../../../services/route.service';
 import {FormsModule} from '@angular/forms';
 import * as bootstrap from 'bootstrap';
 import {AdminActionsService} from '../../../../../services/admin-actions.service';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-route-examples-table',
@@ -24,7 +25,11 @@ export class RouteExamplesTableComponent implements OnInit {
   RouteExampleItemWStatus = RouteExampleItemWStatus;
 
 
-  constructor(private routeService: RouteService, private adminActionsService: AdminActionsService) {
+  constructor(
+    private routeService: RouteService,
+    private adminActionsService: AdminActionsService,
+    private router: Router,
+  private route: ActivatedRoute) {
   }
 
   ngOnInit() {
@@ -161,6 +166,11 @@ export class RouteExamplesTableComponent implements OnInit {
 
   handleEdit(index: number) {
     this.routeExamples[index].editingStatus = RouteExampleItemWStatus.EDITING;
+  }
+
+  goToRecords(exampleId: number) {
+    console.log('goToRecords', exampleId);
+    this.router.navigate(['examples', exampleId, 'records'],  { relativeTo: this.route });
   }
 }
 

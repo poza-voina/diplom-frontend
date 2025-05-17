@@ -35,6 +35,9 @@ import {
 import {
   PasswordRecoveryPageComponent
 } from '../components/modules/user/pages/password-recovery-page/password-recovery-page.component';
+import {
+  RouteExampleRecordsComponent
+} from '../components/modules/admin/pages/route-example-records/route-example-records.component';
 
 export const routes: Routes = [
   {path: 'test1', component: TestComponent},
@@ -141,12 +144,31 @@ export const routes: Routes = [
           },
       },
       {
+        path: 'routes/new',
+        component: AboutRouteComponent,
+        data:
+          {
+            breadcrumb: 'Общая информация',
+            parent: RoutesComponent,
+            isCreate: true,
+          }
+      },
+      {
         path: 'routes/:routeId',
         component: AboutRouteComponent,
         data:
           {
             breadcrumb: 'Общая информация',
             parent: RoutesComponent,
+          }
+      },
+      {
+        path: 'routes/:routeId/examples/:exampleId/records',
+        component: RouteExampleRecordsComponent,
+        data:
+          {
+            breadcrumb: 'Записи на маршрут',
+            parent: AboutRouteComponent,
           }
       }
     ]

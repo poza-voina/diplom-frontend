@@ -14,5 +14,5 @@ export interface IBaseRoute {
 }
 
 export interface IRouteWithAttachment extends IBaseRoute {
-  attachment: IAttachment;
+  attachment?: IAttachment;
 }

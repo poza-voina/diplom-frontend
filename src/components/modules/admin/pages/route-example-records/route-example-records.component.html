@@ -1,0 +1,54 @@
+<div class="container d-flex justify-content-center mt-2 align-items-center">
+  <h2 class="mb-2 text-center">
+    <span>Записи на маршрут: </span>
+    <small class="text-muted">
+      <strong>{{ routeExample?.startDateTime | date:'dd.MM.yyyy HH:mm' }}</strong>
+      &nbsp;&mdash;&nbsp;
+      <strong>{{ routeExample?.endDateTime | date:'dd.MM.yyyy HH:mm' }}</strong>
+    </small>
+  </h2>
+</div>
+
+<div class="container card p-2">
+  <table class="table">
+    <thead>
+    <tr>
+      <th>ФИО</th>
+      <th>Электронная почта</th>
+      <th>Состояние клиента</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of routeExampleRecords; let i = index">
+      <td>
+        {{item.client.firstName}}
+        {{item.client.secondName}}
+        {{item.client.patronymic}}
+      </td>
+      <td>
+        {{item.client.email}}
+      </td>
+      <td>
+        <select class="form-select" [(ngModel)]="item.status" [disabled]="item.editingStatus === EditingStatus.DEFAULT">
+          <option value="Pending">Ожидает</option>
+          <option value="Approved">Одобрен</option>
+          <option value="Rejected">Отклонен</option>
+        </select>
+      </td>
+      <td>
+        <button *ngIf="item.editingStatus === EditingStatus.EDITING" class="btn btn-secondary btn-sm" (click)="handleSave(i)">
+          <i class="bi bi-floppy"></i>
+        </button>
+        <button *ngIf="item.editingStatus === EditingStatus.DEFAULT" class="btn btn-secondary btn-sm" (click)="handleEdit(i)">
+          <i class="bi bi-pencil"></i>
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <button *ngIf="routeExampleRecords.length > 0" class="btn btn-sm btn-primary" (click)="handleSaveAll()"><i
+    class="bi bi-floppy"></i> Сохранить все
+  </button>
+</div>

@@ -31,6 +31,10 @@ export class AdminActionsService extends BaseApiWithAuthService {
     return this.http.post<IBaseRoute>(this.apiRoutesUrl, route, this.getOptions());
   }
 
+  removeRoute(id: number) : Observable<any> {
+    return this.http.delete<IBaseRoute>(this.apiRoutesUrl + `/${id}`, this.getOptions());
+  }
+
   updateRouteCuePoints(cuePointItems: IBaseRouteCuePoint[]): Observable<IBaseRouteCuePoint[]> {
     return this.http.put<IBaseRouteCuePoint[]>(this.apiRoutesUrl + "/update-cue-points", cuePointItems, this.getOptions());
   }
@@ -65,7 +69,7 @@ export class AdminActionsService extends BaseApiWithAuthService {
     return this.http.get<IRouteWithAttachment[]>(this.apiRoutesUrl, {params, ...this.getOptions()});
   }
 
-  getPendingRoutesExamples(request: IGetPendingRoutesExamplesRequest): Observable<IRouteExampleWithRoute[]> {
+  getFilteredRoutesExamples(request: IGetPendingRoutesExamplesRequest): Observable<IRouteExampleWithRoute[]> {
     let params = new HttpParams();
 
     Object.keys(request).forEach(key => {
@@ -79,10 +83,14 @@ export class AdminActionsService extends BaseApiWithAuthService {
         params = params.set(key, value.toString());
       }
     });
-    return this.http.get<IRouteExampleWithRoute[]>(`${this.apiRoutesExampleUrl}/by-pending`, {params, ...this.getOptions()});
+    return this.http.get<IRouteExampleWithRoute[]>(`${this.apiRoutesExampleUrl}/filter`, {params, ...this.getOptions()});
   }
 
   createCategory(dto: INewCategoryRequest): Observable<ICategory> {
     return this.http.post<ICategory>(this.apiRouteCategoriesUrl, dto, this.getOptions());
+  }
+
+  getRouteExample(id: number): Observable<IRouteExample> {
+    return this.http.get<IRouteExample>(`${this.apiRoutesExampleUrl}/${id}`, this.getOptions());
   }
 }

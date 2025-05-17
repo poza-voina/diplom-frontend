@@ -3,6 +3,7 @@
   <tr>
     <th>Дата начала</th>
     <th>Дата окончания</th>
+    <th>Состояние маршрута</th>
     <th></th>
   </tr>
   </thead>
@@ -12,14 +13,19 @@
       <input type="datetime-local" class="form-control"
              [(ngModel)]="item.startDateTime"
              (ngModelChange)="onStartDateChange(i)"
+             [disabled]="item.editingStatus === RouteExampleItemWStatus.DEFAULT"
              name="start{{i}}"/>
     </td>
     <td>
       <input type="datetime-local" class="form-control"
-             [(ngModel)]="item.endDateTime" name="end{{i}}"/>
+             [(ngModel)]="item.endDateTime" name="end{{i}}"
+             [disabled]="item.editingStatus === RouteExampleItemWStatus.DEFAULT"
+      />
     </td>
     <td>
-      <select class="form-select" [(ngModel)]="item.status">
+      <select class="form-select" [(ngModel)]="item.status"
+              [disabled]="item.editingStatus === RouteExampleItemWStatus.DEFAULT"
+      >
         <option value="Pending">Ожидание записей</option>
         <option value="Closed">Закрыт</option>
       </select>
@@ -41,6 +47,7 @@
           ⋮
         </button>
         <ul class="dropdown-menu custom-dropdown-left" [attr.aria-labelledby]="'dropdownMenuButton' + i">
+          <li><button class="dropdown-item" (click)="goToRecords(item.id)">Показать записи</button></li>
           <li><button class="dropdown-item" (click)="handleEdit(i)">Редактировать</button></li>
           <li><button class="dropdown-item" (click)="handleRemove(i)">Удалить</button></li>
         </ul>
