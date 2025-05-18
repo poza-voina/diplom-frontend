@@ -39,6 +39,7 @@ export class AdminActionsService extends BaseApiWithAuthService {
     return this.http.put<IBaseRouteCuePoint[]>(this.apiRoutesUrl + "/update-cue-points", cuePointItems, this.getOptions());
   }
 
+
   createOrUpdateRouteExample(routeExampleItem: IRouteExample): Observable<IRouteExample> {
     return this.http.put<IRouteExample>(this.apiRoutesExampleUrl, routeExampleItem, this.getOptions());
   }

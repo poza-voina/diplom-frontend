@@ -48,7 +48,7 @@
     </div>
 
     <div *ngSwitchCase="NavBarStatus.Image">
-      <app-upload-image></app-upload-image>
+      <app-upload-image (fileSelected)="handleFileSelected($event)"></app-upload-image>
     </div>
   </div>
   <div class="card-footer d-flex justify-content-between flex-row">

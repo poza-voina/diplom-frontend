@@ -9,6 +9,7 @@ import {map} from 'rxjs';
 import {AdminActionsService} from '../../../../services/admin-actions.service';
 import {IBaseRouteCuePoint, RouteCuePointItem} from '../../../../data/cuePoint/CuePoint';
 import {CuePointStatus} from '../../../../enums/cue-point.status';
+import {AttachmentService} from '../../../../services/attachment.service';
 
 @Component({
   selector: 'app-admin-route-map',
@@ -41,7 +42,9 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
     private routeService: RouteService,
     private adminActionsService: AdminActionsService,
     private cdr: ChangeDetectorRef,
-    private router: Router) {
+    private router: Router,
+    private attachmentService: AttachmentService
+  ) {
     this.routeId = +this.route.snapshot.paramMap.get('routeId')!;
   }
 
@@ -166,20 +169,47 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
 
   saveRoute() {
     this.isSavingCuePoints = true;
-    let cuePointItems = this.cuePointCards
-      .map(x => x.cuePointItem);
 
-    cuePointItems.forEach((x) => {x.routeId = this.routeId})
+    const cuePointItems = this.cuePointCards.map(x => {
+      x.cuePointItem.routeId = this.routeId;
+      return x.cuePointItem;
+    });
+
+    let ids: number[] = [];
+    let files: File[] = [];
 
     this.adminActionsService.updateRouteCuePoints(cuePointItems).subscribe({
-      error: error => {
-        this.isSavingCuePoints = false;
+      next: items => {
+        const ids: number[] = [];
+        const files: File[] = [];
+
+        items.forEach((item, index) => {
+          const card = this.cuePointCards[index];
+          if (card?.file) {
+            ids.push(item.id!);
+            files.push(card.file);
+          }
+        });
+
+        console.log('CuePoints saved');
+        console.log(files, ids);
+
+        this.attachmentService.uploadCuePointsAttachments(files, ids).subscribe({
+          next: () => {
+            console.log('Файлы успешно загружены');
+          },
+          error: err => {
+            console.error('Ошибка при загрузке файлов', err);
+          },
+          complete: () => {
+            this.isSavingCuePoints = false;
+          }
+        });
       },
-      complete: () => {
-        this.isSavingCuePoints = true;
+      error: () => {
+        this.isSavingCuePoints = false;
       }
-    });
-  }
+    });}
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
@@ -265,5 +295,9 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
       this.changeRoutePoints();
       this.mapElement.renderRoutePoints();
     }
+  }
+
+  handleFileSelected(file: File, index: number) {
+    this.cuePointCards[index].file = file;
   }
 }

@@ -3,6 +3,7 @@ import {NavBarStatus} from '../enums/nav-bar.status';
 import {IBaseRouteCuePoint} from '../data/cuePoint/CuePoint';
 
 export interface ICuePointCard {
+  file?: File;
   cuePointItem: IBaseRouteCuePoint;
   isHovered: boolean;
   status: CuePointStatus;

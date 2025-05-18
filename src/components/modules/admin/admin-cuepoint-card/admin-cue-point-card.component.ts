@@ -27,6 +27,9 @@ export class AdminCuePointCardComponent implements OnInit {
   query: string = ''; // Строка запроса
   showSuggestions: boolean = false;
 
+  @Output()
+  fileSelected = new EventEmitter<File>();
+
   constructor(private suggestionsService: YandexSuggestionsService, private mapService: MapService, private cdr: ChangeDetectorRef) {
   }
 
@@ -87,6 +90,10 @@ export class AdminCuePointCardComponent implements OnInit {
     });
 
     console.log(this.addressSuggestions);
+  }
+
+  handleFileSelected(file: File) {
+    this.fileSelected.emit(file);
   }
 }
 
