@@ -9,4 +9,6 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 export class ModalWindowComponent {
   @Input() modalWindowId: string | undefined;
   @Output() modalWindowEvent: EventEmitter<void> = new EventEmitter();
+  @Input()
+  label: string = "Заголовок";
 }

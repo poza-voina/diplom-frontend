@@ -59,9 +59,9 @@
     </ng-container>
 
     <!-- Базовая стоимость -->
-    <h6 class="mt-3">Базовая стоимость</h6>
+    <h6 class="mt-3">Cтоимость</h6>
     <ng-container *ngSwitchCase="RouteCardStatus.None">
-      <p>{{ routeItem.baseCost !== null ? (routeItem.baseCost | currency:'RUB') : 'не указано' }}</p>
+      <p>{{ routeItem.baseCost !== null ? (routeItem.baseCost + " р.") : 'не указано' }}</p>
     </ng-container>
     <ng-container *ngSwitchCase="RouteCardStatus.Editing">
       <input
@@ -81,7 +81,7 @@
     </ng-container>
 
     <!-- Скрыть маршрут -->
-    <h6 class="mt-3">Скрыть маршрут</h6>
+    <h6 class="mt-3">Маршрут скрыт</h6>
     <ng-container *ngSwitchCase="RouteCardStatus.None">
       <p>{{ routeItem.isHidden ? 'Да' : 'Нет' }}</p>
     </ng-container>
@@ -94,7 +94,6 @@
           name="isHidden"
           id="isHiddenSwitch"
         >
-        <label class="form-check-label" for="isHiddenSwitch">Скрыть маршрут</label>
       </div>
     </ng-container>
 

@@ -33,6 +33,6 @@
 </div>
 
 
-<modal-window modalWindowId="{{addNewCategoryModelId}}">
+<modal-window [label]="modalLabel" modalWindowId="{{addNewCategoryModelId}}">
   <app-add-new-category (saveEvent)="createNewCategory($event)"></app-add-new-category>
 </modal-window>

@@ -1,17 +1,15 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {DefaultCatalogueComponent} from '../../../components/default-catalog/default-catalog.component';
 import {RouteService} from '../../../../../../services/route.service';
 import {NgForOf, NgIf} from '@angular/common';
 import {IGetVisibleRouteWithPaginate} from '../../../../../../dto/get-all-dto.interface';
 import {IRouteWithAttachment} from '../../../../../../data/route/IBaseRoute';
 import {S3Helper} from '../../../../../../services/s3.helper';
 import {PagginationComponent} from '../../../../default-components/paggination/paggination.component';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-routes-catalog-page',
   imports: [
-    DefaultCatalogueComponent,
     NgForOf,
     NgIf,
     PagginationComponent
@@ -27,16 +25,21 @@ export class RoutesCatalogPageComponent implements OnInit {
   @Output()
   loadCatalogEvent = new EventEmitter<string>();
 
-  constructor(private routeService: RouteService, private route: ActivatedRoute) {
+  constructor(private routeService: RouteService, private route: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit(): void {
+    this.loadAllData();
+  }
+
+  loadAllData(): void {
     this.route.queryParamMap.subscribe(params => {
-      this.filter = params.get('filter');})
+      this.filter = params.get('filter');
+    })
 
     this.loadCatalogEvent.emit(this.header);
 
-    let getRoutesDto: IGetVisibleRouteWithPaginate = {pageNumber: 1, countPerPage: 10};
+    let getRoutesDto: IGetVisibleRouteWithPaginate = {pageNumber: 1, pageSize: 10, category: this.filter};
 
     this.routeService.getVisibleRoutes(getRoutesDto).subscribe(
       {
@@ -55,5 +58,14 @@ export class RoutesCatalogPageComponent implements OnInit {
       return null;
     }
     return S3Helper.getImageUrlOrDefault(uri)
+  }
+
+  clearFilter() {
+    this.router.navigate([], {
+      queryParams: {},
+      replaceUrl: true
+    });
+
+    this.loadAllData();
   }
 }

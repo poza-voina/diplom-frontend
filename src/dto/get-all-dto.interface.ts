@@ -1,4 +1,5 @@
 export interface IGetVisibleRouteWithPaginate {
   pageNumber: number,
-  countPerPage: number
+  pageSize: number,
+  category: string | null | undefined,
 }

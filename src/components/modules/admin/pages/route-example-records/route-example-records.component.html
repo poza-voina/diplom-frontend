@@ -1,6 +1,6 @@
 <div class="container d-flex justify-content-center mt-2 align-items-center">
   <h2 class="mb-2 text-center">
-    <span>Записи на маршрут: </span>
+    <div>Записи на маршрут: {{routeItem?.title}}</div>
     <small class="text-muted">
       <strong>{{ routeExample?.startDateTime | date:'dd.MM.yyyy HH:mm' }}</strong>
       &nbsp;&mdash;&nbsp;
@@ -15,6 +15,7 @@
     <tr>
       <th>ФИО</th>
       <th>Электронная почта</th>
+      <th>Номер телефона</th>
       <th>Состояние клиента</th>
       <th></th>
     </tr>
@@ -22,12 +23,15 @@
     <tbody>
     <tr *ngFor="let item of routeExampleRecords; let i = index">
       <td>
-        {{item.client.firstName}}
         {{item.client.secondName}}
+        {{item.client.firstName}}
         {{item.client.patronymic}}
       </td>
       <td>
         {{item.client.email}}
+      </td>
+      <td>
+        {{item.client.phoneNumber}}
       </td>
       <td>
         <select class="form-select" [(ngModel)]="item.status" [disabled]="item.editingStatus === EditingStatus.DEFAULT">

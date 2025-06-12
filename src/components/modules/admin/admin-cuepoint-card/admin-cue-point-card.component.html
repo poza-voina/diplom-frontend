@@ -52,11 +52,15 @@
     </div>
   </div>
   <div class="card-footer d-flex justify-content-between flex-row">
-    <div>
-      <button [ngSwitch]="cuePointStatus" class="btn btn-primary"
+    <div class="btn-group btn-group-sm">
+      <button [ngSwitch]="cuePointStatus" class="btn btn-sm btn-primary"
               (click)="toggleEditCuePoint()">
         <ng-container *ngSwitchCase="CuePointStatus.None">Изменить</ng-container>
         <ng-container *ngSwitchCase="CuePointStatus.Editing">Сохранить</ng-container>
+      </button>
+
+      <button class="btn btn-sm btn-danger" (click)="handleDelete()">
+        <i class="bi bi-trash"></i>
       </button>
 
 <!--      <button *ngSwitchCase="NavBarStatus.Address"

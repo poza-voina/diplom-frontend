@@ -35,7 +35,15 @@ export class RouteService extends BaseApiService {
   }
 
   getVisibleRoutes(getRoutesDto: IGetVisibleRouteWithPaginate) : Observable<IRouteWithAttachment[]> {
-    return this.http.get<IRouteWithAttachment[]>(`${this.apiUrl}/visible-routes`, this.getOptions());
+    console.log(getRoutesDto);
+    let params = new HttpParams()
+      .set('pageNumber', getRoutesDto.pageNumber)
+      .set('pageSize', getRoutesDto.pageSize)
+      if (getRoutesDto.category) {
+        params = params.set('category', getRoutesDto.category)
+      }
+
+    return this.http.get<IRouteWithAttachment[]>(`${this.apiUrl}/visible-routes`, {...this.getOptions(), params});
   }
 
   getRouteExamplesByMonth(selectedMonth: ISelectMonth) : Observable<IRouteExample[]> {

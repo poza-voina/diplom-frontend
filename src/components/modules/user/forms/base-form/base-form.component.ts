@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {NgForOf, NgIf} from '@angular/common';
 import {RouterLink} from '@angular/router';
@@ -41,12 +41,19 @@ export class BaseFormComponent implements OnInit {
   @Input()
   formLabel!: string;
   @Input() submitStatus!: ISubmitStatus;
+  @Input() initialData: any;
 
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
     const controls = this.createControls();
     this.formGroup = this.fb.group(controls);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['initialData'] && this.formGroup) {
+      this.formGroup.patchValue(this.initialData);
+    }
   }
 
   // Создание формы на основе полей

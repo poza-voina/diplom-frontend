@@ -10,7 +10,7 @@ import {IUserProfileDto} from '../../../../dto/IUserProfileDto';
   providedIn: 'root'
 })
 export class ClientAuthService extends BaseAuthService {
-  registerRoute: string = `${API_URLS.clients}/client/register`;
+  registerRoute: string = `${API_URLS.clients}/client/auth/register`;
   private static tokenKey: string = 'clientTokenKey';
 
   constructor(http: HttpClient) {

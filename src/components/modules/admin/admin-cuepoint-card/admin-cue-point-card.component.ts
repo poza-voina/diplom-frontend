@@ -19,6 +19,7 @@ export class AdminCuePointCardComponent implements OnInit {
   @Output() public onMoveLower = new EventEmitter();
   @Output() public onMoveHigher = new EventEmitter();
   @Output() public onPickedPoint = new EventEmitter<number | null>();
+  @Output() public onDelete = new EventEmitter<number>();
 
   navBarStatus: NavBarStatus = NavBarStatus.Info;
   isExpanded: boolean = false;
@@ -94,6 +95,10 @@ export class AdminCuePointCardComponent implements OnInit {
 
   handleFileSelected(file: File) {
     this.fileSelected.emit(file);
+  }
+
+  handleDelete() {
+    this.onDelete.emit(this.routeCuePointItem?.sortIndex);
   }
 }
 

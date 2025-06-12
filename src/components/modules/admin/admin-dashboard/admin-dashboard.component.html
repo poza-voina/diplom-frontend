@@ -3,7 +3,6 @@
     <!-- Меню слева -->
     <div class="col-md-2">
       <div class="list-group">
-        <a routerLink="/admin/dashboard" class="list-group-item list-group-item-action active">Главная</a>
         <a routerLink="/admin/routes" class="list-group-item list-group-item-action">Маршруты</a>
         <a routerLink="/admin/categories" class="list-group-item list-group-item-action">Категории</a>
       </div>
@@ -14,7 +13,7 @@
       <!-- Первая таблица -->
       <div class="card mb-4">
         <div class="card-header">
-          Маршруты, в ожидании
+          Маршруты, которые ожидают записи
         </div>
         <div class="card-body">
           <table class="table table-hover">
@@ -27,11 +26,11 @@
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let instance of pendingRoutesExamples; let i = index">
+            <tr *ngFor="let instance of pendingRoutesExamples; let i = index" (click)="goToRoute(instance.route.id)">
               <td>{{ i + 1 }}</td>
               <td>{{ instance.route.title }}</td>
               <td>{{ instance.startDateTime | date: 'dd.MM.yyyy HH:mm' }}</td>
-              <td>{{ instance.status }}</td>
+              <td>{{ getStatusDescription(instance.status) }}</td>
             </tr>
             </tbody>
           </table>
@@ -57,11 +56,11 @@
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let instance of pendingRoutesExamples; let i = index">
+            <tr *ngFor="let instance of pendingRoutesExamplesByUser; let i = index" (click)="goToRouteExample(instance.route.id, instance.id)">
               <td>{{ i + 1 }}</td>
               <td>{{ instance.route.title }}</td>
               <td>{{ instance.startDateTime | date: 'dd.MM.yyyy HH:mm' }}</td>
-              <td>{{ instance.status }}</td>
+              <td>{{ getStatusDescription(instance.status) }}</td>
             </tr>
             </tbody>
           </table>

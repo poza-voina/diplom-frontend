@@ -1,15 +1,20 @@
-<div class="container mt-1" style="max-width: 900px;">
-  <div class="container mb-0 text-center p-3 mt-5">
+<div class="container" style="max-width: 900px;">
+  <div class="container mb-0 text-center mb-2 mt-2">
     <h2 class="m-0">Профиль</h2>
   </div>
-  <!-- Профиль -->
-  <div class="info-box p-4 bg-white rounded-4 mb-3 shadow-sm border h-100 d-flex flex-column justify-content-between">
-    <div class="d-flex align-items-center gap-4">
-      <img src="https://via.placeholder.com/80" class="rounded-circle border" alt="avatar" style="width: 80px; height: 80px; object-fit: cover;">
-      <div>
-        <h5 class="mb-1 fw-semibold">Иван Турист</h5>
-        <small class="text-muted">Путешественник с 2022 года</small>
+
+  <div class="info-box p-4 bg-white rounded-4 mb-3 shadow-sm border h-100">
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+      <!-- Левая колонка -->
+      <div class="d-flex flex-column gap-2">
+        <h5 class="fw-semibold mb-1">ФИО: {{profileView?.secondName}} {{profileView?.firstName}} {{profileView?.patronymic}}</h5>
+        <div><strong>Телефон: </strong>{{profileView?.phoneNumber}}</div>
+        <div><strong>Email: </strong>{{profileView?.email}}</div>
       </div>
+
+      <button class="btn btn-sm btn-outline-dark">
+        <i class="bi bi-pencil"></i>
+      </button>
     </div>
   </div>
 
@@ -45,17 +50,9 @@
       <div *ngFor="let record of routeExampleRecordsView" class="d-flex justify-content-between align-items-start">
         <div>
           <div class="fw-semibold mb-1">{{record.routeExample.route.title}}</div>
-          <small class="text-muted">{{record.routeExample.startDateTime}} - {{record.routeExample.endDateTime}}</small>
+          <small class="text-muted">{{record.routeExample.startDateTime | date: 'dd.MM.yyyy HH:mm'}} - {{record.routeExample.endDateTime | date: 'dd.MM.yyyy HH:mm'}}</small>
         </div>
         <span class="badge bg-primary-subtle text-black fw-semibold px-3 py-2 rounded-pill">{{getRecordStatus(record.status)}}</span>
-      </div>
-
-      <div class="d-flex justify-content-between align-items-start">
-        <div>
-          <div class="fw-semibold mb-1">«Золотое кольцо России»</div>
-          <small class="text-muted">3–6 июня 2025</small>
-        </div>
-        <span class="badge bg-warning-subtle text-warning fw-semibold px-3 py-2 rounded-pill">Ожидает</span>
       </div>
     </div>
   </div>

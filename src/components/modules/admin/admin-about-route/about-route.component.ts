@@ -87,7 +87,7 @@ export class AboutRouteComponent implements OnInit {
       maxCountPeople: null,
       minCountPeople: null,
       baseCost: null,
-      creationDateTime: new Date().toISOString(),
+      createdAt: new Date().toISOString(),
       isHidden: false,
       routeCategories: []
     };

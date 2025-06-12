@@ -1,70 +1,101 @@
-<div class="container container-lg d-flex flex-row p-0 mb-3 justify-content-between">
-  <div class="d-flex justify-content-start align-content-center">
-    <div class="dropdown me-2" id="sortingButtons">
+<!-- Панель фильтров и кнопка создания -->
+<div class="container-lg d-flex flex-wrap justify-content-between align-items-center gap-2 p-2 mb-3 bg-light rounded shadow-sm">
+  <!-- Левая часть: сортировка и фильтры -->
+  <div class="d-flex flex-wrap align-items-center gap-2">
+    <!-- Сортировка -->
+    <div class="dropdown" id="sortingButtons">
       <button class="btn btn-sm btn-primary dropdown-toggle" type="button" (click)="dropDownHandler('sortingButtons')" data-bs-toggle="dropdown" aria-expanded="false">
-        {{ RoutesSortHelper.getDescription(selectedSort)}}
+        {{ RoutesSortHelper.getDescription(selectedSort) }}
       </button>
       <ul class="dropdown-menu">
         <ng-container *ngFor="let sortingType of othersSort">
-          <li><button class="dropdown-item btn btn-sm" (click)="handleSortRoutes(sortingType);dropDownHandler('sortingButtons')">{{ RoutesSortHelper.getDescription(sortingType) }}</button></li>
+          <li>
+            <button class="dropdown-item btn btn-sm" (click)="handleSortRoutes(sortingType);dropDownHandler('sortingButtons')">
+              {{ RoutesSortHelper.getDescription(sortingType) }}
+            </button>
+          </li>
         </ng-container>
       </ul>
     </div>
-    <div class="form-check m-0 me-2 align-content-center">
-      <label class="form-check-label">
-        Показать скрытые
-      </label>
-      <input class="form-check-input" type="checkbox" (click)="showHiddenRoute($event)">
+
+    <!-- Фильтры -->
+    <div class="form-check form-switch m-0">
+      <input class="form-check-input" type="checkbox" id="showHidden" (click)="showHiddenRoute($event)">
+      <label class="form-check-label" for="showHidden">Показать скрытые</label>
     </div>
-    <div class="form-check m-0 me-2 align-content-center">
-      <label class="form-check-label" for="flexCheckChecked">
-        Показывать видимые
-      </label>
-      <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" (click)="showVisibleRoute($event)">
+
+    <div class="form-check form-switch m-0">
+      <input class="form-check-input" type="checkbox" id="showVisible" (click)="showVisibleRoute($event)">
+      <label class="form-check-label" for="showVisible">Показывать видимые</label>
     </div>
   </div>
+
+  <!-- Строка поиска -->
+  <div class="d-flex input-group input-group-sm" style="max-width: 400px">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Поиск маршрутов"
+      aria-label="Поиск маршрутов"
+      aria-describedby="search-icon"
+    >
+    <span class="input-group-text" id="search-icon"><i class="bi bi-search"></i></span>
+  </div>
+
+  <!-- Правая часть: кнопка создания -->
   <div>
-    <button class="btn btn-sm btn-primary" (click)="goToNewRoute()" >Создать маршрут<i class="bi bi-plus"></i></button>
+    <button class="btn btn-sm btn-success d-flex align-items-center gap-1" (click)="goToNewRoute()">
+      <i class="bi bi-plus"></i> Создать маршрут
+    </button>
   </div>
 </div>
 
-<div class="container container-lg routes">
+<!-- Список маршрутов -->
+<div class="container-lg routes">
   <ng-container [ngSwitch]="routesLoadingStatus">
-    <div *ngSwitchCase="RoutesLoadingStatus.Loading" class="container container-fluid loading-routes w-100 h-100">
-      <div>
-        Идет загрузка маршрутов
-      </div>
+    <!-- Загрузка -->
+    <div *ngSwitchCase="RoutesLoadingStatus.Loading" class="d-flex flex-column align-items-center justify-content-center py-5">
+      <div class="mb-2">Идёт загрузка маршрутов...</div>
       <div class="spinner-border" role="status">
         <span class="visually-hidden">Загрузка...</span>
       </div>
-      <div *ngSwitchCase="RoutesLoadingStatus.Error">
-        Не получилось загрузить Маршруты
-      </div>
     </div>
+
+    <!-- Ошибка -->
+    <div *ngSwitchCase="RoutesLoadingStatus.Error" class="alert alert-danger text-center" role="alert">
+      Не удалось загрузить маршруты.
+    </div>
+
+    <!-- Успешная загрузка -->
     <ng-container *ngSwitchCase="RoutesLoadingStatus.Completed">
-      <div *ngFor="let item of routes; let i = index" class="card mt-2" (click)="goToRoute(item.id)">
-        <div class="card-body">
-          <a class="card-title">{{ item.title }}</a>
-          <div class="card-text">
-            <div>Дата создания:</div>
-            <div>{{ item.creationDateTime }}</div>
-          </div>
+      <div *ngFor="let item of routes; let i = index" class="card mb-3 shadow-sm">
+        <div class="card-body cursor-pointer" (click)="goToRoute(item.id)">
+          <h5 class="card-title mb-2">{{ item.title }}</h5>
+          <p class="card-text mb-0">
+            <strong>Дата создания:</strong> {{ item.createdAt | date: 'dd.MM.yyyy' }}
+          </p>
         </div>
-        <div class="card-footer">
-          <div class="btn-group">
-            <button (click)="item.isHidden ? showRoute($event, item) : hideRoute($event, item)" class="btn btn-primary btn-sm">
-              <i *ngIf="item.isHidden" class="bi bi-eye-slash"></i>
-              <i *ngIf="!item.isHidden" class="bi bi-eye"></i>
-              <div *ngIf="routesStatuses.getStatus(item) == RouteStatus.ToggleVisibility" class="spinner-border text-white spinner-border-sm ms-2" role="status">
-                <span class="visually-hidden">Загрузка</span>
-              </div>
-            </button>
-            <button class="btn btn-primary btn-sm" (click)="removeRoute($event, i)">
-              <i class="bi bi-trash"></i>
-            </button>
-          </div>
+        <div class="card-footer d-flex justify-content-end gap-2">
+          <!-- Скрыть/показать -->
+          <button (click)="item.isHidden ? showRoute($event, item) : hideRoute($event, item)" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1">
+            <i [class]="'bi ' + (item.isHidden ? 'bi-eye-slash' : 'bi-eye')"></i>
+            <div *ngIf="routesStatuses.getStatus(item) == RouteStatus.ToggleVisibility" class="spinner-border spinner-border-sm text-primary ms-1" role="status">
+              <span class="visually-hidden">Загрузка</span>
+            </div>
+          </button>
+
+          <!-- Удалить -->
+          <button class="btn btn-sm btn-outline-danger" (click)="removeRoute($event, i)">
+            <i class="bi bi-trash"></i>
+          </button>
         </div>
       </div>
     </ng-container>
   </ng-container>
+
+  <app-paggination
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    [itemsPerPage]="itemsPerPage">
+  </app-paggination>
 </div>

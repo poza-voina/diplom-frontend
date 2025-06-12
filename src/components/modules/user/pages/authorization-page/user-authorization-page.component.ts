@@ -46,7 +46,6 @@ export class UserAuthorizationPageComponent {
   }
   links: ILink[] = [
     {label: "Зарегистрироваться", link: "/registration"},
-    {label: "Восстановить пароль", link: "/recovery-password"},
   ];
 
   constructor(private clientAuthService: ClientAuthService) {

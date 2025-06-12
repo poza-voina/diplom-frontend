@@ -38,6 +38,7 @@ export class CategoriesCardBodyComponent {
   test: boolean = false;
   addNewCategoryModelId: string = "addNewCategoryModel";
   protected readonly RouteCardStatus = RouteCardStatus;
+  modalLabel: string = "Создание новой категории";
 
   constructor(private adminActionsService: AdminActionsService) {
   }

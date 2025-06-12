@@ -23,7 +23,7 @@
       </div>
       <div *ngFor="let item of this.cuePointCards; let i = index">
         <div (mouseenter)="handleCuePointCardEnterToggle(item)" (mouseleave)="handleCuePointCardEnterToggle(item)">
-          <app-admin-cue-point-card (fileSelected)="handleFileSelected($event, i)" (onPickedPoint)="handlePickedPoint($event)" [cuePointStatus]="item.status" [routeCuePointItem]="item.cuePointItem" (onMoveLower)="moveLower(item.cuePointItem.sortIndex)"
+          <app-admin-cue-point-card (onDelete)="handleRemove($event)" (fileSelected)="handleFileSelected($event, i)" (onPickedPoint)="handlePickedPoint($event)" [cuePointStatus]="item.status" [routeCuePointItem]="item.cuePointItem" (onMoveLower)="moveLower(item.cuePointItem.sortIndex)"
                                     (onMoveHigher)="moveHigher(item.cuePointItem.sortIndex)"></app-admin-cue-point-card>
           <div *ngIf="item.isHovered" class="d-flex justify-content-center mt-2">
             <button (click)="handleAddNewCard(item)" class="btn btn-sm btn-primary align-content-center">Добавить новую

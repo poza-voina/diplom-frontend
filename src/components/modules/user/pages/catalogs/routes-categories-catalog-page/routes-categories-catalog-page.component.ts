@@ -5,6 +5,7 @@ import {
 import {RouteCategoryItem} from '../../../../../../data/RouteCategoryItem';
 import {RouteCategoriesService} from '../../../../../../services/route-categories.service';
 import { ICategory } from '../../../../../../dto/ICategory';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-routes-categories-catalog-page',
@@ -20,7 +21,7 @@ export class RoutesCategoriesCatalogPageComponent implements OnInit {
   loadCatalogEvent = new EventEmitter<string>();
   categories: ICategory[] = [];
 
-  constructor(private service: RouteCategoriesService) {
+  constructor(private service: RouteCategoriesService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -37,5 +38,18 @@ export class RoutesCategoriesCatalogPageComponent implements OnInit {
         console.error(err);
       }
     })
+  }
+
+  onFilterHandle(categoryTitle: string) {
+    this.router.navigate(
+      ['/', 'routes'],
+      {
+        queryParams: {
+          filter: categoryTitle
+        },
+        queryParamsHandling: 'merge', // сохранить другие параметры (если нужно)
+        replaceUrl: true // опционально, чтобы не добавлять в историю браузера
+      }
+    );
   }
 }

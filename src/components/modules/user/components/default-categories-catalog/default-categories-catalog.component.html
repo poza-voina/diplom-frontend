@@ -3,9 +3,9 @@
     <div class="d-flex align-items-center p-3">
       <div class="flex-grow-1">
         <h5 class="mb-1 fw-semibold">{{ category.title }}</h5>
-        <small class="text-muted">{{ category.countRoutes }} маршрутов</small>
+        <small class="text-muted">Количество маршрутов: {{ category.countRoutes == 0 ? 1 : category.countRoutes }}</small>
       </div>
-      <button class="btn btn-secondary rounded-3">
+      <button class="btn btn-secondary rounded-3" (click)="navigateToRoutes(category.title)">
         <i class="bi bi-arrow-right"></i>
       </button>
     </div>

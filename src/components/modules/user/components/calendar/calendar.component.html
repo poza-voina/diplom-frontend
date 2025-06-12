@@ -28,14 +28,13 @@
   <!-- Всплывающее меню -->
   <!-- Всплывающее меню -->
   <div *ngIf="(tooltipVisible && routesForSelectedDay.length > 0)" class="tooltip" [ngStyle]="{top: mouseY + 'px', left: mouseX + 'px'}">
-    <h3 class="tooltip-title">Маршруты для дня {{ selectedDay }}</h3>
     <ul class="tooltip-list">
       <li *ngFor="let route of routesForSelectedDay" class="tooltip-item" (click)="handleSelectRoute(route)">
         <p class="tooltip-time">
           {{ route.startDateTime | date:'HH:mm' }} - {{ route.endDateTime | date:'HH:mm' }}
         </p>
         <p class="tooltip-seats">
-          Свободных мест: {{ route.countRecords }} из {{ MAX_SEATS }}
+          Свободных мест: {{ MAX_SEATS - route.countRecords }} из {{ MAX_SEATS }}
         </p>
       </li>
     </ul>

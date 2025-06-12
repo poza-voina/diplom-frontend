@@ -45,7 +45,9 @@ export class BreadcrumbComponent implements OnInit {
     let children = root?.children;
 
     if (!root || !children) {
-      throw new Error("Breadcrumbs not found");
+      console.warn("Breadcrumbs not found")
+      return [];
+      //throw new Error("Breadcrumbs not found");
     }
 
     let bufferRoot = (root as {path: string, data: {breadcrumb: string}});
@@ -75,7 +77,14 @@ export class BreadcrumbComponent implements OnInit {
         throw new Error("Breadcrumbs not found");
       }
 
-      breadcrumbs.push({label: child.data.breadcrumb, url: path});
+
+      try {
+        breadcrumbs.push({label: child.data.breadcrumb, url: path});
+      }
+      catch (e) {
+        return []
+      }
+      //breadcrumbs.push({label: child.data.breadcrumb, url: path});
 
       path += "/"
     }

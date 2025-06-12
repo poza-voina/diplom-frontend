@@ -8,7 +8,7 @@ export interface IBaseRoute {
   maxCountPeople: number | null;
   minCountPeople: number | null;
   baseCost: number | null;
-  creationDateTime: string;
+  createdAt: string;
   isHidden: boolean;
   routeCategories: ICategory[];
 }

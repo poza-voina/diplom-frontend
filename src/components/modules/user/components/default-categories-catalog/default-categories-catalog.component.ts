@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {NgForOf} from "@angular/common";
 import {ICategory} from '../../../../../dto/ICategory';
 
@@ -13,4 +13,11 @@ import {ICategory} from '../../../../../dto/ICategory';
 export class DefaultCategoriesCatalogueComponent {
   @Input()
   categories: ICategory[] = []
+
+  @Output()
+  onFilter: EventEmitter<string> = new EventEmitter<string>();
+
+  navigateToRoutes(categoryTitle: string): void {
+    this.onFilter.emit(categoryTitle);
+  }
 }

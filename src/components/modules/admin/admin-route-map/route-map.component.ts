@@ -300,4 +300,11 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
   handleFileSelected(file: File, index: number) {
     this.cuePointCards[index].file = file;
   }
+
+  handleRemove(sortIndex: number) {
+    const index = this.cuePointCards.findIndex(x => x.cuePointItem.sortIndex === sortIndex);
+    if (index >= 0) {
+      this.cuePointCards.splice(index, 1);
+    }
+  }
 }

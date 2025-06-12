@@ -4,7 +4,7 @@ import {ClientService} from '../../../../../services/client.service';
 import {IUserProfileDto} from '../../../../../dto/IUserProfileDto';
 import {IBookRouteExampleRecord, IRouteExampleRecord} from '../../../../../data/IRouteExampleRecord';
 import {IGetBooksRequestWithPaginate} from '../../../../../data/book/IGetBooksRequestWithPaginate';
-import {NgForOf} from '@angular/common';
+import {DatePipe, NgForOf} from '@angular/common';
 import {RouteService} from '../../../../../services/route.service';
 import {RouteHelper} from '../../../../../services/route.helper';
 import {IBaseRoute} from '../../../../../data/route/IBaseRoute';
@@ -12,7 +12,8 @@ import {IBaseRoute} from '../../../../../data/route/IBaseRoute';
 @Component({
   selector: 'app-profile-page',
   imports: [
-    NgForOf
+    NgForOf,
+    DatePipe
   ],
   templateUrl: './profile-page.component.html',
   styleUrl: './profile-page.component.css'

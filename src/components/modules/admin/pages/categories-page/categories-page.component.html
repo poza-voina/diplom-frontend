@@ -1,0 +1,61 @@
+<div class="container d-flex justify-content-center mt-2 align-items-center">
+  <h2 class="mb-2 text-center">
+    <div>Категории маршрутов</div>
+  </h2>
+</div>
+
+<div class="container card p-0">
+  <table class="table m-0">
+    <thead class="">
+    <tr>
+      <th>Название категории</th>
+      <th>Количество маршрутов</th>
+      <th class="text-end"></th> <!-- Прижимаем заголовок справа -->
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let category of categories; let i = index">
+      <td>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="category.name"
+          [readonly]="category.editingStatus === EditingStatus.DEFAULT"
+        />
+      </td>
+      <td class="align-middle">{{ category.count }}</td>
+      <td class="text-end align-middle"> <!-- Прижимаем кнопки справа -->
+        <button
+          *ngIf="category.editingStatus === EditingStatus.EDITING"
+          class="btn btn-success btn-sm me-1"
+          (click)="handleSave(i)"
+        >
+          <i class="bi bi-floppy"></i>
+        </button>
+        <button
+          *ngIf="category.editingStatus === EditingStatus.DEFAULT"
+          class="btn btn-secondary btn-sm"
+          (click)="handleEdit(i)"
+        >
+          <i class="bi bi-pencil"></i>
+        </button>
+        <button
+          class="btn btn-danger btn-sm ms-1"
+        >
+          <i class="bi bi-trash"></i>
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="d-flex w-100">
+    <button
+      *ngIf="categories.length > 0"
+      class="btn btn-primary w-100"
+      (click)="handleSaveAll()"
+    >
+      <i class="bi bi-floppy"></i> Сохранить все
+    </button>
+  </div>
+</div>

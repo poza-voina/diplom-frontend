@@ -10,11 +10,12 @@ import {RouteService} from '../../../../services/route.service';
 import {GetRoutesWithFiltersDto} from '../../../../dto/GetRoutesWithFiltersDto';
 import {AdminActionsService} from '../../../../services/admin-actions.service';
 import { IBaseRoute } from '../../../../data/route/IBaseRoute';
+import {PagginationComponent} from '../../default-components/paggination/paggination.component';
 
 @Component({
   selector: 'app-admin-routes',
   standalone: true,
-  imports: [CommonModule, ModalWindowComponent, NewRouteFormComponent],
+  imports: [CommonModule, ModalWindowComponent, NewRouteFormComponent, PagginationComponent],
   templateUrl: './routes.component.html',
   styleUrls: ['./routes.component.css']
 })
@@ -33,6 +34,9 @@ export class RoutesComponent {
   othersSort: RoutesSort[] = this.RoutesSortHelper.getKeys().slice(1);
   private pageNumber: number = 1;
   private countPerPage: number = 10;
+  currentPage: number = 1;
+  totalPages: number = 10;
+  itemsPerPage: number = 6;
 
   constructor(
     private routeService: RouteService,

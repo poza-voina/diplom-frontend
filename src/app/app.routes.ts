@@ -38,6 +38,8 @@ import {
 import {
   RouteExampleRecordsComponent
 } from '../components/modules/admin/pages/route-example-records/route-example-records.component';
+import {ProfileEditPageComponent} from '../components/modules/user/pages/profile-edit-page/profile-edit-page.component';
+import {CategoriesPageComponent} from '../components/modules/admin/pages/categories-page/categories-page.component';
 
 export const routes: Routes = [
   {path: 'test1', component: TestComponent},
@@ -73,6 +75,10 @@ export const routes: Routes = [
       {
         path: "profile",
         component: ProfilePageComponent
+      },
+      {
+        path: "profile/edit",
+        component: ProfileEditPageComponent
       }
     ]
   },
@@ -104,7 +110,7 @@ export const routes: Routes = [
     component: AdminMainPageComponent,
     data:
       {
-        breadcrumb: 'Администрационная панель'
+        breadcrumb: 'Панель администратора'
       },
     children: [
       {
@@ -114,7 +120,12 @@ export const routes: Routes = [
       },
       {
         path: 'categories',
-        component: AdminRoutesCategoriesComponent
+        component: CategoriesPageComponent,
+        data:
+          {
+            breadcrumb: "Категории маршрутов",
+            parent: AdminMainPageComponent,
+          }
       },
       {
         path: 'dashboard',

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {RouterLink} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import {DatePipe, NgForOf} from '@angular/common';
 import {AdminActionsService} from '../../../../services/admin-actions.service';
 import {IGetPendingRoutesExamplesRequest, IRouteExampleWithRoute} from '../../../../data/IRouteExample';
@@ -20,7 +20,7 @@ export class AdminDashboardComponent implements OnInit {
   pendingRoutesExamples: IRouteExampleWithRoute[] = [];
   pendingRoutesExamplesByUser: IRouteExampleWithRoute[] = [];
 
-  constructor(private adminActionsService: AdminActionsService) {
+  constructor(private adminActionsService: AdminActionsService, private router: Router) {
   }
 
   ngOnInit() {
@@ -52,4 +52,26 @@ export class AdminDashboardComponent implements OnInit {
         }
       );
   }
+
+  getStatusDescription(status: string) : string {
+    switch (status) {
+      case "Pending":
+        return "Ожидает записи";
+      case "Closed":
+        return "Закрыто получение записей";
+      default:
+        console.warn("Нет такого статуса");
+        throw new Error("Нет такого статуса");
+    }
+  }
+
+  goToRoute(routeId: number) {
+    this.router.navigate(['/admin', 'routes', routeId]);
+  }
+
+  goToRouteExample(routeId: number, routeExampleId: number) {
+    this.router.navigate(['/admin', 'routes', routeId, 'examples', routeExampleId, 'records']);
+  }
+
+  protected readonly indexedDB = indexedDB;
 }

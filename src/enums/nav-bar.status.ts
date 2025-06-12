@@ -28,7 +28,7 @@ export class NavBarStatusHelper {
   getDescription(sort: NavBarStatus): string {
     switch (sort) {
       case NavBarStatus.Info:
-        return "Общаяя информация"
+        return "Общая информация"
       case NavBarStatus.Address:
         return 'Адрес';
         case NavBarStatus.Image:

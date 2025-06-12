@@ -11,6 +11,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {map} from 'rxjs';
 import {IRouteExample} from '../../../../../data/IRouteExample';
 import {AdminActionsService} from '../../../../../services/admin-actions.service';
+import {IBaseRoute} from '../../../../../data/route/IBaseRoute';
 
 @Component({
   selector: 'app-route-example-records',
@@ -26,19 +27,28 @@ import {AdminActionsService} from '../../../../../services/admin-actions.service
 })
 export class RouteExampleRecordsComponent implements OnInit {
   routeExampleId: number | null = null;
+  routeId: number | null = null;
   routeExampleRecords: IRouteExampleRecordWithClientW[] = [];
   routeExample: IRouteExample | null = null;
+  routeItem: IBaseRoute | null = null;
 
-  constructor(private adminActionsService: AdminActionsService, private routeExampleRecordService: RouteExampleRecordService, private route: ActivatedRoute) {
+  constructor(private adminActionsService: AdminActionsService, private routeService: RouteService, private routeExampleRecordService: RouteExampleRecordService, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
-    const param = this.route.snapshot.paramMap.get('exampleId');
-    this.routeExampleId = Number(param);
+    const routeExampleId = this.route.snapshot.paramMap.get('exampleId');
+    this.routeExampleId = Number(routeExampleId);
+
+    const routeId = this.route.snapshot.paramMap.get('routeId');
+    this.routeId = Number(routeId);
 
     let request: IGetFilteredRouteExampleRecords = {
       routeExampleId: this.routeExampleId.valueOf(),
     }
+
+    this.routeService.getRoute(this.routeId).subscribe(
+      {next: x => this.routeItem = x}
+    )
 
     this.adminActionsService.getRouteExample(this.routeExampleId).subscribe(
       {next: x =>  this.routeExample = x}
@@ -56,6 +66,8 @@ export class RouteExampleRecordsComponent implements OnInit {
           this.routeExampleRecords = recordsWithStatus;
         }
       });
+
+    this.route
   }
 
   handleSaveAll() {
