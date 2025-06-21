@@ -6,19 +6,27 @@ import {IRouteWithAttachment} from '../../../../../../data/route/IBaseRoute';
 import {S3Helper} from '../../../../../../services/s3.helper';
 import {PagginationComponent} from '../../../../default-components/paggination/paggination.component';
 import {ActivatedRoute, Router} from '@angular/router';
+import {ICollectionDto} from '../../../../../../data/ICollection';
+import * as repl from 'node:repl';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-routes-catalog-page',
   imports: [
     NgForOf,
     NgIf,
-    PagginationComponent
+    PagginationComponent,
+    FormsModule
   ],
   templateUrl: './routes-catalog-page.component.html',
   styleUrl: './routes-catalog-page.component.css'
 })
 export class RoutesCatalogPageComponent implements OnInit {
   routes: IRouteWithAttachment[] = []
+  totalPages: number = 0;
+  currentPage: number = 1;
+  pageSize: number = 6;
+  searchText: string = '';
   header: string = "Маршруты";
   filter: string | null = null;
 
@@ -29,22 +37,27 @@ export class RoutesCatalogPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.route.queryParamMap.subscribe(params => {
+      this.filter = params.get('filter');
+    })
     this.loadAllData();
   }
 
   loadAllData(): void {
-    this.route.queryParamMap.subscribe(params => {
-      this.filter = params.get('filter');
-    })
-
     this.loadCatalogEvent.emit(this.header);
 
-    let getRoutesDto: IGetVisibleRouteWithPaginate = {pageNumber: 1, pageSize: 10, category: this.filter};
+    let getRoutesDto: IGetVisibleRouteWithPaginate = {
+      pageNumber: this.currentPage,
+      pageSize: this.pageSize,
+      category: this.filter,
+      title: this.searchText
+    };
 
     this.routeService.getVisibleRoutes(getRoutesDto).subscribe(
       {
-        next: (routes: IRouteWithAttachment[]) => {
-          this.routes = routes;
+        next: (data: ICollectionDto<IRouteWithAttachment>) => {
+          this.routes = data.values;
+          this.totalPages = data.totalPages;
         },
         error: (error: Error) => console.log(error),
         complete: () => {
@@ -60,11 +73,27 @@ export class RoutesCatalogPageComponent implements OnInit {
     return S3Helper.getImageUrlOrDefault(uri)
   }
 
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadAllData();
+  }
+
+  onButtonSearchClick() {
+    this.loadAllData();
+  }
+
+  onClearSearch() {
+    this.searchText = '';
+    this.loadAllData();
+  }
+
   clearFilter() {
     this.router.navigate([], {
       queryParams: {},
       replaceUrl: true
     });
+
+    this.filter = null;
 
     this.loadAllData();
   }

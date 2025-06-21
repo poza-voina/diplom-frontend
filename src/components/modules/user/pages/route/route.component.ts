@@ -15,6 +15,9 @@ import {IRouteCuePointWithAttachment} from '../../../../../data/cuePoint/CuePoin
 import {IRouteWithAttachment} from '../../../../../data/route/IBaseRoute';
 import {S3Helper} from '../../../../../services/s3.helper';
 import {MapComponent} from '../../../../base/map/map.component';
+import {pipe} from 'rxjs';
+import {Observable, forkJoin} from 'rxjs';
+import {tap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-route',
@@ -35,6 +38,7 @@ export class RouteComponent implements OnInit {
   cuePoints: IRouteCuePointWithAttachment[] = [];
   routeItem: IRouteWithAttachment | null = null;
   routeId: number;
+  selectMonth: ISelectMonth | null = null;
   routeExamplesByMonth: IRouteExample[] = [];
   viewRouteExampleItem: IRouteExample | null = null;
   viewRouteExampleRecord: IRouteExampleRecord | null = null;
@@ -43,17 +47,18 @@ export class RouteComponent implements OnInit {
   isCuePointsInitialize: boolean = false;
   @ViewChild(MapComponent) mapElement!: MapComponent;
   @ViewChild('mapContainer') mapContainer!: ElementRef;
+  @ViewChild(CalendarComponent) calendarComponent!: CalendarComponent;
 
   constructor(private route: ActivatedRoute,
               private routeService: RouteService,
               private clientAuthService: ClientAuthService,
               private clientActionsService: ClientActionsService,
-              private cdr : ChangeDetectorRef) {
+              private cdr: ChangeDetectorRef) {
     this.routeId = +this.route.snapshot.paramMap.get('routeId')!;
   }
 
   get isBooked(): boolean {
-    return this.viewRouteExampleItem !== null;
+    return this.viewRouteExampleRecord !== null;
   }
 
   get isAuth(): boolean {
@@ -98,69 +103,123 @@ export class RouteComponent implements OnInit {
   }
 
   onSelectMonth(selectMonth: ISelectMonth) {
-    this.routeService.getRouteExamplesByMonth(selectMonth).subscribe(
-      {
-        next: (x) => this.routeExamplesByMonth = x,
-        error: error => console.log("Не удалось получить екземляры для месяца")
-      }
-    )
-
-    let dateRange = this.getMonthDateRange(selectMonth);
-    try {
-      this.clientActionsService.getBooks(dateRange).subscribe(
-        {next: (x) => this.routeExampleRecords = x},
-      )
-    } catch (error) {}
+    this.selectMonth = selectMonth;
+    this.updateRouteExamplesAndRecordsByMonth().subscribe();
   }
 
-  getMonthDateRange({ month, year }: ISelectMonth): IGetBooksRequestByDateRange {
+  updateRouteExamplesAndRecordsByMonth(): Observable<any> {
+    const examples$ = this.routeService.getRouteExamplesByMonth(this.selectMonth);
+    const dateRange = this.getMonthDateRange(this.selectMonth);
+    const records$ = this.clientActionsService.getBooks(dateRange);
+
+    return forkJoin([examples$, records$]).pipe(
+      tap(([examples, records]) => {
+        this.routeExamplesByMonth = examples;
+        this.routeExampleRecords = records;
+      })
+    );
+  }
+
+  getMonthDateRange({month, year}: ISelectMonth): IGetBooksRequestByDateRange {
     const start = new Date(year, month - 1, 1, 0, 0, 0, 0);
     const end = new Date(year, month, 0, 23, 59, 59, 999);
 
-    return { startDate: start.toISOString(), endDate: end.toISOString() };
+    return {startDate: start.toISOString(), endDate: end.toISOString()};
   }
 
   handleSelectDay(routeExampleItem: IRouteExample | null) {
     this.viewRouteExampleItem = routeExampleItem;
+    this.routeService.getRouteExample(routeExampleItem.id).subscribe(
+      {
+        next: (x) => this.viewRouteExampleItem = x,
+        error: err => console.log(err)
+      },
+    )
+
     this.changeRecord()
+  }
+
+  requestRouteExampleById() {
+    this.routeService.getRouteExample(this.viewRouteExampleItem.id).subscribe(
+      {
+        next: (x) => this.viewRouteExampleItem = x,
+        error: err => console.log(err)
+      },
+    )
   }
 
   book() {
     if (this.viewRouteExampleItem?.routeId) {
-      this.clientActionsService.book(this.viewRouteExampleItem.id).subscribe(
+      this.clientActionsService.book(this.viewRouteExampleItem.id).subscribe({
+        next: record => {
+          // Сначала обновляем данные, после этого вызываем changeRecord()
+          this.updateRouteExamplesAndRecordsByMonth().subscribe({
+            next: () => {
+              this.changeRecord();
+              this.viewRouteExampleItem = this.routeExamplesByMonth.find(x => x.id == this.viewRouteExampleItem.id);
+            },
+            error: err => {
+              console.error('Ошибка при обновлении данных:', err);
+            }
+          });
+        },
+        error: error => {
+          console.log("Не удалось записаться на маршрут");
+        },
+        complete: () => {
+          this.cdr.detectChanges();
+        }
+      });
+    }
+  }
+
+  changeRecord() {
+    if (this.viewRouteExampleItem !== null) {
+      this.viewRouteExampleRecord = this.getRouteExampleRecord(this.viewRouteExampleItem!.id)
+    } else {
+      this.viewRouteExampleRecord = null;
+    }
+  }
+
+  getRouteExampleRecord(id: number): IRouteExampleRecord {
+    return this.routeExampleRecords.find(x => x.routeExampleId === id) ?? null;
+  }
+
+  unBook() {
+    if (this.viewRouteExampleItem?.routeId) {
+      this.clientActionsService.unBook(this.viewRouteExampleItem.id).subscribe(
         {
+          next: record => {
+            // Сначала обновляем данные, после этого вызываем changeRecord()
+            this.updateRouteExamplesAndRecordsByMonth().subscribe({
+              next: () => {
+                this.changeRecord();
+                this.viewRouteExampleItem = this.routeExamplesByMonth.find(x => x.id == this.viewRouteExampleItem.id);
+              },
+              error: err => {
+                console.error('Ошибка при обновлении данных:', err);
+              }
+            });
+          },
           error: error => {
-            console.log("Не удалось записаться на маршрут")
+            console.log("Не удалось записаться на маршрут");
           }
         }
       )
     }
   }
 
-  changeRecord() {
-    if (this.viewRouteExampleItem !== null)
-    {
-      this.viewRouteExampleRecord = this.routeExampleRecords.find(x => x.routeExampleId === this.viewRouteExampleItem!.id) ?? null;
-    } else {
-      this.viewRouteExampleRecord = null;
-    }
-  }
-
-  unBook() {
-
-  }
-
-  getRecordStatus(status: string) : string {
+  getRecordStatus(status: string): string {
     return RouteHelper.ConvertRouteExampleRecordStatusToMessage(status);
   }
 
-  getImageUrl(uri: string | null) : string | null {
+  getImageUrl(uri: string | null): string | null {
     console.log(`URI ${uri}`);
 
     if (uri === null) {
       return null;
     }
-    console.log(`URI ${ S3Helper.getImageUrlOrDefault(uri)}`);
+    console.log(`URI ${S3Helper.getImageUrlOrDefault(uri)}`);
     return S3Helper.getImageUrlOrDefault(uri);
   }
 

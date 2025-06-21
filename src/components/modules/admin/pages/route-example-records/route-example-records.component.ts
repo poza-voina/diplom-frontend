@@ -66,16 +66,15 @@ export class RouteExampleRecordsComponent implements OnInit {
           this.routeExampleRecords = recordsWithStatus;
         }
       });
-
-    this.route
   }
 
   handleSaveAll() {
-
+    this.adminActionsService.updateRecordsStatuses(this.routeExampleRecords).subscribe();
   }
 
   handleSave(i: number) {
     this.routeExampleRecords[i].editingStatus = EditingStatus.DEFAULT;
+    this.adminActionsService.updateRecordStatus(this.routeExampleRecords[i]).subscribe();
   }
 
   handleEdit(i :number) {

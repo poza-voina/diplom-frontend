@@ -1,4 +1,4 @@
-<ul class="pagination pagination-sm justify-content-center align-items-center gap-1">
+<ul class="pagination pagination-sm justify-content-center align-items-center gap-1 m-0">
   <li class="page-item" [class.disabled]="currentPage === 1">
     <button
       class="btn btn-sm btn-light rounded-start"
@@ -12,16 +12,22 @@
 
   <li *ngFor="let page of pages"
       class="page-item"
-      [class.active]="page === currentPage"
-      [class.disabled]="page < 1"
+      [class.disabled]="page < 1 || page === currentPage"
       [style.pointer-events]="page < 1 ? 'none' : 'auto'">
     <button *ngIf="page > 0"
-            class="btn btn-sm btn-outline-light px-3"
+            class="btn btn-sm px-3"
             (click)="selectPage(page)"
-            [ngStyle]="{
-            'color': 'black',
-            'border-color': '#dee2e6'
-          }">
+            [ngStyle]="page === currentPage
+          ? {
+              'color': 'white',
+              'background-color': '#5e5e5e',
+              'border-color': '#5e5e5e'
+            }
+          : {
+              'color': 'black',
+              'border-color': '#dee2e6',
+              'background-color': 'transparent'
+            }">
       {{ page }}
     </button>
     <span *ngIf="page < 0" class="page-link disabled text-muted px-2" style="cursor: default;">&hellip;</span>

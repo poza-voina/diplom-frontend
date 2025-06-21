@@ -1,16 +1,16 @@
 import {Injectable} from '@angular/core';
-import {API_URLS} from '../api-routes.config';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {IRouteExampleRecordWithClient} from '../data/IRouteExampleRecord';
 import {BaseApiWithAuthService} from './base-api-with-auth.service';
 import {AdminAuthService} from '../components/modules/admin/services/admin-auth.service';
+import {environment} from '../env';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RouteExampleRecordService extends BaseApiWithAuthService {
-  private apiUrl = `${API_URLS.admins}/route-example-records`;
+  private apiUrl = `${environment.apiUrl}/route-example-records`;
   private apiUrlGetRouteExampleRecords = `${this.apiUrl}/filter`;
 
   constructor(http: HttpClient, authService: AdminAuthService) {

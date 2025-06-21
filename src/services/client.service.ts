@@ -4,7 +4,7 @@ import {ClientAuthService} from '../components/modules/user/service/client-auth.
 import {Observable} from 'rxjs';
 import {IUserProfileDto} from '../dto/IUserProfileDto';
 import {Injectable} from '@angular/core';
-import {API_URLS} from '../api-routes.config';
+import {environment} from '../env';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +15,6 @@ export class ClientService extends BaseApiWithAuthService {
   }
 
   getProfile() : Observable<IUserProfileDto> {
-    return this.http.get<IUserProfileDto>(`${API_URLS.clients}/client/profile`, this.getOptions())
+    return this.http.get<IUserProfileDto>(`${environment.apiUrl}/client/profile`, this.getOptions())
   }
 }

@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {BaseApiWithAuthService} from './base-api-with-auth.service';
-import {API_URLS} from '../api-routes.config';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {AdminAuthService} from '../components/modules/admin/services/admin-auth.service';
 import {IBaseRouteCuePoint} from '../data/cuePoint/CuePoint';
@@ -10,14 +9,18 @@ import {IGetPendingRoutesExamplesRequest, IRouteExample, IRouteExampleWithRoute}
 import {GetRoutesWithFiltersDto} from '../dto/GetRoutesWithFiltersDto';
 import {INewCategoryRequest} from '../dto/new-category-item.interface';
 import {ICategory} from '../dto/ICategory';
+import {environment} from '../env';
+import {ICollectionDto} from '../data/ICollection';
+import {IRouteExampleRecord} from '../data/IRouteExampleRecord';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminActionsService extends BaseApiWithAuthService {
-  private apiRoutesUrl = `${API_URLS.admins}/routes`;
-  private apiRoutesExampleUrl = `${API_URLS.admins}/route-examples`;
-  private apiRouteCategoriesUrl = `${API_URLS.admins}/categories`;
+  private apiRoutesUrl = `${environment.apiUrl}/routes`;
+  private apiRoutesExampleUrl = `${environment.apiUrl}/route-examples`;
+  private apiRoutesExampleRecordUrl = `${environment.apiUrl}/route-example-records`;
+  private apiRouteCategoriesUrl = `${environment.apiUrl}/categories`;
 
   constructor(http: HttpClient, authService: AdminAuthService) {
     super(http, authService);
@@ -52,7 +55,7 @@ export class AdminActionsService extends BaseApiWithAuthService {
     return this.http.put<IRouteExample[]>(this.apiRoutesExampleUrl + "/by-route", routeExampleItems, this.getOptions());
   }
 
-  getRoutes(dto: GetRoutesWithFiltersDto): Observable<IRouteWithAttachment[]> {
+  getRoutes(dto: GetRoutesWithFiltersDto): Observable<ICollectionDto<IRouteWithAttachment>> {
     let params = new HttpParams();
 
     Object.keys(dto).forEach(key => {
@@ -67,10 +70,10 @@ export class AdminActionsService extends BaseApiWithAuthService {
       }
     });
 
-    return this.http.get<IRouteWithAttachment[]>(this.apiRoutesUrl, {params, ...this.getOptions()});
+    return this.http.get<ICollectionDto<IRouteWithAttachment>>(this.apiRoutesUrl, {params, ...this.getOptions()});
   }
 
-  getFilteredRoutesExamples(request: IGetPendingRoutesExamplesRequest): Observable<IRouteExampleWithRoute[]> {
+  getFilteredRoutesExamples(request: IGetPendingRoutesExamplesRequest): Observable<ICollectionDto<IRouteExampleWithRoute>> {
     let params = new HttpParams();
 
     Object.keys(request).forEach(key => {
@@ -84,7 +87,7 @@ export class AdminActionsService extends BaseApiWithAuthService {
         params = params.set(key, value.toString());
       }
     });
-    return this.http.get<IRouteExampleWithRoute[]>(`${this.apiRoutesExampleUrl}/filter`, {params, ...this.getOptions()});
+    return this.http.get<ICollectionDto<IRouteExampleWithRoute>>(`${this.apiRoutesExampleUrl}/filter`, {params, ...this.getOptions()});
   }
 
   createCategory(dto: INewCategoryRequest): Observable<ICategory> {
@@ -93,5 +96,21 @@ export class AdminActionsService extends BaseApiWithAuthService {
 
   getRouteExample(id: number): Observable<IRouteExample> {
     return this.http.get<IRouteExample>(`${this.apiRoutesExampleUrl}/${id}`, this.getOptions());
+  }
+
+  updateRecordStatus(routeExampleRecord: IRouteExampleRecord): Observable<IRouteExampleRecord> {
+    return this.http.put<IRouteExampleRecord>(
+      `${this.apiRoutesExampleRecordUrl}/change-status`,
+      routeExampleRecord,
+      this.getOptions()
+    );
+  }
+
+  updateRecordsStatuses(routeExampleRecords: IRouteExampleRecord[]): Observable<IRouteExampleRecord[]> {
+    return this.http.put<IRouteExampleRecord[]>(
+      `${this.apiRoutesExampleRecordUrl}/change-status`,
+      routeExampleRecords,
+      this.getOptions()
+    );
   }
 }

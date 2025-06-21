@@ -1,20 +1,20 @@
 import {BaseAuthService} from '../../../../services/base-auth.service';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {API_URLS} from '../../../../api-routes.config';
 import {IRegistrationUserDto} from '../../../../dto/IRegistrationUserDto';
 import {Observable} from 'rxjs';
 import {IUserProfileDto} from '../../../../dto/IUserProfileDto';
+import {environment} from '../../../../env';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClientAuthService extends BaseAuthService {
-  registerRoute: string = `${API_URLS.clients}/client/auth/register`;
+  registerRoute: string = `${environment.apiUrl}/client/auth/register`;
   private static tokenKey: string = 'clientTokenKey';
 
   constructor(http: HttpClient) {
-    let authRoute = `${API_URLS.clients}/client/auth`;
+    let authRoute = `${environment.apiUrl}/client/auth`;
     super(http, authRoute, ClientAuthService.tokenKey);
   }
 

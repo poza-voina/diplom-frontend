@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Observer } from 'rxjs';
 import {IBaseRouteCuePoint} from '../data/cuePoint/CuePoint';
+import {environment} from '../env';
 
 @Injectable({
   providedIn: 'root',
@@ -76,7 +77,7 @@ export class YandexMapService {
   // Инициализация карты
   initializeMap(containerId: string, routeCoords: [number, number][]) {
     return new Promise((resolve, reject) => {
-      this.loadYandexMaps('268c38ba-239f-4d68-b429-57fcd29522bb').then(() => {
+      this.loadYandexMaps(environment.yandexMapsApiKey).then(() => {
         (window as any)['ymaps'].ready(() => {
           const map = new (window as any)['ymaps'].Map(containerId, {
             center: routeCoords.length ? routeCoords[0] : [55.751574, 37.573856],
@@ -89,9 +90,6 @@ export class YandexMapService {
   }
 
   addRoutePointsToMap(map: any, points: IBaseRouteCuePoint[]) {
-    console.log("addRoutePointsToMap");
-    console.log(points);
-
     this.clearRoutePoints(map);
     this.clearPolylines(map);
 

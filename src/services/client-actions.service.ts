@@ -1,5 +1,4 @@
 import {BaseApiWithAuthService} from './base-api-with-auth.service';
-import {API_URLS} from '../api-routes.config';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {ClientAuthService} from '../components/modules/user/service/client-auth.service';
 import {Observable} from 'rxjs';
@@ -8,12 +7,13 @@ import {IBookRouteExampleRecord, IRouteExampleRecord} from '../data/IRouteExampl
 import {IRouteExample} from '../data/IRouteExample';
 import {IGetBooksRequestByDateRange} from '../data/book/IGetBooksRequestByDateRange';
 import {IGetBooksRequestWithPaginate} from '../data/book/IGetBooksRequestWithPaginate';
+import {environment} from '../env';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClientActionsService extends BaseApiWithAuthService {
-  private apiClientActions: string = `${API_URLS.clients}/client/actions`;
+  private apiClientActions: string = `${environment.apiUrl}/client/actions`;
   private apiClientBooks: string = `${this.apiClientActions}/books`;
 
   constructor(http: HttpClient, authService: ClientAuthService) {

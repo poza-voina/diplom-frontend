@@ -16,27 +16,7 @@
           Маршруты, которые ожидают записи
         </div>
         <div class="card-body">
-          <table class="table table-hover">
-            <thead>
-            <tr>
-              <th>#</th>
-              <th>Название маршрута</th>
-              <th>Дата начала</th>
-              <th>Статус</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let instance of pendingRoutesExamples; let i = index" (click)="goToRoute(instance.route.id)">
-              <td>{{ i + 1 }}</td>
-              <td>{{ instance.route.title }}</td>
-              <td>{{ instance.startDateTime | date: 'dd.MM.yyyy HH:mm' }}</td>
-              <td>{{ getStatusDescription(instance.status) }}</td>
-            </tr>
-            </tbody>
-          </table>
-          <div class="d-flex justify-content-end">
-            <app-paggination [itemsPerPage]="10" [totalPages]="10"></app-paggination>
-          </div>
+          <app-open-routes-table></app-open-routes-table>
         </div>
       </div>
 
@@ -46,27 +26,7 @@
           Маршруты с необработанными записями
         </div>
         <div class="card-body">
-          <table class="table table-hover">
-            <thead>
-            <tr>
-              <th>#</th>
-              <th>Название маршрута</th>
-              <th>Дата начала</th>
-              <th>Статус</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let instance of pendingRoutesExamplesByUser; let i = index" (click)="goToRouteExample(instance.route.id, instance.id)">
-              <td>{{ i + 1 }}</td>
-              <td>{{ instance.route.title }}</td>
-              <td>{{ instance.startDateTime | date: 'dd.MM.yyyy HH:mm' }}</td>
-              <td>{{ getStatusDescription(instance.status) }}</td>
-            </tr>
-            </tbody>
-          </table>
-          <div class="d-flex justify-content-end">
-            <app-paggination [itemsPerPage]="10" [totalPages]="10"></app-paggination>
-          </div>
+          <app-raw-routes-table></app-raw-routes-table>
         </div>
       </div>
     </div>

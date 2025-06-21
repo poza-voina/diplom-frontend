@@ -1,16 +1,16 @@
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
-import {API_URLS} from '../api-routes.config';
 import {BaseApiWithAuthService} from './base-api-with-auth.service';
 import {BaseAuthService} from './base-auth.service';
 import {AdminAuthService} from '../components/modules/admin/services/admin-auth.service';
+import {environment} from '../env';
 
 @Injectable(
   {providedIn: 'root'}
 )
 export class MapService extends BaseApiWithAuthService {
-  private apiUrl = `${API_URLS.admins}/map/address`;
+  private apiUrl = `${environment.apiUrl}/map/address`;
 
   constructor(http: HttpClient, authService: AdminAuthService) {
     super(http, authService);

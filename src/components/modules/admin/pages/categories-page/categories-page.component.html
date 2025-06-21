@@ -19,27 +19,27 @@
         <input
           type="text"
           class="form-control"
-          [(ngModel)]="category.name"
-          [readonly]="category.editingStatus === EditingStatus.DEFAULT"
+          [(ngModel)]="category.title"
+          [readonly]="category.editingStatus === CategoryEditingStatus.DEFAULT"
         />
       </td>
-      <td class="align-middle">{{ category.count }}</td>
+      <td class="align-middle">{{ category.countRoutes }}</td>
       <td class="text-end align-middle"> <!-- Прижимаем кнопки справа -->
         <button
-          *ngIf="category.editingStatus === EditingStatus.EDITING"
+          *ngIf="category.editingStatus === CategoryEditingStatus.EDITING"
           class="btn btn-success btn-sm me-1"
           (click)="handleSave(i)"
         >
           <i class="bi bi-floppy"></i>
         </button>
         <button
-          *ngIf="category.editingStatus === EditingStatus.DEFAULT"
+          *ngIf="category.editingStatus === CategoryEditingStatus.DEFAULT"
           class="btn btn-secondary btn-sm"
           (click)="handleEdit(i)"
         >
           <i class="bi bi-pencil"></i>
         </button>
-        <button
+        <button (click)="handleDelete(i)"
           class="btn btn-danger btn-sm ms-1"
         >
           <i class="bi bi-trash"></i>

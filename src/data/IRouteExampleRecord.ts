@@ -2,6 +2,7 @@ import {IRouteExample} from './IRouteExample';
 import {IBaseRoute} from './route/IBaseRoute';
 
 export interface IRouteExampleRecord {
+  id: number;
   clientId: number,
   routeExampleId: number
   status: string

@@ -9,13 +9,15 @@ import {ModalWindowComponent} from '../../../base/modal-window/modal-window.comp
 import {RouteService} from '../../../../services/route.service';
 import {GetRoutesWithFiltersDto} from '../../../../dto/GetRoutesWithFiltersDto';
 import {AdminActionsService} from '../../../../services/admin-actions.service';
-import { IBaseRoute } from '../../../../data/route/IBaseRoute';
+import {IBaseRoute, IRouteWithAttachment} from '../../../../data/route/IBaseRoute';
 import {PagginationComponent} from '../../default-components/paggination/paggination.component';
+import {ICollectionDto} from '../../../../data/ICollection';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-admin-routes',
   standalone: true,
-  imports: [CommonModule, ModalWindowComponent, NewRouteFormComponent, PagginationComponent],
+  imports: [CommonModule, ModalWindowComponent, NewRouteFormComponent, PagginationComponent, FormsModule],
   templateUrl: './routes.component.html',
   styleUrls: ['./routes.component.css']
 })
@@ -32,11 +34,10 @@ export class RoutesComponent {
   protected readonly RouteStatus = RouteStatus;
   protected readonly RoutesSortHelper: RoutesSortHelper = new RoutesSortHelper();
   othersSort: RoutesSort[] = this.RoutesSortHelper.getKeys().slice(1);
-  private pageNumber: number = 1;
-  private countPerPage: number = 10;
   currentPage: number = 1;
   totalPages: number = 10;
-  itemsPerPage: number = 6;
+  pageSize: number = 6;
+  searchText: string = '';
 
   constructor(
     private routeService: RouteService,
@@ -51,18 +52,21 @@ export class RoutesComponent {
 
   loadRoutes(): void {
     let getRoutesDto: GetRoutesWithFiltersDto = new GetRoutesWithFiltersDto({
-      pageNumber: this.pageNumber,
-      countPerPage: this.countPerPage,
+      pageNumber: this.currentPage,
+      pageSize: this.pageSize,
       sortType: this.selectedSort,
-      filters: this.filters
+      filters: this.filters,
+      title: this.searchText
     });
+
     this.routesLoadingStatus = RoutesLoadingStatus.Loading;
 
     this.adminActionsService.getRoutes(getRoutesDto)
-      .pipe(
-        tap(routes => this.routes = routes)
-      )
       .subscribe({
+        next: (data: ICollectionDto<IRouteWithAttachment>) => {
+          this.routes = data.values;
+          this.totalPages = data.totalPages;
+        },
         error: (error) => {
           this.routesLoadingStatus = RoutesLoadingStatus.Error;
         },
@@ -166,6 +170,11 @@ export class RoutesComponent {
     this.router.navigate(['/admin/routes/new']);
   }
 
+  onPageChange(page: number) {
+    this.currentPage = page;
+    this.loadRoutes();
+  }
+
   removeRoute(event: Event, i: number) {
     console.log("removeRoute")
     event.stopPropagation();
@@ -176,6 +185,15 @@ export class RoutesComponent {
         complete: () => {this.routes.slice(i, 1)}
       }
     );
+  }
+
+  onSearch() {
+    this.loadRoutes();
+  }
+
+  onClearSearch() {
+    this.searchText = '';
+    this.loadRoutes();
   }
 }
 
@@ -246,6 +264,7 @@ class RoutesSortHelper {
         return 'Нет такого типа сортировки';
     }
   }
+
 
   fromString(value: string): RoutesSort | undefined {
     return RoutesSort[value as keyof typeof RoutesSort];

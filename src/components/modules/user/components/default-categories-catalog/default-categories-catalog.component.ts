@@ -1,12 +1,13 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {ICategory} from '../../../../../dto/ICategory';
 
 @Component({
   selector: 'app-default-categories-catalogue',
-    imports: [
-        NgForOf
-    ],
+  imports: [
+    NgForOf,
+    NgIf
+  ],
   templateUrl: './default-categories-catalog.component.html',
   styleUrl: './default-categories-catalog.component.css'
 })

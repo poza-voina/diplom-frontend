@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {NgForOf, NgIf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
+import {CategoryEditingStatus, ICategory, ICategoryW} from '../../../../../dto/ICategory';
+import {RouteCategoriesService} from '../../../../../services/route-categories.service';
+import {tap} from 'rxjs/operators';
+import {map} from 'rxjs';
 
 @Component({
   selector: 'app-categories-page',
@@ -12,44 +16,53 @@ import {FormsModule} from '@angular/forms';
   templateUrl: './categories-page.component.html',
   styleUrl: './categories-page.component.css'
 })
-export class CategoriesPageComponent {
-  categories = [
-    {
-      id: 1,
-      name: 'Музеи',
-      count: 1,
-      editingStatus: EditingStatus.DEFAULT
-    },
-    {
-      id: 2,
-      name: 'Памятники архитектуры',
-      count: 1,
-      editingStatus: EditingStatus.DEFAULT
-    }
-  ];
-  EditingStatus = EditingStatus;
+export class CategoriesPageComponent implements OnInit {
+  categories: ICategoryW[] = [];
+  CategoryEditingStatus = CategoryEditingStatus;
+
+  constructor(private service: RouteCategoriesService) {  }
+
+  ngOnInit() {
+    this.service.getAll().pipe(
+      map(value => {
+        return value.map(category => ({
+          ...category,
+          editingStatus: CategoryEditingStatus.DEFAULT
+        }));
+      })
+    ).subscribe({
+      next: value => {
+        this.categories = value;
+      }
+    });
+  }
 
   handleEdit(index: number) {
-    this.categories[index].editingStatus = EditingStatus.EDITING;
+    this.categories[index].editingStatus = CategoryEditingStatus.EDITING;
   }
 
   handleSave(index: number) {
-    // логика сохранения (API или локальное)
-    this.categories[index].editingStatus = EditingStatus.DEFAULT;
+    this.service.update(this.categories[index]).subscribe()
+    this.categories[index].editingStatus = CategoryEditingStatus.DEFAULT;
+  }
+
+  handleDelete(index: number) {
+    this.categories.splice(index, 1);
+    this.service.delete(this.categories[index].id).subscribe(
+      {
+        next: value => {},
+        error: error => {console.warn(error);}
+      }
+    )
   }
 
   handleSaveAll() {
+    this.service.updateAll(this.categories);
     this.categories.forEach(cat => {
-      if (cat.editingStatus === EditingStatus.EDITING) {
-        // логика сохранения
-        cat.editingStatus = EditingStatus.DEFAULT;
+      if (cat.editingStatus === CategoryEditingStatus.EDITING) {
+        cat.editingStatus = CategoryEditingStatus.DEFAULT;
       }
     });
   }
 }
 
-
-enum EditingStatus {
-  DEFAULT,
-  EDITING
-}

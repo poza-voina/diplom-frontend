@@ -1,0 +1,12 @@
+version: '3'
+
+networks:
+  diplom-network:
+    external: false
+
+services:
+  diplom-frontend:
+    image: diplom-frontend
+    ports:
+      - "4000:4200"
+    restart: unless-stopped

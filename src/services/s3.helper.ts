@@ -1,4 +1,4 @@
-import {S3_BASE_URL} from '../api-routes.config';
+import {environment} from '../env';
 
 export class S3Helper {
   static getImageUrlOrDefault (imageUri?: string) : string | null {
@@ -6,6 +6,6 @@ export class S3Helper {
       return null;
     }
 
-    return S3_BASE_URL + imageUri;
+    return environment.s3Url + imageUri;
   }
 }

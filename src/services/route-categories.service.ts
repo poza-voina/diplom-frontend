@@ -2,15 +2,15 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import { ICategory } from '../dto/ICategory';
 import {Injectable} from '@angular/core';
-import {API_URLS} from '../api-routes.config';
 import {BaseApiWithAuthService} from './base-api-with-auth.service';
 import {AdminAuthService} from '../components/modules/admin/services/admin-auth.service';
+import {environment} from '../env';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RouteCategoriesService extends BaseApiWithAuthService {
-  private apiUrl = `${API_URLS.admins}/categories`;
+  private apiUrl = `${environment.apiUrl}/categories`;
 
   constructor(http: HttpClient, authService: AdminAuthService) {
     super(http, authService);
@@ -34,5 +34,9 @@ export class RouteCategoriesService extends BaseApiWithAuthService {
 
   delete(id: number) : Observable<object> {
     return this.http.delete(`${this.apiUrl}/${id}`, this.getOptions());
+  }
+
+  updateAll(categories: ICategory[]) {
+    return this.http.put<ICategory[]>(`${this.apiUrl}`, categories,this.getOptions());
   }
 }

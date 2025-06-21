@@ -2,19 +2,22 @@ import {RoutesFilter, RoutesSort} from '../components/modules/admin/admin-routes
 
 export class GetRoutesWithFiltersDto {
   pageNumber: number;
-  countPerPage: number;
+  pageSize: number;
   sortType: RoutesSort | undefined;
   filters: RoutesFilter[] | null | undefined;
+  title: string;
 
   constructor(dto: {
     pageNumber: number,
-    countPerPage: number,
+    pageSize: number,
+    title: string,
     sortType?: RoutesSort,
     filters?: RoutesFilter[] | null
   }) {
     this.pageNumber = dto.pageNumber;
-    this.countPerPage = dto.countPerPage;
+    this.pageSize = dto.pageSize;
     this.sortType = dto.sortType;
     this.filters = dto.filters;
+    this.title = dto.title;
   }
 }

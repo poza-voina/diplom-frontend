@@ -3,17 +3,38 @@
 
   <div class="container">
     <!-- Поисковая строка -->
-  <div class="mb-3">
-    <div class="d-flex flex-column flex-md-row align-items-stretch gap-2 mb-2">
+  <div class="mb-3"><div class="position-relative d-flex flex-column flex-md-row align-items-stretch gap-2 mb-2">
+    <div class="position-relative flex-grow-1">
       <input
         type="text"
-        class="form-control form-control-lg shadow-sm border-light rounded-3"
+        class="form-control form-control-lg shadow-sm border-light rounded-3 pe-5"
         placeholder="Поиск маршрутов..."
+        [(ngModel)]="searchText"
+        (keydown.enter)="onButtonSearchClick()"
       />
-      <button class="btn btn-outline-dark btn-lg rounded-3" style="color: black; border: 1px solid #dee2e6; background-color: white;">
-        <i class="bi bi-search"></i>
+
+      <!-- Крестик внутри input -->
+      <button
+        *ngIf="searchText"
+        type="button"
+        class="btn position-absolute end-0 top-50 translate-middle-y me-3 p-0"
+        style="z-index: 10;"
+        (click)="onClearSearch()"
+        aria-label="Очистить поиск"
+      >
+        <i class="bi bi-x fs-5 text-secondary"></i>
       </button>
     </div>
+
+    <button
+      (click)="onButtonSearchClick()"
+      class="btn btn-outline-dark btn-lg rounded-3"
+      style="color: black; border: 1px solid #dee2e6; background-color: white;"
+    >
+      <i class="bi bi-search"></i>
+    </button>
+  </div>
+
 
     <div *ngIf="filter" class="mb-3">
       <div
@@ -76,7 +97,9 @@
 </div>
 
 <app-paggination
-[totalPages]="10"
-[currentPage]="1"
-[itemsPerPage]="10"
+*ngIf="totalPages > 0"
+[totalPages]="totalPages"
+[currentPage]="currentPage"
+[pageSize]="pageSize"
+(pageChanged)="onPageChange($event)"
 ></app-paggination>

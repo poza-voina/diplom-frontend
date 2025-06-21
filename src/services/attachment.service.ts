@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import {catchError, EMPTY, map, Observable, of} from 'rxjs';
-import {API_URLS} from '../api-routes.config';
-
+import {environment} from '../env';
 @Injectable({
   providedIn: 'root',
 })
 export class AttachmentService {
-  private apiUrlGetCuePointAttachments = `${API_URLS.admins}/attachments/cuepoints`;
-  private readonly cuepointsUploadUrl = `${API_URLS.admins}/attachments/cuepoints/upload`;
-  private readonly routeUploadUrl = `${API_URLS.admins}/attachments/route/upload`;
-  private apiUrlGetRouteAttachment = `${API_URLS.admins}/attachments/route`;
+  private apiUrlGetCuePointAttachments = `${environment.apiUrl}/attachments/cuepoints`;
+  private cuepointsUploadUrl = `${environment.apiUrl}/attachments/cuepoints/upload`;
+  private routeUploadUrl = `${environment.apiUrl}/attachments/route/upload`;
+  private apiUrlGetRouteAttachment = `${environment.apiUrl}/attachments/route`;
 
   constructor(private http: HttpClient) {}
 

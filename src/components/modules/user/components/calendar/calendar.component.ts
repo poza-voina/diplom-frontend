@@ -200,11 +200,12 @@ export class CalendarComponent implements OnChanges, OnInit {
       this.isTooltipPinned = true;
       this.generateTooltipData(day, event);
     }
-    this.onSelectRouteExample.emit(null);
+    //this.onSelectRouteExample.emit(null);
   }
 
   handleSelectRoute(routeExample: IRouteExample) {
     console.log("handleSelectRoute");
+    this.isTooltipPinned = false;
     this.onSelectRouteExample.emit(routeExample);
   }
 }
