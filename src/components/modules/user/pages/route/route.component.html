@@ -63,7 +63,7 @@
           <button *ngIf="!isBooked" class="btn btn-primary w-100 mt-4" (click)="book()" [disabled]="isButtonBookDisabled">
             Записаться на маршрут
           </button>
-          <button *ngIf="isBooked" class="btn btn-primary w-100 mt-4" (click)="unBook()">Отписаться от маршрута</button>
+          <button *ngIf="isBooked && isPending" class="btn btn-primary w-100 mt-4" (click)="unBook()">Отписаться от маршрута</button>
         </ng-container>
 
         <ng-template #loginLink>
@@ -81,6 +81,7 @@
                       (onSelectRouteExample)="handleSelectDay($event)"
                       [routeId]="routeItem?.id || 0"
                       [routeExamplesByMonth]="routeExamplesByMonth"
+                      [maxSeats]="routeItem.maxCountPeople"
         ></app-calendar>
       </div>
     </div>

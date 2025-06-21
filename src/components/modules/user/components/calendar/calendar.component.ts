@@ -30,7 +30,6 @@ export class CalendarComponent implements OnChanges, OnInit {
   year: number = 0;
   daysInMonth: (number | null)[] = [];
   highlightedDays: Set<number> = new Set();
-  MAX_SEATS = 10;  // Пример максимального числа мест
   selectedDay: number | null = null;  // Выбранный день для отображения меню
   routesForSelectedDay: IRouteExample[] = [];  // Список маршрутов для выбранного дня
   isTooltipPinned = false;
@@ -41,6 +40,9 @@ export class CalendarComponent implements OnChanges, OnInit {
 
   @Input()
   routeId: number = 0;
+
+  @Input()
+  maxSeats: number = 0;
 
   @Output()
   onInit = new EventEmitter<ISelectMonth>();
@@ -137,7 +139,7 @@ export class CalendarComponent implements OnChanges, OnInit {
 
     // Проверяем есть ли хотя бы один экземпляр маршрута с доступными местами
     return this.routeExamplesByMonth.some(route =>
-      new Date(route.startDateTime).getDate() === day && route.countRecords < this.MAX_SEATS);
+      new Date(route.startDateTime).getDate() === day && route.countRecords < this.maxSeats);
   }
 
   isDayFullyBooked(day: number | null): boolean {
@@ -155,7 +157,7 @@ export class CalendarComponent implements OnChanges, OnInit {
     }
 
     // Проверяем, что все маршруты на день полностью забронированы
-    return routesOnDay.every(route => route.countRecords >= this.MAX_SEATS);
+    return routesOnDay.every(route => route.countRecords >= this.maxSeats);
   }
 
   showMenu(day: number | null, event: MouseEvent): void {

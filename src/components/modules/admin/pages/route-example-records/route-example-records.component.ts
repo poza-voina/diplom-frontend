@@ -51,7 +51,7 @@ export class RouteExampleRecordsComponent implements OnInit {
     )
 
     this.adminActionsService.getRouteExample(this.routeExampleId).subscribe(
-      {next: x =>  this.routeExample = x}
+      {next: x => this.routeExample = x}
     )
 
     this.routeExampleRecordService.getRouteExampleRecordsWithClient(request)
@@ -69,22 +69,34 @@ export class RouteExampleRecordsComponent implements OnInit {
   }
 
   handleSaveAll() {
-    this.adminActionsService.updateRecordsStatuses(this.routeExampleRecords).subscribe();
+    this.adminActionsService.updateRecordsStatuses(this.routeExampleRecords)
+      .subscribe(
+        {
+          next: x => {
+            this.routeExampleRecords.forEach(x => x.editingStatus = EditingStatus.DEFAULT);
+          }
+        }
+      );
   }
 
   handleSave(i: number) {
-    this.routeExampleRecords[i].editingStatus = EditingStatus.DEFAULT;
-    this.adminActionsService.updateRecordStatus(this.routeExampleRecords[i]).subscribe();
+    this.adminActionsService.updateRecordStatus(this.routeExampleRecords[i]).subscribe(
+      {
+        next: x => {
+          this.routeExampleRecords[i].editingStatus = EditingStatus.DEFAULT;
+        }
+      }
+    );
   }
 
-  handleEdit(i :number) {
+  handleEdit(i: number) {
     this.routeExampleRecords[i].editingStatus = EditingStatus.EDITING;
   }
 
   protected readonly EditingStatus = EditingStatus;
 }
 
-interface IRouteExampleRecordWithClientW extends IRouteExampleRecordWithClient{
+interface IRouteExampleRecordWithClientW extends IRouteExampleRecordWithClient {
   editingStatus: EditingStatus
 }
 

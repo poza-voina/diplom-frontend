@@ -10,7 +10,9 @@
       <app-default-navigation-card-header [activeTabIndex]="0"
                                           [navigationItems]="navigationItems"
                                           (onInitialized)="handleHeaderOnInitialized($event)"
-                                          (onTabClick)="handleChangeCardBody($event)"></app-default-navigation-card-header>
+                                          (onTabClick)="handleChangeCardBody($event)"
+                                          [isCreate]="isCreate"
+      ></app-default-navigation-card-header>
       <div class="card-body" [ngSwitch]="currentNavigationBarStatus">
         <app-route-card-body *ngSwitchCase="AboutRouteNavigationBarStatus.Route"
                              [routeItem]="routeItem"
@@ -29,7 +31,7 @@
       </div>
     </div>
 
-    <app-route-examples-table [routeId]="routeId"></app-route-examples-table>
+    <app-route-examples-table *ngIf="!isCreate" [routeId]="routeId"></app-route-examples-table>
   </div>
 
 </div>

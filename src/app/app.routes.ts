@@ -115,8 +115,12 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full'
+        component: AdminDashboardComponent,
+        data:
+          {
+            breadcrumb: '',
+            parent: AdminMainPageComponent,
+          }
       },
       {
         path: 'categories',
@@ -124,15 +128,6 @@ export const routes: Routes = [
         data:
           {
             breadcrumb: "Категории маршрутов",
-            parent: AdminMainPageComponent,
-          }
-      },
-      {
-        path: 'dashboard',
-        component: AdminDashboardComponent,
-        data:
-          {
-            breadcrumb: null,
             parent: AdminMainPageComponent,
           }
       },

@@ -34,7 +34,7 @@
           {{ route.startDateTime | date:'HH:mm' }} - {{ route.endDateTime | date:'HH:mm' }}
         </p>
         <p class="tooltip-seats">
-          Свободных мест: {{ MAX_SEATS - route.countRecords }} из {{ MAX_SEATS }}
+          Свободных мест: {{ maxSeats - route.countRecords }} из {{ maxSeats }}
         </p>
       </li>
     </ul>

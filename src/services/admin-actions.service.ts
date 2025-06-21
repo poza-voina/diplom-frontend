@@ -108,7 +108,7 @@ export class AdminActionsService extends BaseApiWithAuthService {
 
   updateRecordsStatuses(routeExampleRecords: IRouteExampleRecord[]): Observable<IRouteExampleRecord[]> {
     return this.http.put<IRouteExampleRecord[]>(
-      `${this.apiRoutesExampleRecordUrl}/change-status`,
+      `${this.apiRoutesExampleRecordUrl}/change-statuses`,
       routeExampleRecords,
       this.getOptions()
     );

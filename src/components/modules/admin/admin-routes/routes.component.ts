@@ -181,8 +181,8 @@ export class RoutesComponent {
     let item = this.routes[i];
     this.adminActionsService.removeRoute(item.id).subscribe(
       {
-        error: (error) => {console.log("Не удалось удалить маршрут")},
-        complete: () => {this.routes.slice(i, 1)}
+        next: () => {this.routes.splice(i, 1);},
+        error: (error) => {console.log("Не удалось удалить маршрут")}
       }
     );
   }

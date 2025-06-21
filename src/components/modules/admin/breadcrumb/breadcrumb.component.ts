@@ -7,6 +7,7 @@ import {right} from '@popperjs/core';
 interface Breadcrumb {
   label: string;
   url: string;
+  segment: string;
 }
 
 @Component({
@@ -22,73 +23,94 @@ interface Breadcrumb {
 
 export class BreadcrumbComponent implements OnInit {
   breadcrumbs: Breadcrumb[] = [];
+  // костыль :)
+  exceptionsUrls: string[] = ['examples'];
+  // еще костыль :)
+  breadcrumbsAssociation: { [key: string]: string }  = {
+    "admin": "Панель администратора",
+    "routes": "Маршруты",
+    "examples": "Экземпляры",
+    "categories": "Категории",
+    "records": "Записи",
+    "map": "Ключевые точки",
+    "new": "Новый",
+  };
 
-  constructor(private router: Router, private route: ActivatedRoute) {
-  }
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
-    this.breadcrumbs = this.buildBreadcrumbs(this.router.url);
+    this.updateBreadcrumbs(this.router.url);
 
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
-        const url = this.router.url;
-        this.breadcrumbs = this.buildBreadcrumbs(url);
-      });
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      this.updateBreadcrumbs(event.urlAfterRedirects);
+    });
   }
 
-  buildBreadcrumbs(url: string): Breadcrumb[] {
-    const segments = url.split("?")[0].split('/').filter(Boolean);
-    const breadcrumbs: Breadcrumb[] = [];
+  updateBreadcrumbs(url: string): void {
+    const cleanUrl = url.split('?')[0].split('#')[0];
+    const segments = cleanUrl.split('/').filter(Boolean);
 
-    let root = this.router.config.find(x => x.path === segments[0]);
-    let children = root?.children;
+    let path = '';
+    this.breadcrumbs = [];
 
-    if (!root || !children) {
-      console.warn("Breadcrumbs not found")
-      return [];
-      //throw new Error("Breadcrumbs not found");
+    for (let i = 0; i < segments.length; i++) {
+      path += `/${segments[i]}`;
+
+      let label = '';
+
+      label = this.formatLabel(segments[i]);
+      // костыль чтобы скипались несуществующие маршруты
+      if (this.exceptionsUrls.includes(segments[i])) {
+        path = this.breadcrumbs[this.breadcrumbs.length - 1].url;
+      }
+      else if(!isNaN(Number(segments[i])) && this.exceptionsUrls.includes(segments[i - 1])) {
+        path = this.breadcrumbs[this.breadcrumbs.length - 2].url;
+      }
+
+      this.breadcrumbs.push({ label, url: path, segment: segments[i] });
+    }
+  }
+
+  findRouteByPath(path: string, routes: Routes): any {
+    // Приводим к формату без слэша в начале
+    const cleanPath = path.startsWith('/') ? path.substring(1) : path;
+
+    for (const route of routes) {
+      if (!route.path) continue;
+
+      // Разбиваем путь маршрута и текущий путь на сегменты
+      const routeSegments = route.path.split('/');
+      const pathSegments = cleanPath.split('/');
+
+      if (routeSegments.length !== pathSegments.length) continue;
+
+      // Проверяем сегмент за сегментом, учитывая параметрические сегменты (:id)
+      let match = true;
+      for (let i = 0; i < routeSegments.length; i++) {
+        if (routeSegments[i].startsWith(':')) continue; // параметр
+        if (routeSegments[i] !== pathSegments[i]) {
+          match = false;
+          break;
+        }
+      }
+
+      if (match) return route;
     }
 
-    let bufferRoot = (root as {path: string, data: {breadcrumb: string}});
-    breadcrumbs.push({label: bufferRoot.data.breadcrumb, url: "/" + bufferRoot.path});
+    return null;
+  }
 
-    let path = "";
-    for (const segment of segments.splice(1, segments.length - 1)) {
-      path += segment;
+  formatLabel(segment: string): string {
+    if (segment === '') {}
 
-      let child = children.find(x =>
-          x.path === path || (
-            x.path?.includes(':') &&
-            x.path.split('/').length === path.split('/').length
-          )
-      ) as { path: string, data: { breadcrumb: string } };
-
-      if (child?.path.includes(':')) {
-        const routeParts = child.path.split('/');
-        const pathParts = path.split('/');
-
-        path = routeParts.map((part, i) =>
-          part.startsWith(':') ? pathParts[i] : part
-        ).join('/');
-      }
-
-      if (!child) {
-        throw new Error("Breadcrumbs not found");
-      }
-
-
-      try {
-        breadcrumbs.push({label: child.data.breadcrumb, url: path});
-      }
-      catch (e) {
-        return []
-      }
-      //breadcrumbs.push({label: child.data.breadcrumb, url: path});
-
-      path += "/"
+    if (segment in this.breadcrumbsAssociation) {
+      return this.breadcrumbsAssociation[segment];
     }
 
-    return breadcrumbs;
+    return segment
+      .replace(/-/g, ' ')
+      .replace(/\b\w/g, char => char.toUpperCase());
   }
 }

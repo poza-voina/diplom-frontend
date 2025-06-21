@@ -1,6 +1,6 @@
 <div class="container d-flex justify-content-center mt-2 align-items-center">
   <h2 class="mb-2 text-center">
-    <div>Записи на маршрут: {{routeItem?.title}}</div>
+    <div>Записи на маршрут: {{ routeItem?.title }}</div>
     <small class="text-muted">
       <strong>{{ routeExample?.startDateTime | date:'dd.MM.yyyy HH:mm' }}</strong>
       &nbsp;&mdash;&nbsp;
@@ -22,29 +22,31 @@
     </thead>
     <tbody>
     <tr *ngFor="let item of routeExampleRecords; let i = index">
-      <td>
-        {{item.client.secondName}}
-        {{item.client.firstName}}
-        {{item.client.patronymic}}
+      <td class="align-content-center">
+        {{ item.client.secondName }}
+        {{ item.client.firstName }}
+        {{ item.client.patronymic }}
       </td>
-      <td>
-        {{item.client.email}}
+      <td class="align-content-center">
+        {{ item.client.email }}
       </td>
-      <td>
-        {{item.client.phoneNumber}}
+      <td class="align-content-center">
+        {{ item.client.phoneNumber }}
       </td>
-      <td>
+      <td class="align-content-center">
         <select class="form-select" [(ngModel)]="item.status" [disabled]="item.editingStatus === EditingStatus.DEFAULT">
           <option value="Pending">Ожидает</option>
           <option value="Approved">Одобрен</option>
           <option value="Rejected">Отклонен</option>
         </select>
       </td>
-      <td>
-        <button *ngIf="item.editingStatus === EditingStatus.EDITING" class="btn btn-secondary btn-sm" (click)="handleSave(i)">
+      <td class="align-content-center">
+        <button *ngIf="item.editingStatus === EditingStatus.EDITING" class="btn btn-secondary btn-sm"
+                (click)="handleSave(i)">
           <i class="bi bi-floppy"></i>
         </button>
-        <button *ngIf="item.editingStatus === EditingStatus.DEFAULT" class="btn btn-secondary btn-sm" (click)="handleEdit(i)">
+        <button *ngIf="item.editingStatus === EditingStatus.DEFAULT" class="btn btn-secondary btn-sm"
+                (click)="handleEdit(i)">
           <i class="bi bi-pencil"></i>
         </button>
       </td>

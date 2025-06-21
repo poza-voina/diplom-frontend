@@ -15,7 +15,7 @@ import {IRouteCuePointWithAttachment} from '../../../../../data/cuePoint/CuePoin
 import {IRouteWithAttachment} from '../../../../../data/route/IBaseRoute';
 import {S3Helper} from '../../../../../services/s3.helper';
 import {MapComponent} from '../../../../base/map/map.component';
-import {pipe} from 'rxjs';
+import {of, pipe} from 'rxjs';
 import {Observable, forkJoin} from 'rxjs';
 import {tap} from 'rxjs/operators';
 
@@ -59,6 +59,10 @@ export class RouteComponent implements OnInit {
 
   get isBooked(): boolean {
     return this.viewRouteExampleRecord !== null;
+  }
+
+  get isPending(): boolean {
+    return this.viewRouteExampleRecord.status === "Pending";
   }
 
   get isAuth(): boolean {
@@ -110,7 +114,14 @@ export class RouteComponent implements OnInit {
   updateRouteExamplesAndRecordsByMonth(): Observable<any> {
     const examples$ = this.routeService.getRouteExamplesByMonth(this.selectMonth);
     const dateRange = this.getMonthDateRange(this.selectMonth);
-    const records$ = this.clientActionsService.getBooks(dateRange);
+
+    let records$: Observable<any>;
+
+    if (this.clientAuthService.isAuthenticated()) {
+      records$ = this.clientActionsService.getBooks(dateRange);
+    } else {
+      records$ = of([]);
+    }
 
     return forkJoin([examples$, records$]).pipe(
       tap(([examples, records]) => {

@@ -17,6 +17,8 @@ export class DefaultNavigationCardHeaderComponent implements OnInit {
   navigationItems: IHeaderNavigationItem<string | number>[] = [];
   @Input()
   activeTabIndex: number = 0;
+  @Input()
+  isCreate: boolean = false;
   @Output() public onTabClick = new EventEmitter<IHeaderNavigationItem<string | number>>();
   @Output() public onInitialized = new EventEmitter<IHeaderNavigationItem<string | number>>();
 
