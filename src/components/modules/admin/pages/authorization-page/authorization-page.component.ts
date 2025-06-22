@@ -3,6 +3,7 @@ import {AuthorizationFormComponent} from '../../forms/authorization-form/authori
 import {ILoginCredentials} from '../../../../../dto/login-credentials.interface';
 import {NgIf} from '@angular/common';
 import {AdminAuthService} from '../../services/admin-auth.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-authorization-page',
@@ -16,7 +17,7 @@ import {AdminAuthService} from '../../services/admin-auth.service';
 export class AuthorizationPageComponent {
   isLoginError: boolean = false;
 
-  constructor(private authService: AdminAuthService) {
+  constructor(private authService: AdminAuthService, private router: Router) {
   }
 
   handleCompletedForm(credentials: ILoginCredentials) {
@@ -25,7 +26,7 @@ export class AuthorizationPageComponent {
         next: (next: string) => {
           this.isLoginError = false;
           this.authService.setToken(next)
-          window.history.back();
+          this.router.navigate(['/admin']);
         },
         error: err => {
           this.isLoginError = true;

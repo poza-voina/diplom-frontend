@@ -21,6 +21,15 @@ export class NavigationBarComponent implements OnInit {
 
   constructor(protected authService: ClientAuthService) {  }
 
+  @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    // Проверяем, был ли клик вне кнопки и меню
+    if (!target.closest('.dropdown-menu') && !target.closest('.btn-light')) {
+      this.dropdownOpen = false;
+    }
+  }
+
   ngOnInit() {
     this.checkScreenSize();
   }

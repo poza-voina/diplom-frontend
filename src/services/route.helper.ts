@@ -3,7 +3,7 @@ export class RouteHelper {
     switch (status) {
       case 'Approved':
         return 'Одобрен';
-      case 'Reject':
+      case 'Rejected':
         return 'Отклонен';
       case 'Pending':
         return 'Ожидает';

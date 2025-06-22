@@ -11,8 +11,8 @@
     />
   </div>
 
-  <div class="row my-4 align-items-stretch">
-    <div class="col-md-6">
+  <div class="row mt-4 align-items-stretch">
+    <div class="col-md-6 mb-4">
       <div class="info-box p-4 bg-white rounded-4 shadow-sm border h-100 d-flex flex-column justify-content-between">
         <div>
           <ng-container *ngIf="routeItem as route; else noRoute">
@@ -74,7 +74,7 @@
       </div>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-6 mb-4">
       <div class="calendar-container p-4 bg-white rounded-4 shadow-sm border h-100">
         <app-calendar *ngIf="routeItem" (onSelectMonth)="onSelectMonth($event)"
                       (onInit)="onSelectMonth($event)"

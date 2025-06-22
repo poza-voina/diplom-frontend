@@ -8,6 +8,7 @@ import {DatePipe, NgForOf} from '@angular/common';
 import {RouteService} from '../../../../../services/route.service';
 import {RouteHelper} from '../../../../../services/route.helper';
 import {IBaseRoute} from '../../../../../data/route/IBaseRoute';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-profile-page',
@@ -26,7 +27,11 @@ export class ProfilePageComponent implements OnInit {
   currentPageSize: number = 10;
   loadingErrors: LoadingErrors<ProfilePageComponent> = new LoadingErrors<ProfilePageComponent>();
 
-  constructor(private clientService: ClientService, private clientActionsService: ClientActionsService, private routeService: RouteService) {
+  constructor(
+    private clientService: ClientService,
+    private clientActionsService: ClientActionsService,
+    private routeService: RouteService,
+    private router: Router) {
   }
 
   ngOnInit(): void {
@@ -57,6 +62,10 @@ export class ProfilePageComponent implements OnInit {
 
   getRecordStatus(status: string) :string {
     return RouteHelper.ConvertRouteExampleRecordStatusToMessage(status);
+  }
+
+  goToEditProfile() {
+    this.router.navigate(['/profile/edit']);
   }
 }
 

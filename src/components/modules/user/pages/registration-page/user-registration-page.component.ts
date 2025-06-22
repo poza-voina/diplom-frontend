@@ -1,9 +1,10 @@
-import {Component} from '@angular/core';
+import {Component, HostListener, ViewChild} from '@angular/core';
 import {UserModule} from '../../user.module';
 import {BaseFormComponent, IField, ILink, ISubmitStatus, SubmitStatus} from '../../forms/base-form/base-form.component';
 import {Validators} from '@angular/forms';
 import {IRegistrationUserDto} from '../../../../../dto/IRegistrationUserDto';
 import {ClientAuthService} from '../../service/client-auth.service';
+import {NgClass, NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-registration-page',
@@ -11,7 +12,9 @@ import {ClientAuthService} from '../../service/client-auth.service';
   standalone: true,
   imports: [
     UserModule,
-    BaseFormComponent
+    BaseFormComponent,
+    NgClass,
+    NgIf
   ],
   styleUrl: './user-registration-page.component.css'
 })
@@ -26,8 +29,23 @@ export class UserRegistrationPageComponent {
   links: ILink[] = [
     {label: "Войти", link: "/login"},
   ];
+  containerClass = 'w-75';
 
-  constructor(private authClientService: ClientAuthService) { }
+  ngOnInit() {
+    this.setContainerClass(window.innerWidth);
+  }
+
+  constructor(private authClientService: ClientAuthService) {
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.setContainerClass(event.target.innerWidth);
+  }
+
+  setContainerClass(width: number) {
+    this.containerClass = width <= 800 ? 'w-95' : 'w-75';
+  }
 
   handleFormSubmit(event: any) {
     this.submitStatus.status = SubmitStatus.PENDING;
@@ -42,6 +60,7 @@ export class UserRegistrationPageComponent {
     };
 
     registrationUser = event;
+
 
     this.authClientService.register(registrationUser).subscribe({
       next: (response) => {
@@ -128,4 +147,5 @@ export class UserRegistrationPageComponent {
       }
     }
   ];
+  isError: boolean = false;
 }

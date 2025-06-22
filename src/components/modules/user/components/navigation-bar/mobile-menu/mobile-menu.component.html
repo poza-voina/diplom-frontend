@@ -1,8 +1,8 @@
 <div class="d-flex flex-row">
-  <div class="position-relative" (document:click)="closeDropdown($event)">
+  <div class="position-relative me-2" (click)="closeDropdown($event)">
     <button
       class="btn border rounded-pill py-1 px-3 d-flex align-items-center gap-2 shadow-sm d-lg-none position-relative"
-      (click)="toggleDropdown($event)"
+      (click)="toggleMenuDropdown($event)"
     >
       {{ currentItem?.label }}
       <i class="bi bi-list fs-5 text-dark"></i>
@@ -11,20 +11,20 @@
     <!-- Выпадающее меню для мобильной версии -->
     <div
       class="dropdown-menu dropdown-menu-end mt-2 shadow"
-      *ngIf="dropdownOpen"
+      *ngIf="isMenuOpen"
       style="display: block; position: absolute; right: 0;"
     >
       <ng-container *ngFor="let item of items">
-        <a routerLink="{{item.link}}" class="dropdown-item">{{item.label}}</a>
+        <a routerLink="{{item.link}}" class="dropdown-item" (click)="closeDropdown($event)">{{item.label}}</a>
         <hr class="dropdown-divider"/>
       </ng-container>
     </div>
   </div>
 
-  <div class="position-relative" (document:click)="closeDropdown($event)">
+  <div class="position-relative" (click)="closeDropdown($event)">
     <button
       class="btn btn-sm btn-light rounded-circle d-flex align-items-center justify-content-center"
-      (click)="toggleDropdown($event)"
+      (click)="toggleProfileMenuDropdown($event)"
     >
       <i class="bi bi-person-fill text-secondary fs-5"></i>
     </button>
@@ -32,12 +32,20 @@
     <!-- Выпадающее меню для мобильной версии -->
     <div
       class="dropdown-menu dropdown-menu-end mt-2 shadow"
-      *ngIf="dropdownOpen"
+      *ngIf="isProfileMenuOpen"
       style="display: block; position: absolute; right: 0;"
     >
-      <a routerLink="/profile" class="dropdown-item">Профиль</a>
-      <hr class="dropdown-divider"/>
-      <a class="dropdown-item">Выйти</a>
+      <ng-container *ngIf="authService.isAuthenticated()">
+        <a routerLink="/profile" class="dropdown-item">Профиль</a>
+        <hr class="dropdown-divider"/>
+        <a class="dropdown-item" (click)="logoutHandler()">Выйти</a>
+      </ng-container>
+
+      <ng-container *ngIf="!authService.isAuthenticated()">
+        <a routerLink="/login" class="dropdown-item">Войти</a>
+        <hr class="dropdown-divider"/>
+        <a routerLink="/registration" class="dropdown-item">Зарегистрироваться</a>
+      </ng-container>
     </div>
   </div>
 

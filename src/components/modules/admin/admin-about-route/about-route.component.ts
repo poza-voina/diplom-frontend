@@ -57,6 +57,7 @@ export class AboutRouteComponent implements OnInit {
   @ViewChild(RouteCardBodyComponent) routeCardBodyComponent!: RouteCardBodyComponent;
 
   private file?: File;
+  errorMessage: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -133,8 +134,14 @@ export class AboutRouteComponent implements OnInit {
       this.routeItem.routeCategories = this.routeCategories;
       this.adminActionsService.updateRoute(this.routeItem).subscribe(
         {
-          next: (x) => this.routeItem = x,
-          error: (error) => console.log("Не удалось обновить маршрут"),
+          next: (x) => {
+            this.routeItem = x;
+            this.errorMessage = null;
+          },
+          error: (error) => {
+            this.routeCardStatus = RouteCardStatus.Editing;
+            this.errorMessage = "Название маршрута должно быть уникальным";
+          },
           complete: () => {
           }
         }
@@ -152,10 +159,17 @@ export class AboutRouteComponent implements OnInit {
       this.routeItem.routeCategories = this.routeCategories;
       this.adminActionsService.createRoute(this.routeItem).subscribe(
         {
-          next: (x) => this.routeItem = x,
-          error: (error) => console.log("Не удалось обновить маршрут"),
-          complete: () => {
+          next: (x) => {
+            this.errorMessage = null;
+            this.routeItem = x;
             this.router.navigate(['/admin/routes/' + this.routeItem!.id]);
+          },
+          error: (error) => {
+            this.routeCardStatus = RouteCardStatus.Editing;
+            this.errorMessage = "Название маршрута должно быть уникальным";
+          },
+          complete: () => {
+
           }
         }
       );

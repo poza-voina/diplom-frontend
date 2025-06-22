@@ -20,7 +20,7 @@
 
     <!-- Меню для десктопа -->
     <div *ngIf="!isMobile" class="d-flex align-items-center gap-2">
-      <div class="position-relative" (document:click)="closeDropdown($event)">
+      <div class="position-relative" (click)="closeDropdown($event)">
         <button
           class="btn btn-light rounded-circle d-flex align-items-center justify-content-center"
           style="width: 40px; height: 40px;"

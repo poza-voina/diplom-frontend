@@ -6,6 +6,9 @@
     <button class="btn btn-primary" (click)="goToRouteMap()" [disabled]="isCreate">Изменить маршрут</button>
   </div>
   <div class="container container-lg d-flex flex-column">
+    <div *ngIf="errorMessage" class="alert alert-danger text-center" role="alert">
+      {{ errorMessage }}
+    </div>
     <div class="card mb-3">
       <app-default-navigation-card-header [activeTabIndex]="0"
                                           [navigationItems]="navigationItems"

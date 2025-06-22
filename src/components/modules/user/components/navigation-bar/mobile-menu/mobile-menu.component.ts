@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {NgForOf, NgIf} from '@angular/common';
 import {RouterLink} from '@angular/router';
+import {ClientAuthService} from '../../../service/client-auth.service';
 
 @Component({
   selector: 'app-mobile-menu',
@@ -15,51 +16,54 @@ import {RouterLink} from '@angular/router';
 export class MobileMenuComponent implements OnInit {
 
   items: MenuItem[] = [
-    { label: "Маршруты", link: "/routes" },
-    { label: "Категории", link: "/categories" },
-    { label: "Избранные маршруты", link: "/favorites" },
-    { label: "Записи на маршрут", link: "/bron" },
+    {label: "Маршруты", link: "/routes"},
+    {label: "Категории", link: "/routes/categories"},
   ];
 
-  mobileMenuOpen = false;
+  isMenuOpen = false;
+  isProfileMenuOpen = false;
   currentItem: MenuItem | undefined;
-  dropdownOpen: boolean = false;
+
+  constructor(protected authService: ClientAuthService) {
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    // Проверяем, был ли клик вне кнопки и меню
+    if (!target.closest('.dropdown-menu') && !target.closest('.btn-light')) {
+      this.isMenuOpen = false;
+      this.isProfileMenuOpen = false;
+    }
+  }
 
   ngOnInit() {
     // Инициализация currentItem после того как items уже определены
     this.currentItem = this.items[0];
   }
 
-  toggleMobileMenu(event: MouseEvent): void {
-    event.stopPropagation();
-    this.mobileMenuOpen = !this.mobileMenuOpen;
-  }
-
-  closeMobileMenu(event: MouseEvent): void {
-    // Закрыть меню только если клик был не на кнопке или меню
-    const button = event.target as HTMLElement;
-    if (!button.closest('.btn') && !button.closest('.position-relative')) {
-      this.mobileMenuOpen = false;
-    }
-  }
-
-  // Метод для выбора пункта меню
-  selectItem(item: MenuItem) {
-    this.currentItem = item;
-    // Закрываем меню после выбора
-  }
-
-  toggleDropdown(event: MouseEvent) {
+  toggleMenuDropdown(event: MouseEvent) {
     event.stopPropagation(); // Чтобы клик по кнопке не закрывал меню
-    this.dropdownOpen = !this.dropdownOpen;
+    this.isProfileMenuOpen = false;
+    this.isMenuOpen = true;
+  }
+
+  toggleProfileMenuDropdown(event: MouseEvent) {
+    event.stopPropagation(); // Чтобы клик по кнопке не закрывал меню
+    this.isProfileMenuOpen = true;
+    this.isMenuOpen = false;
   }
 
   closeDropdown(event: MouseEvent) {
     const target = event.target as HTMLElement;
     const clickedInside = target.closest('.position-relative');
-    if (!clickedInside) {
-      this.dropdownOpen = false;
-    }}
+    this.isProfileMenuOpen = false;
+    this.isMenuOpen = false;
+  }
+
+  logoutHandler() {
+    this.authService.removeToken();
+  }
 }
 
 interface MenuItem {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, HostListener} from '@angular/core';
 import {BaseFormComponent, IField, ILink, ISubmitStatus, SubmitStatus} from '../../forms/base-form/base-form.component';
 import {Validators} from '@angular/forms';
 import {ClientAuthService} from '../../service/client-auth.service';
@@ -6,11 +6,13 @@ import {ILoginCredentials} from '../../../../../dto/login-credentials.interface'
 import {IRegistrationUserDto} from '../../../../../dto/IRegistrationUserDto';
 import {ClientService} from '../../../../../services/client.service';
 import {IUserProfileDto} from '../../../../../dto/IUserProfileDto';
+import {NgClass} from '@angular/common';
 
 @Component({
   selector: 'app-profile-edit-page',
   imports: [
-    BaseFormComponent
+    BaseFormComponent,
+    NgClass
   ],
   templateUrl: './profile-edit-page.component.html',
   styleUrl: './profile-edit-page.component.css'
@@ -27,13 +29,26 @@ export class ProfileEditPageComponent {
     {label: "Войти", link: "/login"},
   ];
   initData: IUserProfileDto | null = null;
+  containerClass = 'w-75';
 
-  constructor(private clientService: ClientService, private authClientService: ClientAuthService) { }
+
+  constructor(private clientService: ClientService) { }
 
   ngOnInit() {
     this.clientService.getProfile().subscribe(
       {next: x => this.initData = x, error: x => {console.log(x)}, complete: () => console.log(this.initData)}
     )
+
+    this.setContainerClass(window.innerWidth);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.setContainerClass(event.target.innerWidth);
+  }
+
+  setContainerClass(width: number) {
+    this.containerClass = width <= 800 ? 'w-95' : 'w-75';
   }
 
   handleFormSubmit(event: any) {
@@ -50,7 +65,7 @@ export class ProfileEditPageComponent {
 
     registrationUser = event;
 
-    this.authClientService.register(registrationUser).subscribe({
+    this.clientService.updateProfile(registrationUser).subscribe({
       next: (response) => {
         this.submitStatus.status = SubmitStatus.SUCCESS;
         window.history.back();

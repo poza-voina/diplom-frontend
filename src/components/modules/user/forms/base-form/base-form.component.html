@@ -1,5 +1,8 @@
 <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
   <div class="form-container">
+    <div *ngIf="submitStatus.status === SubmitStatus.ERROR" class="alert alert-danger text-center" role="alert">
+      {{submitStatus.message}}
+    </div>
     <h2 class="form-title">{{this.formLabel}}</h2>
 
     <div *ngFor="let field of fields">

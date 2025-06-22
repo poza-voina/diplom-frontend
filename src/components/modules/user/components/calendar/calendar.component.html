@@ -27,7 +27,8 @@
 
   <!-- Всплывающее меню -->
   <!-- Всплывающее меню -->
-  <div *ngIf="(tooltipVisible && routesForSelectedDay.length > 0)" class="tooltip" [ngStyle]="{top: mouseY + 'px', left: mouseX + 'px'}">
+  <div *ngIf="(tooltipVisible && routesForSelectedDay.length > 0)" class="tooltip"
+       [ngStyle]="{top: mouseY + 'px', left: mouseX - 173 + 'px'}">
     <ul class="tooltip-list">
       <li *ngFor="let route of routesForSelectedDay" class="tooltip-item" (click)="handleSelectRoute(route)">
         <p class="tooltip-time">

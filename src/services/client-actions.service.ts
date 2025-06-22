@@ -1,5 +1,5 @@
 import {BaseApiWithAuthService} from './base-api-with-auth.service';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {ClientAuthService} from '../components/modules/user/service/client-auth.service';
 import {Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
@@ -8,6 +8,8 @@ import {IRouteExample} from '../data/IRouteExample';
 import {IGetBooksRequestByDateRange} from '../data/book/IGetBooksRequestByDateRange';
 import {IGetBooksRequestWithPaginate} from '../data/book/IGetBooksRequestWithPaginate';
 import {environment} from '../env';
+import {IRegistrationUserDto} from '../dto/IRegistrationUserDto';
+import {IUserProfileDto} from '../dto/IUserProfileDto';
 
 @Injectable({
   providedIn: 'root'

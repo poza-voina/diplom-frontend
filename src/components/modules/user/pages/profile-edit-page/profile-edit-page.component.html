@@ -1,5 +1,5 @@
 <div class="container-fluid d-flex flex-column justify-content-center align-items-baseline">
-  <div class="container w-75">
+  <div class="container" [ngClass]="containerClass">
     <app-base-form [initialData]="initData" [fields]="this.fields" [submitLabel]="this.submitLabel" [formLabel]="this.formLabel" (formSubmit)="handleFormSubmit($event)">
     </app-base-form>
   </div>

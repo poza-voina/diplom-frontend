@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {NgForOf, NgIf, NgSwitch, NgSwitchCase} from '@angular/common';
 import {RouteCardStatus} from '../../data/route-card.status';
 import * as bootstrap from 'bootstrap';
@@ -39,6 +39,7 @@ export class CategoriesCardBodyComponent {
   addNewCategoryModelId: string = "addNewCategoryModel";
   protected readonly RouteCardStatus = RouteCardStatus;
   modalLabel: string = "Создание новой категории";
+  @ViewChild(AddNewCategoryComponent) newCategoryForm!: AddNewCategoryComponent;
 
   constructor(private adminActionsService: AdminActionsService) {
   }
@@ -114,10 +115,17 @@ export class CategoriesCardBodyComponent {
   createNewCategory(item: INewCategoryRequest) {
     this.adminActionsService.createCategory(item).subscribe(
       {
-        next: (response) => this.allCategories.push(response),
-        error: (error) => console.log(error)
+        next: (response) => {
+          this.allCategories.push(response);
+          this.newCategoryForm.isError = false;
+          this.newCategoryForm.categoryItem.title = '';
+          this.closeModal(this.addNewCategoryModelId);
+        },
+        error: (error) => {
+          this.newCategoryForm.categoryItem.title = '';
+          this.newCategoryForm.isError = true;
+        }
       }
     )
-    this.closeModal(this.addNewCategoryModelId);
   }
 }

@@ -1,3 +1,6 @@
+<div *ngIf="isError" class="alert alert-danger text-center" role="alert">
+  Название категории должно быть уникальным
+</div>
 <form>
   <form-field label="Название категории:">
     <input class="form-control mb-3" [(ngModel)]="categoryItem.title" [ngModelOptions]="{standalone: true}" type="text" value="text">

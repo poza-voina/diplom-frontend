@@ -66,6 +66,7 @@ export class BaseFormComponent implements OnInit {
   }
 
   // Получение ошибок для конкретного поля
+  errorMessage: string | null = null;
   getControlErrors(controlName: string): string[] {
     const control = this.formGroup.get(controlName);
     if (!control || !control.errors || !control.touched) return [];
@@ -77,6 +78,8 @@ export class BaseFormComponent implements OnInit {
   onSubmit() {
     this.formSubmit.emit(this.formGroup.value)
   }
+
+  protected readonly SubmitStatus = SubmitStatus;
 }
 
 export interface ISubmitStatus {
