@@ -8,7 +8,8 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let item of routeExamples; let i = index">
+  <tr *ngFor="let item of routeExamples; let i = index"
+      [ngStyle]="{'border-bottom': routeExampleMarker === item.id.toString() ? '2px solid red' : '#DEE2E6'}">
     <td>
       <input type="datetime-local" class="form-control"
              [(ngModel)]="item.startDateTime"
@@ -49,7 +50,7 @@
         <ul class="dropdown-menu custom-dropdown-left" [attr.aria-labelledby]="'dropdownMenuButton' + i">
           <li><button class="dropdown-item" (click)="goToRecords(item.id)">Показать записи</button></li>
           <li><button class="dropdown-item" (click)="handleEdit(i)">Редактировать</button></li>
-          <li><button class="dropdown-item" (click)="handleRemove(i)">Удалить</button></li>
+          <li *ngIf="item.countRecords == 0"><button class="dropdown-item" (click)="handleRemove(i)">Удалить</button></li>
         </ul>
       </div>
     </td>

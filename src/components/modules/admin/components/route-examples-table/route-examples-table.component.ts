@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgForOf, NgIf, NgStyle} from '@angular/common';
 import {IRouteExample} from '../../../../../data/IRouteExample';
 import {map} from 'rxjs';
 import {RouteService} from '../../../../../services/route.service';
@@ -13,7 +13,8 @@ import {ActivatedRoute, Router} from '@angular/router';
   imports: [
     NgForOf,
     FormsModule,
-    NgIf
+    NgIf,
+    NgStyle
   ],
   templateUrl: './route-examples-table.component.html',
   styleUrl: './route-examples-table.component.css'
@@ -23,6 +24,7 @@ export class RouteExamplesTableComponent implements OnInit {
   @Input()
   routeId!: number;
   RouteExampleItemWStatus = RouteExampleItemWStatus;
+  @Input() routeExampleMarker: string | null = null;
 
 
   constructor(

@@ -42,8 +42,8 @@ export class OpenRoutesTableComponent implements OnInit {
     }
   }
 
-  goToRoute(routeId: number) {
-    this.router.navigate(['/admin', 'routes', routeId]);
+  goToRoute(routeId: number, routeExampleId: number) {
+    this.router.navigate(['/admin', 'routes', routeId],  { queryParams: { routeExampleId: routeExampleId } });
   }
 
   protected readonly indexedDB = indexedDB;

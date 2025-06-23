@@ -1,19 +1,27 @@
 <div class="container container-lg d-flex flex-column flex-md-row p-0">
   <div class="container container-sm d-flex flex-column mt-2" style="max-width: 400px">
     <div class="map-container ratio-1x1 mb-3">
-      <app-map [routePoints]="this.routePoints" [canSelectPoint]="this.canSelectPoint" (onMapInitialize)="handleMapInitialize()" (onOutputPoint)="handleOutputPoint($event)" class="map"></app-map>
+      <app-map [routePoints]="this.routePoints" [canSelectPoint]="this.canSelectPoint"
+               (onMapInitialize)="handleMapInitialize()" (onOutputPoint)="handleOutputPoint($event)"
+               class="map"></app-map>
     </div>
-    <button class="btn btn-primary" (click)="saveRoute()">Сохранить
+    <button class="btn btn-primary" [disabled]="showAlert"  (click)="saveRoute()">Сохранить
       <div *ngIf="isSavingCuePoints" class="spinner-border text-white spinner-border-sm ms-2" role="status">
         <span class="visually-hidden">Загрузка</span>
-      </div></button>
+      </div>
+    </button>
   </div>
 
   <div class="container p-0">
     <div class="container">
+      <div class="alert alert-danger text-center mt-2" role="alert"
+           *ngIf="showAlert">
+        В маршруте существуют точки без названия
+      </div>
       <div *ngIf="this.cuePointCards.length === 0" class="d-flex flex-column align-content-center">
         <div style="text-align: center; padding: 20px; font-family: Arial, sans-serif;">
-          <p style="font-size: 24px; font-weight: bold; color: #333; background-color: #f4f4f4; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+          <p
+            style="font-size: 24px; font-weight: bold; color: #333; background-color: #f4f4f4; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
             В этом маршруте еще нет ключевых точек
           </p>
         </div>
@@ -23,8 +31,14 @@
       </div>
       <div *ngFor="let item of this.cuePointCards; let i = index">
         <div (mouseenter)="handleCuePointCardEnterToggle(item)" (mouseleave)="handleCuePointCardEnterToggle(item)">
-          <app-admin-cue-point-card (onDelete)="handleRemove($event)" (fileSelected)="handleFileSelected($event, i)" (onPickedPoint)="handlePickedPoint($event)" [cuePointStatus]="item.status" [routeCuePointItem]="item.cuePointItem" (onMoveLower)="moveLower(item.cuePointItem.sortIndex)"
-                                    (onMoveHigher)="moveHigher(item.cuePointItem.sortIndex)"></app-admin-cue-point-card>
+          <div class="card-container">
+            <app-admin-cue-point-card (onDelete)="handleRemove($event)" (fileSelected)="handleFileSelected($event, i)"
+                                      (onPickedPoint)="handlePickedPoint($event)" [cuePointStatus]="item.status"
+                                      [routeCuePointItem]="item.cuePointItem"
+                                      (onMoveLower)="moveLower(item.cuePointItem.sortIndex)"
+                                      (onMoveHigher)="moveHigher(item.cuePointItem.sortIndex)"></app-admin-cue-point-card>
+          </div>
+
           <div *ngIf="item.isHovered" class="d-flex justify-content-center mt-2">
             <button (click)="handleAddNewCard(item)" class="btn btn-sm btn-primary align-content-center">Добавить новую
               ключевую точку <i
@@ -32,9 +46,6 @@
           </div>
         </div>
       </div>
-    </div>
-    <div>
-      <button *ngIf="showScrollButton" (click)="scrollTop()" class="btn btn-primary">Вернуться в начало</button>
     </div>
   </div>
 </div>

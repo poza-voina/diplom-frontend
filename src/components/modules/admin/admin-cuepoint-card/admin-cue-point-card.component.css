@@ -1,6 +1,46 @@
-.heading-input {
-  font-size: inherit;
-  font-weight: inherit;
-  font-family: inherit;
-  line-height: inherit;
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+
+  &:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+
+  &:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+.tooltip-text {
+  visibility: hidden;
+  width: 200px; /* Ширина по содержимому */
+  max-width: 200px; /* Максимальная ширина */
+  background-color: #333;
+  color: #fff;
+  text-align: left; /* Выравнивание текста по левому краю */
+  border-radius: 6px; /* Закругленные углы */
+  padding: 8px 12px;
+  position: absolute;
+  z-index: 1000;
+  bottom: 50%;
+  right: 100%; /* Позиционирование слева от элемента */
+  margin-right: 10px; /* Отступ от элемента */
+  transform: translateY(50%); /* Центрирование по вертикали */
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  font-size: 14px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Легкая тень для глубины */
+
+  /* Убираем стрелку */
+  &::after {
+    display: none;
+  }
 }

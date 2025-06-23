@@ -9,6 +9,7 @@ import {RouteService} from '../../../../../services/route.service';
 import {RouteHelper} from '../../../../../services/route.helper';
 import {IBaseRoute} from '../../../../../data/route/IBaseRoute';
 import {Router} from '@angular/router';
+import {ClientAuthService} from '../../service/client-auth.service';
 
 @Component({
   selector: 'app-profile-page',
@@ -29,12 +30,17 @@ export class ProfilePageComponent implements OnInit {
 
   constructor(
     private clientService: ClientService,
+    private clientAuthService: ClientAuthService,
     private clientActionsService: ClientActionsService,
     private routeService: RouteService,
     private router: Router) {
   }
 
   ngOnInit(): void {
+    if(!this.clientAuthService.isAuthenticated()){
+      this.router.navigate(['/login']);
+      return;
+    }
     this.clientService.getProfile().subscribe(
       {
         next: value => this.profileView = value,

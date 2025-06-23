@@ -12,3 +12,35 @@
   right: 0;
   bottom: 0;
 }
+
+.card-information {
+  position: relative;
+
+  &.has-error {
+    border: 2px solid red;
+    border-radius: 4px;
+  }
+
+  .error-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    border-radius: inherit;
+
+    .error-text {
+      background: white;
+      padding: 4px 8px;
+      border: 1px solid red;
+      border-radius: 4px;
+      color: red;
+      font-weight: bold;
+    }
+  }
+}

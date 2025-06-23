@@ -38,12 +38,13 @@ export class AdminActionsService extends BaseApiWithAuthService {
     return this.http.delete<IBaseRoute>(this.apiRoutesUrl + `/${id}`, this.getOptions());
   }
 
-  updateRouteCuePoints(cuePointItems: IBaseRouteCuePoint[]): Observable<IBaseRouteCuePoint[]> {
-    return this.http.put<IBaseRouteCuePoint[]>(this.apiRoutesUrl + "/update-cue-points", cuePointItems, this.getOptions());
+  updateRouteCuePoints(cuePointItems: IBaseRouteCuePoint[], routeId: number): Observable<IBaseRouteCuePoint[]> {
+    return this.http.put<IBaseRouteCuePoint[]>(`${this.apiRoutesUrl}/${routeId}/update-cue-points`, cuePointItems, this.getOptions());
   }
 
-
   createOrUpdateRouteExample(routeExampleItem: IRouteExample): Observable<IRouteExample> {
+    routeExampleItem.startDateTime = new Date(routeExampleItem.startDateTime).toISOString();
+    routeExampleItem.endDateTime = new Date(routeExampleItem.endDateTime).toISOString();
     return this.http.put<IRouteExample>(this.apiRoutesExampleUrl, routeExampleItem, this.getOptions());
   }
 
@@ -52,6 +53,10 @@ export class AdminActionsService extends BaseApiWithAuthService {
   }
 
   createOrUpdateRouteExamples(routeExampleItems: IRouteExample[]): Observable<IRouteExample[]> {
+    routeExampleItems.forEach(x => {
+      x.startDateTime = new Date(x.startDateTime).toISOString();
+      x.endDateTime = new Date(x.endDateTime).toISOString();
+    })
     return this.http.put<IRouteExample[]>(this.apiRoutesExampleUrl + "/by-route", routeExampleItems, this.getOptions());
   }
 

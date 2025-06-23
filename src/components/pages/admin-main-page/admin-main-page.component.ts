@@ -43,7 +43,6 @@ export class AdminMainPageComponent implements OnInit {
   }
 
   isAuthenticated() {
-    console.log(`isAuthenticated = ${this.authService.isAuthenticated()}`);
     return this.authService.isAuthenticated();
   }
 

@@ -23,7 +23,6 @@ import {AttachmentService} from '../../../../services/attachment.service';
   styleUrl: './route-map.component.css'
 })
 export class RouteMapComponent implements OnInit, AfterViewInit {
-
   cuePointCards: ICuePointCard[] = []
   routeId: number;
   isMapAvailable = false;
@@ -56,6 +55,10 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
 
   }
 
+  get showAlert(): boolean {
+    return this.cuePointCards?.some(card => !card?.cuePointItem?.title?.trim());
+  }
+
   extractCoordsWithAddresses(): [number, number][] {
     var a = this.cuePointCards
       .filter(x => x.cuePointItem && x.cuePointItem.latitude && x.cuePointItem.longitude && x.cuePointItem.address)
@@ -68,7 +71,11 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
   loadCuePoints() {
     this.routeService.getRouteCuePoints(this.routeId)
       .pipe(
-        map(x => x.map(y => new CuePointCard({cuePointItem: y, isHovered: false, cuePointStatus: CuePointStatus.None}))))
+        map(x => x.map(y => new CuePointCard({
+          cuePointItem: y,
+          isHovered: false,
+          cuePointStatus: CuePointStatus.None
+        }))))
       .subscribe(
         {
           next: cuePointsCards => {
@@ -95,6 +102,7 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
       this.printSortIndexes();
     }
   }
+
   printSortIndexes() {
     const indexes = this.cuePointCards.map(point => point.cuePointItem.sortIndex);
     console.log(indexes);
@@ -178,7 +186,7 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
     let ids: number[] = [];
     let files: File[] = [];
 
-    this.adminActionsService.updateRouteCuePoints(cuePointItems).subscribe({
+    this.adminActionsService.updateRouteCuePoints(cuePointItems, this.routeId).subscribe({
       next: items => {
         const ids: number[] = [];
         const files: File[] = [];
@@ -188,28 +196,32 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
           if (card?.file) {
             ids.push(item.id!);
             files.push(card.file);
+            console.log("asdf");
           }
         });
 
         console.log('CuePoints saved');
         console.log(files, ids);
-
-        this.attachmentService.uploadCuePointsAttachments(files, ids).subscribe({
-          next: () => {
-            console.log('Файлы успешно загружены');
-          },
-          error: err => {
-            console.error('Ошибка при загрузке файлов', err);
-          },
-          complete: () => {
-            this.isSavingCuePoints = false;
-          }
-        });
+        if (files.length > 0 && ids.length > 0) {
+          this.attachmentService.uploadCuePointsAttachments(files, ids).subscribe({
+            next: () => {
+              console.log('Файлы успешно загружены');
+            },
+            error: err => {
+              console.error('Ошибка при загрузке файлов', err);
+            }
+          });
+        }
       },
       error: () => {
+        console.warn("Не удалось сохранить ключевые точки маршрута");
+        this.isSavingCuePoints = false;
+      },
+      complete: () => {
         this.isSavingCuePoints = false;
       }
-    });}
+    });
+  }
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
@@ -291,7 +303,7 @@ export class RouteMapComponent implements OnInit, AfterViewInit {
   }
 
   renderCuePoints() {
-    if (this.isMapAvailable && this.isCuePointsAvailable){
+    if (this.isMapAvailable && this.isCuePointsAvailable) {
       this.changeRoutePoints();
       this.mapElement.renderRoutePoints();
     }

@@ -14,7 +14,7 @@ export interface IBaseRouteCuePoint {
 }
 
 export interface IRouteCuePointWithAttachment extends IBaseRouteCuePoint {
-  attachment: IAttachment;
+  attachment?: IAttachment;
 }
 
 export class RouteCuePointItem implements IBaseRouteCuePoint  {

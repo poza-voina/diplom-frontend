@@ -1,7 +1,7 @@
 <div class="container d-flex flex-row mt-2" *ngIf="routeItem != null">
   <div class="container container-sm d-flex flex-column " style="max-width: 400px">
     <div class="map-container ratio-1x1 mb-3">
-      <app-map class="map"></app-map>
+      <app-map (onMapInitialize)="handleMapInitialize()" [routePoints]="cuePoints"  class="map"></app-map>
     </div>
     <button class="btn btn-primary" (click)="goToRouteMap()" [disabled]="isCreate">Изменить маршрут</button>
   </div>
@@ -34,7 +34,7 @@
       </div>
     </div>
 
-    <app-route-examples-table *ngIf="!isCreate" [routeId]="routeId"></app-route-examples-table>
+    <app-route-examples-table *ngIf="!isCreate" [routeId]="routeId" [routeExampleMarker]="routeExampleMarker"></app-route-examples-table>
   </div>
 
 </div>

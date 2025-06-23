@@ -21,6 +21,7 @@ import * as bootstrap from 'bootstrap';
 import {UploadImageCardBodyComponent} from './components/upload-image-card-body/upload-image-card-body.component';
 import {AttachmentService} from '../../../../services/attachment.service';
 import {IBaseRoute, IRouteWithAttachment} from '../../../../data/route/IBaseRoute';
+import {IRouteCuePointWithAttachment} from '../../../../data/cuePoint/CuePoint';
 
 @Component({
   selector: 'app-admin-about-route',
@@ -58,6 +59,11 @@ export class AboutRouteComponent implements OnInit {
 
   private file?: File;
   errorMessage: string | null = null;
+  @ViewChild(MapComponent) mapElement!: MapComponent;
+  private isCuePointsInitialize: boolean = false;
+  private isMapInitialize: boolean = false;
+  protected cuePoints: IRouteCuePointWithAttachment[] = [];
+  protected routeExampleMarker: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -77,7 +83,32 @@ export class AboutRouteComponent implements OnInit {
     } else {
       this.loadRoute();
       this.loadCategories();
+      this.loadCuePoints();
+      this.getMarker();
     }
+  }
+
+  getMarker() {
+    this.route.queryParamMap.subscribe(params => {
+      this.routeExampleMarker = params.get('routeExampleId');
+    });
+  }
+
+  loadCuePoints() : void {
+    this.routeService.getRouteCuePoints(this.routeId).subscribe(
+      {
+        next: cuePoints => {
+          this.cuePoints = cuePoints;
+        },
+        error: error => {
+          console.log("Не удалось загрузить ключевые точки маршрута");
+        },
+        complete: () => {
+          this.isCuePointsInitialize = true;
+          this.renderCuePoints()
+        }
+      }
+    )
   }
 
   getEmptyRoute(): IBaseRoute {
@@ -114,7 +145,7 @@ export class AboutRouteComponent implements OnInit {
         this.routeCardStatus = RouteCardStatus.Editing;
         break;
       case RouteCardStatus.Editing:
-        let handleSaveResult=  this.routeCardBodyComponent?.handleSave() ?? true;
+        let handleSaveResult = this.routeCardBodyComponent?.handleSave() ?? true;
         if (handleSaveResult) {
           if (this.isCreate) {
             this.createAboutRoute()
@@ -130,6 +161,7 @@ export class AboutRouteComponent implements OnInit {
   }
 
   updateAboutRoute() {
+    console.log(this.routeItem);
     if (this.routeItem != null) {
       this.routeItem.routeCategories = this.routeCategories;
       this.adminActionsService.updateRoute(this.routeItem).subscribe(
@@ -235,6 +267,17 @@ export class AboutRouteComponent implements OnInit {
 
   onFileSelected(file: File) {
     this.file = file;
+  }
+
+  handleMapInitialize() {
+    this.isMapInitialize = true;
+    this.renderCuePoints();
+  }
+
+  private renderCuePoints() {
+    if (this.isMapInitialize && this.isCuePointsInitialize) {
+      this.mapElement.renderRoutePoints();
+    }
   }
 }
 

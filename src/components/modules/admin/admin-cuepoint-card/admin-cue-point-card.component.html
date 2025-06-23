@@ -25,11 +25,12 @@
       <div *ngSwitchCase="NavBarStatus.Address" class="card-text">
         <h4 class="card-title">
           <ng-container
-            *ngIf="cuePointStatus === CuePointStatus.None">{{ checkAddress() ? routeCuePointItem.address : "Адрес не указан" }}
+            *ngIf="cuePointStatus === CuePointStatus.None">{{ checkAddress() ? routeCuePointItem.address : "Точка на карте не выбрана" }}
           </ng-container>
           <input
             *ngIf="cuePointStatus !== CuePointStatus.None"
             class="form-control heading-input"
+            [disabled]="true"
             [(ngModel)]="routeCuePointItem.address"
             (input)="onAddressInput($event)"
             (focus)="showSuggestions = true"
@@ -48,7 +49,14 @@
     </div>
 
     <div *ngSwitchCase="NavBarStatus.Image">
-      <app-upload-image (fileSelected)="handleFileSelected($event)"></app-upload-image>
+      <ng-container *ngIf="!routeCuePointItem?.attachment?.uri">
+        <app-upload-image (fileSelected)="handleFileSelected($event)"></app-upload-image>
+      </ng-container>
+      <ng-container *ngIf="routeCuePointItem?.attachment?.uri">
+        <img *ngIf="routeCuePointItem?.attachment?.uri" [src]="getImageUrl(routeCuePointItem.attachment?.uri)"
+             alt="Изображение не загружено"
+             style="max-width: 100%; max-height: 80vh; height: auto; width: auto; object-fit: contain;">
+      </ng-container>
     </div>
   </div>
   <div class="card-footer d-flex justify-content-between flex-row">
@@ -63,21 +71,27 @@
         <i class="bi bi-trash"></i>
       </button>
 
-<!--      <button *ngSwitchCase="NavBarStatus.Address"
-              (click)="toggleEditAddress()"
-              class="btn btn-primary">
-        <ng-container *ngIf="addressStatus === AddressStatus.None">Изменить</ng-container>
-        <ng-container *ngIf="addressStatus !== AddressStatus.None">Сохранить
-          <div *ngIf="addressStatus === AddressStatus.Saving"
-               class="spinner-border text-white spinner-border-sm ms-2" role="status">
-            <span class="visually-hidden">Загрузка</span>
-          </div>
-        </ng-container>
-      </button>-->
+      <!--      <button *ngSwitchCase="NavBarStatus.Address"
+                    (click)="toggleEditAddress()"
+                    class="btn btn-primary">
+              <ng-container *ngIf="addressStatus === AddressStatus.None">Изменить</ng-container>
+              <ng-container *ngIf="addressStatus !== AddressStatus.None">Сохранить
+                <div *ngIf="addressStatus === AddressStatus.Saving"
+                     class="spinner-border text-white spinner-border-sm ms-2" role="status">
+                  <span class="visually-hidden">Загрузка</span>
+                </div>
+              </ng-container>
+            </button>-->
     </div>
-    <div class="d-flex flex-column">
-      <button *ngIf="!(routeCuePointItem.latitude && routeCuePointItem.longitude && routeCuePointItem.address)" class="btn"><i
-        class="bi bi-exclamation-circle"></i></button>
+    <div class="d-flex flex-row align-items-center">
+      <div class="tooltip-container"
+           *ngIf="!(routeCuePointItem.latitude && routeCuePointItem.longitude && routeCuePointItem.address && !isNullOrEmpty(routeCuePointItem.title))">
+        <i class="bi bi-exclamation-circle text-danger"></i>
+        <span class="tooltip-text">
+      <div *ngIf="!routeCuePointItem.address">Адрес не указан</div>
+      <div *ngIf="isNullOrEmpty(routeCuePointItem.title)">Название не указано</div>
+    </span>
+      </div>
     </div>
   </div>
 </div>

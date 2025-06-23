@@ -3,7 +3,8 @@ import {NavBarStatus, NavBarStatusHelper} from '../../../../enums/nav-bar.status
 import {CuePointStatus} from '../../../../enums/cue-point.status';
 import {YandexSuggestionsService} from '../../../../services/yandex-suggest.service';
 import {MapService} from '../../../../services/map-service';
-import {IBaseRouteCuePoint} from '../../../../data/cuePoint/CuePoint';
+import {IBaseRouteCuePoint, IRouteCuePointWithAttachment} from '../../../../data/cuePoint/CuePoint';
+import {S3Helper} from '../../../../services/s3.helper';
 
 @Component({
   selector: 'app-admin-cue-point-card',
@@ -13,7 +14,7 @@ import {IBaseRouteCuePoint} from '../../../../data/cuePoint/CuePoint';
 })
 export class AdminCuePointCardComponent implements OnInit {
 
-  @Input() routeCuePointItem: IBaseRouteCuePoint | undefined;
+  @Input() routeCuePointItem: IRouteCuePointWithAttachment | undefined;
   @Input() cuePointStatus: CuePointStatus = CuePointStatus.None;
 
   @Output() public onMoveLower = new EventEmitter();
@@ -99,6 +100,33 @@ export class AdminCuePointCardComponent implements OnInit {
 
   handleDelete() {
     this.onDelete.emit(this.routeCuePointItem?.sortIndex);
+  }
+
+  getImageUrl(uri: string | undefined) : string | null {
+    return S3Helper.getImageUrlOrDefault(uri);
+  }
+
+  isNullOrEmpty(value: any): boolean {
+    // Проверяем на null, undefined или пустую строку
+    if (value === null || value === undefined) {
+      return true;
+    }
+
+    // Если это строка, проверяем на пустоту или пробелы
+    if (typeof value === 'string') {
+      return value.trim() === '';
+    }
+
+    // Если это массив или объект, проверяем на пустоту
+    if (Array.isArray(value)) {
+      return value.length === 0;
+    }
+
+    if (typeof value === 'object') {
+      return Object.keys(value).length === 0;
+    }
+
+    return false;
   }
 }
 
