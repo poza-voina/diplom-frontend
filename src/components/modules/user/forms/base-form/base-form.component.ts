@@ -40,7 +40,7 @@ export class BaseFormComponent implements OnInit {
   submitLabel!: string;
   @Input()
   formLabel!: string;
-  @Input() submitStatus!: ISubmitStatus;
+  @Input() submitStatus: ISubmitStatus;
   @Input() initialData: any;
 
   constructor(private fb: FormBuilder) {}
