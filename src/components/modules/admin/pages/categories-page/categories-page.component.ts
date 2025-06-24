@@ -19,6 +19,7 @@ import {map} from 'rxjs';
 export class CategoriesPageComponent implements OnInit {
   categories: ICategoryW[] = [];
   CategoryEditingStatus = CategoryEditingStatus;
+  isNotFound: boolean = false;
 
   constructor(private service: RouteCategoriesService) {  }
 
@@ -33,6 +34,10 @@ export class CategoriesPageComponent implements OnInit {
     ).subscribe({
       next: value => {
         this.categories = value;
+        this.isNotFound = this.categories.length === 0;
+      },
+      error: error => {
+        this.isNotFound = true;
       }
     });
   }
@@ -47,10 +52,11 @@ export class CategoriesPageComponent implements OnInit {
   }
 
   handleDelete(index: number) {
-    this.categories.splice(index, 1);
     this.service.delete(this.categories[index].id).subscribe(
       {
-        next: value => {},
+        next: value => {
+          this.categories.splice(index, 1);
+        },
         error: error => {console.warn(error);}
       }
     )
