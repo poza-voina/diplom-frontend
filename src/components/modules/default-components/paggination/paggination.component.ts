@@ -12,8 +12,8 @@ import {NgForOf, NgIf, NgStyle} from '@angular/common';
   styleUrl: './paggination.component.css'
 })
 export class PagginationComponent {
-  @Input() totalPages = 0;
-  @Input() pageSize = 10;
+  @Input() totalPages = 1;
+  @Input() pageSize = 1;
   @Input() currentPage = 1;
   @Output() pageChanged = new EventEmitter<number>();
 

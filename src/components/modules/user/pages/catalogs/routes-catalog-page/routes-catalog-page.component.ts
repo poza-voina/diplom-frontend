@@ -29,6 +29,7 @@ export class RoutesCatalogPageComponent implements OnInit {
   searchText: string = '';
   header: string = "Маршруты";
   filter: string | null = null;
+  isNotFound: boolean = false;
 
   @Output()
   loadCatalogEvent = new EventEmitter<string>();
@@ -58,8 +59,9 @@ export class RoutesCatalogPageComponent implements OnInit {
         next: (data: ICollectionDto<IRouteWithAttachment>) => {
           this.routes = data.values;
           this.totalPages = data.totalPages;
+          this.isNotFound = this.routes.length === 0;
         },
-        error: (error: Error) => console.log(error),
+        error: (error: Error) => {this.isNotFound = true;},
         complete: () => {
         }
       }

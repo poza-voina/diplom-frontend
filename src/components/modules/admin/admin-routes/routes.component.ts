@@ -35,9 +35,10 @@ export class RoutesComponent {
   protected readonly RoutesSortHelper: RoutesSortHelper = new RoutesSortHelper();
   othersSort: RoutesSort[] = this.RoutesSortHelper.getKeys().slice(1);
   currentPage: number = 1;
-  totalPages: number = 10;
+  totalPages: number = 1;
   pageSize: number = 6;
   searchText: string = '';
+  isNotFound: boolean = false;
 
   constructor(
     private routeService: RouteService,
@@ -66,9 +67,11 @@ export class RoutesComponent {
         next: (data: ICollectionDto<IRouteWithAttachment>) => {
           this.routes = data.values;
           this.totalPages = data.totalPages;
+          this.isNotFound = this.routes.length === 0;
         },
         error: (error) => {
           this.routesLoadingStatus = RoutesLoadingStatus.Error;
+          this.isNotFound = true;
         },
         complete: () => {
           this.routesLoadingStatus = RoutesLoadingStatus.Completed;

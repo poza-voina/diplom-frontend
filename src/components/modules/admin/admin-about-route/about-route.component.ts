@@ -180,7 +180,11 @@ export class AboutRouteComponent implements OnInit {
       );
       if (this.file) {
         this.attachmentService.uploadRouteAttachment(this.file, this.routeId).subscribe(
-          {error: error => console.log("Не удалось обновить картинку")}
+          {
+            next: (attachment) => {
+              this.routeItem.attachment = attachment;
+            },
+            error: error => console.log("Не удалось обновить картинку")}
         )
       }
     }
@@ -207,7 +211,11 @@ export class AboutRouteComponent implements OnInit {
       );
       if (this.file) {
         this.attachmentService.uploadRouteAttachment(this.file, this.routeId).subscribe(
-          {error: error => console.log("Не удалось обновить картинку")}
+          {
+            next: (attachment) => {;
+              this.routeItem.attachment = attachment;
+            },
+            error: error => console.log("Не удалось обновить картинку")}
         )
       }
     }

@@ -17,6 +17,7 @@ export class DefaultCategoriesCatalogueComponent {
 
   @Output()
   onFilter: EventEmitter<string> = new EventEmitter<string>();
+  @Input() isNotFound: boolean = false;
 
   navigateToRoutes(categoryTitle: string): void {
     this.onFilter.emit(categoryTitle);

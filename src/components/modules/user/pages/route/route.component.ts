@@ -93,7 +93,7 @@ export class RouteComponent implements OnInit {
     this.routeService.getRouteCuePoints(this.routeId).subscribe(
       {
         next: cuePoints => {
-          this.cuePoints = cuePoints;
+          this.cuePoints = cuePoints.sort((a: { sortIndex: number }, b: { sortIndex: number }) => a.sortIndex - b.sortIndex);
         },
         error: error => {
           console.log("Не удалось загрузить ключевые точки маршрута");
@@ -225,12 +225,9 @@ export class RouteComponent implements OnInit {
   }
 
   getImageUrl(uri: string | null): string | null {
-    console.log(`URI ${uri}`);
-
     if (uri === null) {
       return null;
     }
-    console.log(`URI ${S3Helper.getImageUrlOrDefault(uri)}`);
     return S3Helper.getImageUrlOrDefault(uri);
   }
 

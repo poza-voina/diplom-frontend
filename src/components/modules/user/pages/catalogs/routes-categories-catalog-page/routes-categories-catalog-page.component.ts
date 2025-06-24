@@ -7,6 +7,7 @@ import {RouteCategoriesService} from '../../../../../../services/route-categorie
 import { ICategory } from '../../../../../../dto/ICategory';
 import {Router} from '@angular/router';
 
+
 @Component({
   selector: 'app-routes-categories-catalog-page',
   imports: [
@@ -20,6 +21,7 @@ export class RoutesCategoriesCatalogPageComponent implements OnInit {
   @Output()
   loadCatalogEvent = new EventEmitter<string>();
   categories: ICategory[] = [];
+  isNotFound: boolean = false;
 
   constructor(private service: RouteCategoriesService, private router: Router) {
   }
@@ -33,9 +35,11 @@ export class RoutesCategoriesCatalogPageComponent implements OnInit {
     this.service.getAll().subscribe({
       next: next => {
         this.categories = next;
+        this.isNotFound = this.categories.length === 0;
       },
       error: err => {
         console.error(err);
+        this.isNotFound = true;
       }
     })
   }
